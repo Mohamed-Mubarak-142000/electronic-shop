@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Owner Profile - VoltMarket</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#122118",
+                        "surface-dark": "#1a2e22",
+                        "border-dark": "#254632",
+                        "text-secondary": "#95c6a9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #122118;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #254632;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #366348;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col overflow-x-hidden group/design-root">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">VoltMarket</h2>
+</div>
+<div class="flex items-center gap-9 hidden md:flex">
+<a class="text-text-secondary hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Dashboard</a>
+<a class="text-text-secondary hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Products</a>
+<a class="text-text-secondary hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Orders</a>
+<a class="text-white text-sm font-medium leading-normal border-b-2 border-primary pb-1" href="#">Portfolio</a>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<label class="flex flex-col min-w-40 !h-10 max-w-64 hidden sm:flex">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-text-secondary flex border-none bg-border-dark items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-1 focus:ring-primary border-none bg-border-dark focus:border-none h-full placeholder:text-text-secondary px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal" placeholder="Search" value=""/>
+</div>
+</label>
+<button class="flex items-center justify-center overflow-hidden rounded-lg size-10 bg-border-dark text-white hover:bg-[#366348] transition-colors relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full"></span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-border-dark cursor-pointer" data-alt="User avatar profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBO1bSm0mCatDFJS3l0kyIo2MPIAZ-ZVhUlux3JuupkXz-5mpN9sw1JvVll7YHNw30aXsoXi80C22rqHbPXAU-KnHKtXE-RyPHQg46pJln_v6GsqMhYpHIMBI8_pdUhDR28MvTIvaMlQLvu9Xofu8g_FPeMO8SUSNf8UKQTvXMlP1xY_Hf5yPEXH63fHsww47pJNGjbFjXlfB5mlJ_L2Bl7CYlwU2S9TQTJes8L4_G2xNaHAjlLVz-nBm1t2o76XpPXp1gPfSsIqOk");'></div>
+</div>
+</header>
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col max-w-[1024px] flex-1 gap-6">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 px-4">
+<a class="text-text-secondary text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<span class="text-text-secondary text-sm font-medium">/</span>
+<a class="text-text-secondary text-sm font-medium hover:text-primary transition-colors" href="#">Portfolio</a>
+<span class="text-text-secondary text-sm font-medium">/</span>
+<span class="text-white text-sm font-medium">Edit Profile</span>
+</div>
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between gap-3 px-4">
+<div class="flex min-w-72 flex-col gap-2">
+<h1 class="text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Edit Profile</h1>
+<p class="text-text-secondary text-base font-normal">Manage your public persona, expertise, and contact details seen by customers.</p>
+</div>
+<div class="flex gap-3 items-end">
+<button class="flex items-center justify-center rounded-lg h-10 px-6 border border-border-dark bg-transparent text-white hover:bg-border-dark transition-colors font-bold text-sm">
+                            Cancel
+                        </button>
+<button class="flex items-center justify-center rounded-lg h-10 px-6 bg-primary text-black hover:bg-[#2dc46b] transition-colors font-bold text-sm shadow-[0_0_15px_rgba(54,226,123,0.3)]">
+                            Save Changes
+                        </button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="px-4">
+<div class="flex border-b border-border-dark gap-8 overflow-x-auto">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-white pb-3 pt-2 min-w-max px-2" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">General Info</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-text-secondary hover:text-white pb-3 pt-2 min-w-max px-2 transition-colors" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Expertise &amp; Skills</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-text-secondary hover:text-white pb-3 pt-2 min-w-max px-2 transition-colors" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Projects</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-text-secondary hover:text-white pb-3 pt-2 min-w-max px-2 transition-colors" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Social Links</p>
+</a>
+</div>
+</div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 p-4 pt-2">
+<!-- Left Column: Avatar & Quick Status -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="bg-surface-dark rounded-xl p-6 border border-border-dark flex flex-col items-center text-center gap-4">
+<div class="relative group cursor-pointer">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-32 border-4 border-border-dark group-hover:opacity-75 transition-opacity" data-alt="Current profile picture of Alex Watts" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC6Zlu2-4pLAUk_AjGaIqvcrn5kp2F0CNlwZ639jwYUQk1HJpyjM-XMkHKnsi5TmbwYbTiIxCw-_0eCY_qpMjJdOWGeES1HCzMB_a4LmrAr7lZFcyCOCLrAosuznXarnRvoU-zGeDNvSMDwl1ybqsNUoKkKwbJdUnuWo5Ydxs5QaAYJLwYriJ7RPt3ZIUvm3ud65Quar0UdSHJByPmgBUlfC0HPdimTQF8-jsBxMAt96HdcFYbzVDX7azHDpu4Y9Be7yp5wz_vVq5Q");'></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-3xl drop-shadow-lg">photo_camera</span>
+</div>
+<div class="absolute bottom-1 right-1 bg-primary size-6 rounded-full border-4 border-surface-dark"></div>
+</div>
+<div>
+<h3 class="text-white text-xl font-bold">Alex Watts</h3>
+<p class="text-text-secondary text-sm">Master Electrician</p>
+</div>
+<button class="w-full flex items-center justify-center rounded-lg h-10 bg-border-dark hover:bg-[#366348] text-white text-sm font-bold transition-colors gap-2">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+                                Change Photo
+                            </button>
+<p class="text-xs text-text-secondary">JPG, GIF or PNG. Max size 2MB.</p>
+</div>
+<div class="bg-surface-dark rounded-xl p-6 border border-border-dark flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="text-white font-bold text-sm">Profile Visibility</h3>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer checked:right-0 right-5" id="toggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer" for="toggle"></label>
+</div>
+</div>
+<p class="text-xs text-text-secondary">Your profile is currently visible to all visitors in the directory.</p>
+</div>
+</div>
+<!-- Right Column: Form Fields -->
+<div class="lg:col-span-8 flex flex-col gap-8">
+<!-- Personal Details Section -->
+<div class="flex flex-col gap-5">
+<h3 class="text-white text-lg font-bold border-b border-border-dark pb-2">Personal Details</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">First Name</label>
+<input class="w-full bg-surface-dark border border-border-dark rounded-lg px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="e.g. Alex" type="text" value="Alex"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">Last Name</label>
+<input class="w-full bg-surface-dark border border-border-dark rounded-lg px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="e.g. Watts" type="text" value="Watts"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">Job Title</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-secondary text-[20px]">badge</span>
+<input class="w-full bg-surface-dark border border-border-dark rounded-lg pl-10 pr-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="e.g. Senior Technician" type="text" value="Master Electrician"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">Experience (Years)</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-secondary text-[20px]">history</span>
+<input class="w-full bg-surface-dark border border-border-dark rounded-lg pl-10 pr-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="e.g. 5" type="number" value="12"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Contact Info Section -->
+<div class="flex flex-col gap-5">
+<h3 class="text-white text-lg font-bold border-b border-border-dark pb-2">Contact Information</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-secondary text-[20px]">mail</span>
+<input class="w-full bg-surface-dark border border-border-dark rounded-lg pl-10 pr-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" type="email" value="alex.watts@voltmarket.com"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">Phone Number</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-secondary text-[20px]">call</span>
+<input class="w-full bg-surface-dark border border-border-dark rounded-lg pl-10 pr-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" type="tel" value="+1 (555) 012-3456"/>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">Location</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-secondary text-[20px]">location_on</span>
+<input class="w-full bg-surface-dark border border-border-dark rounded-lg pl-10 pr-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="City, State" type="text" value="Seattle, WA"/>
+</div>
+</div>
+</div>
+<!-- Bio Section -->
+<div class="flex flex-col gap-5">
+<h3 class="text-white text-lg font-bold border-b border-border-dark pb-2">About The Expert</h3>
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">Bio</label>
+<div class="bg-surface-dark border border-border-dark rounded-lg overflow-hidden focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all">
+<!-- Simple Toolbar -->
+<div class="flex items-center gap-1 p-2 border-b border-border-dark bg-[#1e3326]">
+<button class="p-1.5 rounded hover:bg-border-dark text-text-secondary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">format_bold</span>
+</button>
+<button class="p-1.5 rounded hover:bg-border-dark text-text-secondary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">format_italic</span>
+</button>
+<button class="p-1.5 rounded hover:bg-border-dark text-text-secondary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+</button>
+<div class="w-px h-4 bg-border-dark mx-1"></div>
+<button class="p-1.5 rounded hover:bg-border-dark text-text-secondary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">link</span>
+</button>
+</div>
+<textarea class="w-full bg-surface-dark border-none p-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-0 resize-y" placeholder="Tell customers about your background and expertise..." rows="5">Specializing in industrial electrical systems for over a decade. I bring precision and safety to every high-voltage project. Certified in smart home integrations and renewable energy setups.</textarea>
+</div>
+<p class="text-xs text-text-secondary text-right">240/500 characters</p>
+</div>
+</div>
+<!-- Skills Section -->
+<div class="flex flex-col gap-5">
+<h3 class="text-white text-lg font-bold border-b border-border-dark pb-2">Top Skills</h3>
+<div class="flex flex-col gap-3">
+<label class="text-white text-sm font-medium">Add Skills</label>
+<div class="flex gap-2">
+<input class="flex-1 bg-surface-dark border border-border-dark rounded-lg px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="e.g. Solar Installation" type="text"/>
+<button class="bg-border-dark hover:bg-primary hover:text-black text-white px-4 rounded-lg font-bold text-sm transition-colors">Add</button>
+</div>
+<div class="flex flex-wrap gap-2 mt-2">
+<div class="flex items-center gap-2 bg-primary/20 border border-primary/40 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
+                                        Industrial Wiring
+                                        <button class="hover:text-white transition-colors flex items-center"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+<div class="flex items-center gap-2 bg-primary/20 border border-primary/40 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
+                                        Circuit Breaker Repair
+                                        <button class="hover:text-white transition-colors flex items-center"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+<div class="flex items-center gap-2 bg-primary/20 border border-primary/40 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
+                                        Smart Home Systems
+                                        <button class="hover:text-white transition-colors flex items-center"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

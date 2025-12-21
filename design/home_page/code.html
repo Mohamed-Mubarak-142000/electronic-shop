@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroShop - Modern Electrical Supplies</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1c3326",
+                        "surface-highlight": "#254632",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem", 
+                        "lg": "2rem", 
+                        "xl": "3rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for horizontal sections if needed */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary selection:text-background-dark">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Navigation -->
+<div class="sticky top-0 z-50 bg-background-dark/95 backdrop-blur-md border-b border-[#254632]">
+<div class="flex items-center justify-between px-4 py-3 lg:px-10 max-w-[1440px] mx-auto w-full">
+<!-- Logo -->
+<div class="flex items-center gap-8">
+<a class="flex items-center gap-3 text-white group" href="#">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<h2 class="text-white text-xl font-bold tracking-tight">ElectroShop</h2>
+</a>
+<!-- Search Bar (Desktop) -->
+<div class="hidden md:flex items-center">
+<label class="relative flex items-center min-w-[320px]">
+<span class="absolute left-4 text-[#95c6a9]">
+<span class="material-symbols-outlined">search</span>
+</span>
+<input class="w-full bg-[#254632] text-white placeholder:text-[#95c6a9] rounded-full py-2.5 pl-12 pr-4 focus:ring-2 focus:ring-primary focus:outline-none border-none text-sm transition-all hover:bg-[#2d543c]" placeholder="Search bulbs, switches, tools..." type="text"/>
+</label>
+</div>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-6">
+<!-- Links (Desktop) -->
+<div class="hidden lg:flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Categories</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Deals</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">B2B</a>
+</div>
+<!-- Action Buttons -->
+<div class="flex gap-3">
+<button class="flex items-center justify-center size-10 rounded-full bg-[#254632] hover:bg-primary hover:text-[#122118] text-white transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<button class="relative flex items-center justify-center size-10 rounded-full bg-[#254632] hover:bg-primary hover:text-[#122118] text-white transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-[#122118]">2</span>
+</button>
+<button class="hidden sm:flex h-10 px-5 items-center justify-center rounded-full bg-primary text-[#122118] text-sm font-bold hover:brightness-110 transition-all">
+                            Sign In
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<main class="flex-1 flex flex-col items-center w-full">
+<div class="w-full max-w-[1440px] px-4 md:px-10 pb-10">
+<!-- Hero Section -->
+<div class="py-6">
+<div class="relative overflow-hidden rounded-[2rem] min-h-[520px] flex items-center bg-cover bg-center group" data-alt="Modern smart home living room with colorful ambient lighting" style='background-image: linear-gradient(to right, rgba(17, 33, 23, 0.9) 0%, rgba(17, 33, 23, 0.4) 50%, rgba(17, 33, 23, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDADEqPsOmKi_XwT6AvVte0yDQygWKaXYZ2lasqr0jLA8v6hyUh66MVDYjpNFU2O-7zz3D72k5QkRVp3KOi-6o1nxnw_63XoyWOIxgMPa1GdeCpvrrQzN7J5iGAyJProQ_TjdnkXTwzicepoLZ2xTTorXP5pj0ehkLNZeXjB9HXxcVg1WHQdS6TNptMGr6odEC-0zSdIqIksRC6UuEzr0jlBxHubRXGtva1bUJHDOmUihlEXDu6s5dQPFSYlNCgAZK6wZq4Tfchwog");'>
+<div class="absolute inset-0 bg-gradient-to-t from-[#112117] via-transparent to-transparent opacity-60"></div>
+<div class="relative z-10 p-8 md:p-16 max-w-3xl flex flex-col gap-6 items-start">
+<span class="inline-flex items-center gap-2 rounded-full bg-primary/20 px-3 py-1 text-xs font-bold text-primary backdrop-blur-sm border border-primary/20">
+<span class="material-symbols-outlined text-sm">eco</span>
+                                ENERGY EFFICIENT
+                            </span>
+<h1 class="text-white text-5xl md:text-7xl font-black leading-[0.95] tracking-tight">
+                                Power Up <br/> <span class="text-primary">Your World.</span>
+</h1>
+<p class="text-gray-300 text-lg md:text-xl font-normal leading-relaxed max-w-lg">
+                                Discover the latest in smart home switches, professional-grade tools, and energy-saving lighting solutions.
+                            </p>
+<div class="flex flex-wrap gap-4 mt-4">
+<button class="h-12 px-8 rounded-full bg-primary text-[#122118] text-base font-bold tracking-wide hover:scale-105 transition-transform flex items-center gap-2">
+                                    Shop Homeowners
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="h-12 px-8 rounded-full bg-[#254632]/80 backdrop-blur-md text-white border border-[#3e6b50] text-base font-bold tracking-wide hover:bg-[#254632] hover:scale-105 transition-all">
+                                    For Professionals
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Brand Marquee -->
+<div class="w-full py-8 overflow-hidden">
+<p class="text-center text-sm font-medium text-gray-500 mb-6 uppercase tracking-widest">Trusted by top brands</p>
+<div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+<!-- Using simple text representations for logos to keep it generic but styled -->
+<div class="text-2xl font-black text-white tracking-tighter">PHILIPS</div>
+<div class="text-2xl font-bold text-white italic">Schneider</div>
+<div class="text-xl font-bold text-white border-2 border-white px-2 py-0.5">SIEMENS</div>
+<div class="text-2xl font-bold text-white tracking-widest">LUTRON</div>
+<div class="flex items-center gap-1 text-xl font-bold text-white"><span class="material-symbols-outlined">bolt</span>ABB</div>
+</div>
+</div>
+<!-- Categories -->
+<div class="py-10">
+<div class="flex items-end justify-between px-2 mb-8">
+<div>
+<h2 class="text-3xl font-bold text-white tracking-tight">Shop by Category</h2>
+<p class="text-gray-400 mt-1">Everything you need for your next project</p>
+</div>
+<a class="hidden md:flex items-center gap-1 text-primary text-sm font-bold hover:underline" href="#">
+                            View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+<!-- Category Item 1 -->
+<a class="group flex flex-col items-center gap-4" href="#">
+<div class="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Close up of a modern LED light bulb glowing warm light" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB2NRObgQzMNCoyO1sxx8e90pmltnkBjJV1qUga4yToomAUirfarj02OQVn6QilMbs-aYhaUFpIju8OwrvL_52W8zB9gh5pzK9PqawhqqLBIju2XiHipppuv4LZXSViZnCS-cxDioiCACHZFMw-B2Akz0E3oixMFEDKMxNwr0C5oC2Pk26BhyZ4Nz4IV3wZ8jfrAThSNPGGlDnQ6Ejxrk8YHXP7cl7ur2rBJEMo-gm6mJx3lMdYdr21OdEhoz1qeAw9NW_huLBbg8o");'></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<span class="text-white font-medium text-center group-hover:text-primary transition-colors">Lighting</span>
+</a>
+<!-- Category Item 2 -->
+<a class="group flex flex-col items-center gap-4" href="#">
+<div class="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Modern ceiling fan on a white ceiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuATl8jfbIc2D08_rRUGnTl60B2lBKLEbH0HxqtFbnJBx9b0bz0rR8LeesHOH3QIqBwm1AKeO8TsxQ_O2X4OeN9bPxOWwi-CTaNThNbh-USmR__MQ_JOLi9TMyyxLIErr05KQWL0Q3HMksJRheZg29i5qtk8c4pdcHbisovV4cCUQR5dY2Hse6rImlkWJV20g-W019X2A7VgoPPjHCR57jOTK2OuKrhTTIakWkQP5Gx2SW4cp9hZmAQXd1uR9_u2qRMBHlsB8GLp5RQ");'></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<span class="text-white font-medium text-center group-hover:text-primary transition-colors">Fans</span>
+</a>
+<!-- Category Item 3 -->
+<a class="group flex flex-col items-center gap-4" href="#">
+<div class="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Close up of white light switches on a wall" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCkz-taY3W0wQF_3FaQYmybdwHwR92HDYgdUZLguo8h-QFNnvzwkamJte5xndb6TELq4xNkQTF26hObWXfXqUmIjljgMZlEChTc8_7d6pBmsd2XVr4CX7yt5_4YFiD9TJTtLdxJeX_W8lH0ziKN6NT2iB-DNQF7CbtJ6hn3Qa_BR4JH4GyrX_Sa_5p03dDC2JMlmL9xRbijrj8eXTeozoaGJn3Cvr2kSaD49ycBCkosWcfUajhF0tu6vDWhW-x7a_eVPr1P47kmLac");'></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<span class="text-white font-medium text-center group-hover:text-primary transition-colors">Switches</span>
+</a>
+<!-- Category Item 4 -->
+<a class="group flex flex-col items-center gap-4" href="#">
+<div class="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Colorful electrical wires and cables bundled together" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDgUNNtFS0oDkj_k_32zPl65hOfSRnCuPu7Y7R9tHOdFD4Mf4BGDox4CSSWY0auIi8cSyFs1Ydl9jmGb2MecMmXMwJ1Lg4Q7RzXYwWlMGA2_5f-pMAWXXjKBFZ6vLRK4cytCJ4FQ2wMqxcR5GHzZaySqv2Wld8vm8SzelwGBe5-gNfigDENqskPw67veRZRXqLloSAoXBJWHKlolYUlQp12mVVPBy-JIhE8-fHIWPxq3OKhEVICxC7rVbe1x8w5rKRE__PTFQXvU-o");'></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<span class="text-white font-medium text-center group-hover:text-primary transition-colors">Wiring</span>
+</a>
+<!-- Category Item 5 -->
+<a class="group flex flex-col items-center gap-4" href="#">
+<div class="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Electrical circuit breaker panel board" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBSdINFmHKclKXocFuMUZ6_syNjmorufssVR2X09WNh0lQcDP91t8U_32g_hpo9ClyvylGX1vOawILRLXAqkawaWpyjMkg7wBhSZEvhH4HjgifOm863Nzlp90AjEDAEeWELshIEfKu0Qluos8_ATWv2dDaiUK-vqPm694GAqGpA7BaBz2Lk77aUH33Ypgebv0pyhqoevKUvJdZNxlaGLiZgkKbBU7pEtXxV3bR8zj-aNipz52xCGiaH7DGdc95eGWA4_poB0FmHwjA");'></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<span class="text-white font-medium text-center group-hover:text-primary transition-colors">Protection</span>
+</a>
+<!-- Category Item 6 -->
+<a class="group flex flex-col items-center gap-4" href="#">
+<div class="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Professional electrician tools including pliers and screwdrivers" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDe86GIwoOS_1kKJ9g-OoYEKQFbnhmA_SgiDYv5qil41ZEYWq6eyYCHj_Jg_ELW5CArk9tKgk3WC6X0Sda0-WcZSIQkjLXsxmXiyFyfNRGVv9PD12xA9xQ7q34uos23Dw7mRN4z0d2UHpB46dknzbQTy_Coq_QUdt82584CeMLzcXYZA5wrjQ--bkFZniVLcON0w48OrUiGJKZk-zReuWdTCuzP9LniO9xAiPxZf5V-DGcNqWKNtmcGn_ptFwZwUM-z-qq8ddxxryA");'></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<span class="text-white font-medium text-center group-hover:text-primary transition-colors">Tools</span>
+</a>
+</div>
+</div>
+<!-- Featured Products Grid -->
+<div class="py-12">
+<div class="flex items-center gap-4 mb-8">
+<h2 class="text-3xl font-bold text-white tracking-tight">Best Sellers</h2>
+<div class="h-px flex-1 bg-[#254632]"></div>
+<div class="flex gap-2">
+<button class="size-10 rounded-full border border-[#254632] flex items-center justify-center text-white hover:bg-[#254632] transition-colors"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="size-10 rounded-full border border-[#254632] flex items-center justify-center text-white hover:bg-[#254632] transition-colors"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Product Card 1 -->
+<div class="group relative bg-[#1c3326] rounded-[2rem] p-4 hover:bg-[#254632] transition-all duration-300 flex flex-col h-full">
+<div class="relative aspect-[4/3] rounded-[1.5rem] overflow-hidden bg-white mb-4">
+<img alt="Smart LED light bulb on white background" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEhqjaDROppyY2TUY_L7w7dMfsEqft2xsWky41Wt7lqS3yzspvyV-eRR7ysfVD33izLaz8RWfMymEtBS1fqFOCe1qp4BahIkO6UCwueilB8Za6f49TQq7n7RNWhEukNt8PkYZZZiK9UM-KDwc0mNabhoWEsPR9ild8kN14ExdO6iHRXJYZMJg71h5OV9mn5invwOzMUf0rxBxBOr4-hwqPe684T_oFbGxD_vnDPR6rFqXQfd-TiSrNGaYPeqH4alivH7xz60DbULs"/>
+<div class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">-20%</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex text-yellow-400 text-xs mb-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star_half</span>
+<span class="text-gray-400 ml-1">(42)</span>
+</div>
+<h3 class="text-white font-bold text-lg leading-tight mb-1 group-hover:text-primary transition-colors">Lumina Smart WiFi LED Bulb RGB</h3>
+<p class="text-gray-400 text-sm mb-4">Voice controlled, 16M colors</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-gray-500 text-sm line-through">$24.99</span>
+<span class="text-primary text-xl font-bold">$19.99</span>
+</div>
+<button class="size-10 rounded-full bg-primary text-[#122118] flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_15px_rgba(54,226,123,0.3)]">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group relative bg-[#1c3326] rounded-[2rem] p-4 hover:bg-[#254632] transition-all duration-300 flex flex-col h-full">
+<div class="relative aspect-[4/3] rounded-[1.5rem] overflow-hidden bg-white mb-4">
+<img alt="High speed power drill on white background" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPk49J0H__oSv1d3kwcxiJ18Q8fgxpCcvVb7-fVZc5osxIAlOn3a2hW606dw6Oq3pGUUCsSdpqDKoJg54s7Hj7DQ7JY9t8vRFmM1XavJOs1PHID0eLmexvPKSSBMp2YaTOUILQEV3U4TY_dRsQZYzQ-rkjpnHAmp257FxodlPBdzXOA1RHztnBxNInJeH5yDFvcRMGKyYIG8VpNDOIClXDLyK4S9RN_LDlMk5T75zVCyEBsKEKXiPmDoohdtbGWfvK3JMgI7e87u8"/>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex text-yellow-400 text-xs mb-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-gray-400 ml-1">(128)</span>
+</div>
+<h3 class="text-white font-bold text-lg leading-tight mb-1 group-hover:text-primary transition-colors">ProSeries 20V Cordless Drill</h3>
+<p class="text-gray-400 text-sm mb-4">Includes 2 batteries &amp; charger</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-primary text-xl font-bold">$129.00</span>
+</div>
+<button class="size-10 rounded-full bg-[#122118] border border-[#254632] text-white flex items-center justify-center hover:bg-primary hover:text-[#122118] hover:border-primary transition-all">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group relative bg-[#1c3326] rounded-[2rem] p-4 hover:bg-[#254632] transition-all duration-300 flex flex-col h-full">
+<div class="relative aspect-[4/3] rounded-[1.5rem] overflow-hidden bg-white mb-4">
+<img alt="Modern sleek light switch on wall" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVqEoCSCRpEcFCS1Po174Cj3S1BipRQpUvCnJ8N2FhlbDrsQbTht_uowCt1UBHt-bZ-drOIdOBdY8X-AIxOSK48IS9J9o0GSl797hgE0b1yNhCpLbUGyOPRkHHdzrY5paP9zj4YWH-hmBID8amN9JkwWtvcp32mtHrZyrxOrkVTe6y42lqo1M3arPWzxHRT7odD49k9mDeUXcDg6QDPfGrPRpgNbF48gGjY5QYutYRrVvlDibn6IxRnnE-Yy1A2cv8fZy0And5yvo"/>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex text-yellow-400 text-xs mb-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-gray-400 ml-1">(8)</span>
+</div>
+<h3 class="text-white font-bold text-lg leading-tight mb-1 group-hover:text-primary transition-colors">Matte Black Rocker Switch</h3>
+<p class="text-gray-400 text-sm mb-4">Single pole, modern finish</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-primary text-xl font-bold">$8.50</span>
+</div>
+<button class="size-10 rounded-full bg-[#122118] border border-[#254632] text-white flex items-center justify-center hover:bg-primary hover:text-[#122118] hover:border-primary transition-all">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group relative bg-[#1c3326] rounded-[2rem] p-4 hover:bg-[#254632] transition-all duration-300 flex flex-col h-full">
+<div class="relative aspect-[4/3] rounded-[1.5rem] overflow-hidden bg-white mb-4">
+<img alt="Large spool of yellow electrical wire" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDM4sPuhBY1KXO4_eJFYBN3Exy9FaAZyzEtL3HkwVeOnzX8biRhzxZ8yqwBj13fwyVMIwUObvouDlm1WwF73mnpr617p5PmSqnZm8Pf2ZoZOGXCO2iBk4iVlnCOlka9iY-he1m621DszTBTRRsbSaoI26S4pYpwaDLRPvLr3z0yKBxJ58QlIlLuKsWP16p8Zarf5qMfIOZI3knmvTeNAsULwe0dZAQ8vypz8Gr56e7TOiSn-iwCfqfNzXfkgbq7IScOFpAXlKubqc"/>
+<div class="absolute top-3 right-3 bg-primary text-[#122118] text-xs font-bold px-2 py-1 rounded-full">New</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex text-yellow-400 text-xs mb-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-gray-400 ml-1">(56)</span>
+</div>
+<h3 class="text-white font-bold text-lg leading-tight mb-1 group-hover:text-primary transition-colors">12/2 NM-B Wire, 250ft</h3>
+<p class="text-gray-400 text-sm mb-4">Copper building wire, indoor</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-primary text-xl font-bold">$145.00</span>
+</div>
+<button class="size-10 rounded-full bg-[#122118] border border-[#254632] text-white flex items-center justify-center hover:bg-primary hover:text-[#122118] hover:border-primary transition-all">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- CTA Section -->
+<div class="py-12">
+<div class="relative overflow-hidden rounded-[3rem] bg-[#254632] bg-opacity-40">
+<div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/10 to-transparent"></div>
+<div class="absolute bottom-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between p-10 md:p-20 gap-10">
+<div class="flex flex-col gap-6 max-w-2xl text-center md:text-left">
+<div class="inline-flex items-center gap-2 self-center md:self-start bg-yellow-400/20 text-yellow-400 px-4 py-1.5 rounded-full text-sm font-bold border border-yellow-400/20">
+<span class="material-symbols-outlined text-sm">engineering</span>
+                                    B2B EXCLUSIVE
+                                </div>
+<h2 class="text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
+                                    Electrician Special:<br/>
+<span class="text-primary">Bulk Savings</span>
+</h2>
+<p class="text-gray-300 text-lg md:text-xl">
+                                    Register your business today and get <span class="text-white font-bold">10% off</span> bulk orders over $500. We offer net-30 terms for approved accounts.
+                                </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2">
+<button class="h-14 px-8 rounded-full bg-primary text-[#122118] text-lg font-bold hover:brightness-110 shadow-lg shadow-primary/25 transition-all">
+                                        Register Business Account
+                                    </button>
+<button class="h-14 px-8 rounded-full bg-transparent border-2 border-white/20 text-white text-lg font-bold hover:bg-white/10 transition-all">
+                                        View B2B Benefits
+                                    </button>
+</div>
+</div>
+<!-- Visual Element -->
+<div class="relative size-64 md:size-80 flex-shrink-0">
+<div class="absolute inset-0 bg-primary/20 rounded-full blur-3xl"></div>
+<img alt="Electrician hard hat and blueprints" class="relative z-10 w-full h-full object-cover rounded-full border-4 border-[#254632] shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-AG2JpXiB2fT-3UQMvwbIsx9b-DzSLP8aG97UO710bW-wLjvufVzVglC4C3PuMCj9cIdNI-1kP9INrZraiWBOiuME2_9LXdrAwvqA0BdLCwAolHdbg6BwM0QDl6x2cF08AnJQGhu4fgIKUJPVsb-JYi3_YP20SlZrJmXcNQKYbyoOCLoowZlO4MEA0BRFoXxdbWCHjOko3iQJFK5207UCuOuof0n3TfwBpq8y2XofH1_FEEIgg2A7OJy5h48-xWaW-UdTY10xWPI"/>
+<div class="absolute -bottom-4 -right-4 bg-[#122118] p-4 rounded-2xl border border-[#254632] shadow-xl z-20">
+<div class="flex items-center gap-3">
+<div class="bg-green-500/20 p-2 rounded-full text-green-500">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div>
+<div class="text-xs text-gray-400">Verified Partner</div>
+<div class="text-white font-bold">Priority Support</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Latest Arrivals Section (Simplified Grid) -->
+<div class="py-12">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-2xl font-bold text-white">New Arrivals</h2>
+<a class="text-primary font-bold text-sm hover:underline" href="#">See All</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+<!-- Tiny Cards -->
+<div class="bg-[#1c3326] p-4 rounded-2xl hover:bg-[#254632] transition-colors cursor-pointer group">
+<div class="aspect-square bg-white rounded-xl mb-3 overflow-hidden">
+<img alt="Digital multimeter tool" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3snYJFR1yAkK23XP8wgOQrl9Egqk83o5777kVcGbvqgTdWDiigb1BprXkLyKOHutKoXJggw_wv3dc_3TlXlFjg2lqfwampm-mCNOkx_cR9hbm_4nBA89CtsP8m6xp0NLHnsD5JsbhYZNZxkECgt4i1Z2lHVLVHRyY4EzGTzXPjt0kMBklyZfBnAHCx8cNx8wfrhA2O_3yY6acWr1NAajFGh8EylpSVlJctdRJJgPrnDGTApNWbp3y3q97RvWF4Hc0cYhP5m-0TIk"/>
+</div>
+<p class="text-white font-bold text-sm truncate">Digital Multimeter</p>
+<p class="text-primary font-bold text-sm">$45.00</p>
+</div>
+<div class="bg-[#1c3326] p-4 rounded-2xl hover:bg-[#254632] transition-colors cursor-pointer group">
+<div class="aspect-square bg-white rounded-xl mb-3 overflow-hidden">
+<img alt="White extension cord coiled" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0qBIMIpsBj5e4-SZ-sqM17KTgNDdtDbD6KUHoFFzglU3AwV1UgY9sfCqeEvywd4cgyOaW7dFAGC-wCg6RJUxEJozvbO_tpjPI2XU1aeYimuYJlVKAjqIAHUXPm5qiN0qilf3dYjaAqz1DRZIG_qmodtHSr_vAp3KuCnrIgEm7hrX92-7ecHOLTbmZRHTKSdRIyyaeNmJU7lEkxR7PD4CYmhvhnRpnHmTGGE-bJcCVjSo-EtMjo1m0wy5jVn5JjfgHqjE7L1RjUSw"/>
+</div>
+<p class="text-white font-bold text-sm truncate">Extension Cord 50ft</p>
+<p class="text-primary font-bold text-sm">$32.99</p>
+</div>
+<div class="bg-[#1c3326] p-4 rounded-2xl hover:bg-[#254632] transition-colors cursor-pointer group">
+<div class="aspect-square bg-white rounded-xl mb-3 overflow-hidden">
+<img alt="Solar panel close up texture" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSPU52XHgxIjg0bQu0-4QHqq68zqLQskVgwlWI2l3oaPcZBGV8yX7Oy_Q7ix4DmxOU3Bf-myGVZRMGhJOi3HqUuw5i21wUW36N5qsEN4Kwkxv-akHJnq1k71m7l0r2-iO9hsgTvzCqHfmgE3s5KtTpeIqXvpAY4JUEAv64e_B7yNUow3XURyxR4GhPUVkiMJKlOqmNUkeAKvNLmS31EBadA8CSr13GWlBL41AxWfwDPXhnK__TwPkEK-o6du88fYs3nm4cTZur-jw"/>
+</div>
+<p class="text-white font-bold text-sm truncate">Solar Charge Controller</p>
+<p class="text-primary font-bold text-sm">$89.50</p>
+</div>
+<div class="bg-[#1c3326] p-4 rounded-2xl hover:bg-[#254632] transition-colors cursor-pointer group">
+<div class="aspect-square bg-white rounded-xl mb-3 overflow-hidden">
+<img alt="Pendant light hanging" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_H67mgU8aOXuCYL7vMof5uAo_uAK1YhOc0RYPEunO_q418wBXwBUvcmxrEcHPO65fwK-nWkpr6EZd6VggKAfFj1TZnVSKhvvAEzoKG1Jy_KrOJUrgEGBamD_Pzw5nzJ2d9sVbzDM6-sWZlcoHlDr1F1uasMhGhcY3RgeFtzKi5bWmIjdqLOkR9JqlPT6T5RB0orcYFJex_Xgjp5QGII6-sHBBwqUAHZ51KYicw3mdShPMQr8jPUou7uD6-xaJ07XJA4IkOKU-Pc4"/>
+</div>
+<p class="text-white font-bold text-sm truncate">Industrial Pendant</p>
+<p class="text-primary font-bold text-sm">$55.00</p>
+</div>
+<div class="bg-[#1c3326] p-4 rounded-2xl hover:bg-[#254632] transition-colors cursor-pointer group md:hidden lg:block">
+<div class="aspect-square bg-white rounded-xl mb-3 overflow-hidden">
+<img alt="Smart home thermostat on wall" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALhnV-skOGzv9QbO8xmv5eYJ52zl8tcdtrr2TL7XPcEj7zrMnrTP2pz-SOkyzEr7yLp-4jXk8mAzdRfUVCDiQAOLvPzDUrBwhbvlCK0hXXbopuTKSMySeMDXU4fIdLiU6PY1k0qC4F1aC8CEgP_r8yV3tD3kHAg9SIr_Bs6i4dfA2A3k4H9zKRZqYnRzdlxP_Odx0AIBn26OE0390cYrLsonEw9LR-yFIEIB5dGUo69BjZ_ePY0jw1OE4JRqUWUm15mGeN-BE7Iwg"/>
+</div>
+<p class="text-white font-bold text-sm truncate">Smart Thermostat</p>
+<p class="text-primary font-bold text-sm">$199.00</p>
+</div>
+</div>
+</div>
+<!-- Store Locator Section -->
+<div class="py-12 border-t border-[#254632] mt-8">
+<div class="grid md:grid-cols-2 gap-8 items-center rounded-3xl bg-[#1c3326] overflow-hidden">
+<div class="p-8 md:p-12">
+<h2 class="text-3xl font-bold text-white mb-4">Visit Our Showroom</h2>
+<p class="text-gray-400 mb-8">Come see our lighting fixtures in person and speak with our certified electrical consultants.</p>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="size-12 rounded-full bg-[#254632] flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<h4 class="text-white font-bold text-lg">Main Headquarters</h4>
+<p class="text-gray-400">1234 Voltage Ave, Circuit City, CA 90210</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="size-12 rounded-full bg-[#254632] flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div>
+<h4 class="text-white font-bold text-lg">Opening Hours</h4>
+<p class="text-gray-400">Mon - Fri: 8am - 6pm<br/>Sat: 9am - 4pm</p>
+</div>
+</div>
+</div>
+<button class="mt-8 px-6 py-3 rounded-full border border-gray-600 text-white hover:bg-white hover:text-black transition-colors font-bold text-sm">
+                                Get Directions
+                            </button>
+</div>
+<div class="h-full min-h-[300px] w-full bg-slate-800 relative">
+<img alt="Map of city showing location" class="w-full h-full object-cover opacity-60" data-location="Los Angeles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkOKAVEkh3ODely2HGRAp910-FLwvTeC_xIt75RIXIT3-G0N5R6YrN_Dvc2bLU2_tkve7n0m9JnyLohyrQQcEfbVakcDyZbvM2kp5B3MTXdAlRm9XAJfZTZW1Q3_osNuJzte77sm-T_m7E1ql12JZrB2cbYpneMjHLqDTXmBiHkfUc8BbMnOjvcbLVccX-h1UDChsUluK-hjfdFGARp2wcF7_ttV6XGESnkG38_qrxEdhBiymxaTVexw2bBtu2M4nR9VyMjOdTzjY"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-primary text-[#122118] px-4 py-2 rounded-lg font-bold shadow-xl transform -translate-y-4">
+                                    ElectroShop HQ
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-primary"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0b1610] border-t border-[#254632] pt-16 pb-8">
+<div class="max-w-[1440px] mx-auto px-4 md:px-10">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+<!-- Brand Column -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-primary text-3xl">bolt</span>
+<span class="text-xl font-bold">ElectroShop</span>
+</div>
+<p class="text-gray-400 text-sm leading-relaxed">
+                            Your trusted partner for electrical supplies. From home renovations to industrial projects, we power your world with quality and efficiency.
+                        </p>
+<div class="flex gap-4">
+<a class="size-10 rounded-full bg-[#1c3326] flex items-center justify-center text-gray-400 hover:text-primary hover:bg-[#254632] transition-all" href="#">
+<!-- Facebook icon rep -->
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</a>
+<a class="size-10 rounded-full bg-[#1c3326] flex items-center justify-center text-gray-400 hover:text-primary hover:bg-[#254632] transition-all" href="#">
+<!-- Twitter icon rep -->
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path></svg>
+</a>
+<a class="size-10 rounded-full bg-[#1c3326] flex items-center justify-center text-gray-400 hover:text-primary hover:bg-[#254632] transition-all" href="#">
+<!-- Instagram icon rep -->
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069-3.204 0-3.584-.012-4.849-.069-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"></path></svg>
+</a>
+</div>
+</div>
+<!-- Links Column 1 -->
+<div>
+<h3 class="text-white font-bold text-lg mb-6">Shop</h3>
+<ul class="flex flex-col gap-4 text-gray-400 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">All Products</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Lighting</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Fans &amp; Cooling</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Tools &amp; Hardware</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Clearance</a></li>
+</ul>
+</div>
+<!-- Links Column 2 -->
+<div>
+<h3 class="text-white font-bold text-lg mb-6">Support</h3>
+<ul class="flex flex-col gap-4 text-gray-400 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Track Order</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Returns &amp; Warranty</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Installation Guide</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">FAQ</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+</ul>
+</div>
+<!-- Newsletter Column -->
+<div>
+<h3 class="text-white font-bold text-lg mb-6">Stay Powered Up</h3>
+<p class="text-gray-400 text-sm mb-4">Subscribe for exclusive deals and new product alerts.</p>
+<form class="flex flex-col gap-3">
+<input class="w-full bg-[#1c3326] border border-[#254632] rounded-full px-5 py-3 text-white focus:outline-none focus:border-primary transition-colors text-sm" placeholder="Enter your email" type="email"/>
+<button class="w-full bg-primary text-[#122118] font-bold rounded-full px-5 py-3 hover:brightness-110 transition-all text-sm" type="button">Subscribe</button>
+</form>
+</div>
+</div>
+<div class="border-t border-[#254632] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-gray-500 text-xs">© 2023 ElectroShop Inc. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-gray-500 hover:text-white text-xs" href="#">Privacy Policy</a>
+<a class="text-gray-500 hover:text-white text-xs" href="#">Terms of Service</a>
+<a class="text-gray-500 hover:text-white text-xs" href="#">Sitemap</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

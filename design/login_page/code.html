@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroShop - Login</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1b3224",
+                        "border-dark": "#366348",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white transition-colors duration-200">
+<!-- Navbar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-[#254632] px-6 lg:px-10 py-4 absolute top-0 w-full z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path d="M24 18L18 26H26L20 34" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+</svg>
+</div>
+<h2 class="text-gray-900 dark:text-white text-xl font-bold tracking-tight">ElectroShop</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-6 text-sm font-medium text-gray-600 dark:text-gray-300">
+<a class="hover:text-primary transition-colors" href="#">Products</a>
+<a class="hover:text-primary transition-colors" href="#">Trade Account</a>
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+</div>
+<button class="flex cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-background-dark text-sm font-bold leading-normal hover:bg-primary/90 transition-all shadow-[0_0_15px_rgba(54,226,123,0.3)]">
+<span class="truncate">Sign Up</span>
+</button>
+</div>
+<!-- Mobile Menu Icon -->
+<button class="md:hidden text-gray-900 dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="relative flex min-h-screen w-full flex-col lg:flex-row pt-[72px]">
+<!-- Left Column: Visual -->
+<div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-surface-dark items-center justify-center">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Electrical components background" class="w-full h-full object-cover opacity-40 mix-blend-overlay" data-alt="Modern electrical circuit board close up with blue and green lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxdlJ5rZ3NmZHDntb8x9I3MDDL9poTTM3QL5U7lUUPHb-Cpbeg3dwehO4Ss4d3nzKXuTR37NZYKoA0ZNSQNrNH7O-b5eyagGba9CwpWgZG499xcbn-ywdR0ZUkGDf8F13zqvQVA3SunWUZW3C4w-OfpI0rSaWa0vCcc3L3Q0s-6xksaacgzc-5CoGBLuyvLVhdCYOHA5s-7yGcGiCqzJY4b7XWVo2Hmm9wkCDzvVd1HgWL9BZ6hs_nZWgrEc3pICaFYa3B7-WYnVo"/>
+</div>
+<!-- Abstract Glow effects -->
+<div class="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-[100px] z-0"></div>
+<!-- Content Overlay -->
+<div class="relative z-10 max-w-lg px-12 text-center">
+<div class="inline-flex items-center justify-center p-4 bg-primary/10 rounded-full mb-8 backdrop-blur-sm border border-primary/20">
+<span class="material-symbols-outlined text-primary text-4xl">bolt</span>
+</div>
+<h1 class="text-4xl font-bold text-white mb-6 leading-tight">Powering Your Next Big Project</h1>
+<p class="text-gray-300 text-lg leading-relaxed">Join thousands of electricians and contractors getting exclusive trade pricing, bulk discounts, and next-day delivery on premium electrical supplies.</p>
+<div class="mt-12 flex gap-4 justify-center">
+<div class="flex -space-x-3">
+<img alt="User 1" class="w-10 h-10 rounded-full border-2 border-surface-dark" data-alt="Portrait of a smiling young woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_a2eSJu9Phkg0DpMD1KrRqUhEMsX4AdYcvcrAGKqp8CF6gtW3-vIlkGkupBGCSTdZOmeTJF_8qsylhecfQOJKzjKlqsxlLeMfPnLnVmMYjqHdhNvLuLkszJh7XfOAkd4kF8U_hBK6WVRqB-iA7GfjAJdZKTlDLILQKxggsruUgdIoI8HLA9EdySq6viVpZNxoBr0kHpAiFPdqyGGw7opAXog0cjuq39sxRZXxlewfJ4nNOYJwxww62tjAE_3jL9dR4SZt4O-EH9E"/>
+<img alt="User 2" class="w-10 h-10 rounded-full border-2 border-surface-dark" data-alt="Portrait of a man with a beard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAybcPAt-MzG1pgZII4uxuKnM6u9kkMHO7h3TVzAByqVaJnREMF93kIRizopJfbXlZHqwhVJCY-D_qwFXKM4OMBlAalpSlRKxzFzhQ8vlRQOt7_RavDVsaeT6GBnVxCAExKOXTQJNgqF9bsVyuAe2-oHMXmzLEoeGyNWOrSKcdw_8l_amHkgG_HokkE07Ey43fZbCuDyVziY2OmKxhoZbdC-inm8VaYEfYqsBpH1zdP3sadg6HIVyXNrwsmqAn8dAB0Ilo02iJsXv4"/>
+<img alt="User 3" class="w-10 h-10 rounded-full border-2 border-surface-dark" data-alt="Portrait of a smiling man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASHu64l2tD0lRbligPIQT1q6jawwMtQv9aINFBF3HZPRS0P_DCbvy4EzoJFUaHm8zocT5l5uhs0JhjnVr5ueijWnWNk1ev1yeHX99cM59efcrSOHTbAxN7K9UMuAKK36T8Ov7cg1mLM2jtXIZezpEmZ76WV9Bl2BeB27LFqvRWZBiHp0PKXF5ZU8eZTCOfHeOHnJxjc7Akg7PtF4baG6tau2tAAkmIJjpb7cGyMgKelJW_fE6CrYtrYPKkzRTUDFUhahaipCyStIg"/>
+<div class="w-10 h-10 rounded-full border-2 border-surface-dark bg-gray-700 flex items-center justify-center text-xs text-white font-medium">+2k</div>
+</div>
+<div class="flex flex-col items-start justify-center">
+<div class="flex text-yellow-400 text-xs">
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+</div>
+<span class="text-gray-400 text-xs font-medium pl-1">Trusted by pros</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Login Form -->
+<div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-background-light dark:bg-background-dark">
+<div class="w-full max-w-[480px] flex flex-col gap-8">
+<!-- Header Text -->
+<div class="text-center lg:text-left">
+<h1 class="text-gray-900 dark:text-white tracking-tight text-3xl md:text-4xl font-bold leading-tight mb-2">Welcome Back</h1>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Log in to access your trade dashboard.</p>
+</div>
+<!-- Form -->
+<form class="flex flex-col gap-5">
+<!-- Email Field -->
+<label class="flex flex-col gap-2">
+<span class="text-gray-700 dark:text-gray-300 text-sm font-semibold ml-1">Email Address</span>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">mail</span>
+</div>
+<input class="form-input w-full rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#95c6a9] h-14 pl-12 pr-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 shadow-sm" placeholder="name@company.com" required="" type="email"/>
+</div>
+</label>
+<!-- Password Field -->
+<label class="flex flex-col gap-2">
+<div class="flex justify-between items-center ml-1">
+<span class="text-gray-700 dark:text-gray-300 text-sm font-semibold">Password</span>
+<a class="text-xs font-medium text-primary hover:text-primary/80 transition-colors" href="#">Forgot Password?</a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">lock</span>
+</div>
+<input class="form-input w-full rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#95c6a9] h-14 pl-12 pr-12 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 shadow-sm" placeholder="Enter your password" required="" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors cursor-pointer" type="button">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</button>
+</div>
+</label>
+<!-- Remember Me -->
+<div class="flex items-center gap-3 ml-1 mt-1">
+<div class="relative flex items-center">
+<input class="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark checked:bg-primary checked:border-primary focus:ring-primary/20 transition-all" id="remember" type="checkbox"/>
+<span class="absolute text-background-dark opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+<span class="material-symbols-outlined" style="font-size: 16px; font-weight: bold;">check</span>
+</span>
+</div>
+<label class="text-sm text-gray-600 dark:text-gray-400 cursor-pointer select-none" for="remember">Remember this device</label>
+</div>
+<!-- Sign In Button -->
+<button class="mt-4 flex w-full cursor-pointer items-center justify-center rounded-full bg-primary text-background-dark h-14 text-base font-bold tracking-wide hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(54,226,123,0.4)] active:scale-[0.98] transition-all duration-200" type="submit">
+                        Sign In
+                    </button>
+<!-- Divider -->
+<div class="relative flex items-center py-4">
+<div class="flex-grow border-t border-gray-200 dark:border-border-dark"></div>
+<span class="flex-shrink-0 mx-4 text-gray-400 text-sm">or continue with</span>
+<div class="flex-grow border-t border-gray-200 dark:border-border-dark"></div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 rounded-full border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark h-12 text-sm font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-[#23402f] transition-colors" type="button">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+                            Google
+                        </button>
+<button class="flex items-center justify-center gap-2 rounded-full border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark h-12 text-sm font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-[#23402f] transition-colors" type="button">
+<svg class="w-5 h-5 dark:fill-white fill-gray-900" viewbox="0 0 24 24">
+<path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.15-.04-.21.02-1.35.584-2.75 1.38-3.68.777-.92 2.056-1.55 3.01-1.55 0 .05.11.08.114.82zM12.42 5.86c.325 0 .913.32 1.718.32 1.323 0 2.482-.9 3.23-1.07.72-.17 2.686.06 3.98 2.05-.13.08-2.28 1.41-2.28 4.3 0 3.12 2.47 4.54 2.57 4.61-.17.44-1.02 2.45-2.06 4.22-.64 1.08-1.57 2.13-2.73 2.13-1.09 0-1.48-.75-3.41-.75-1.92 0-2.52.75-3.56.75-1.22 0-2.3-1.42-3.23-2.92-1.9-3.05-3.1-8.15-1.11-11.66 1-1.76 2.94-2.65 4.75-2.65.66 0 1.25.26 1.83.61z"></path>
+</svg>
+                            Apple
+                        </button>
+</div>
+<!-- Sign Up Link -->
+<div class="flex justify-center mt-6">
+<p class="text-gray-500 dark:text-gray-400 text-sm">Don't have an account? <a class="text-primary font-semibold hover:underline" href="#">Register now</a></p>
+</div>
+</form>
+</div>
+</div>
+</main>
+</body></html>

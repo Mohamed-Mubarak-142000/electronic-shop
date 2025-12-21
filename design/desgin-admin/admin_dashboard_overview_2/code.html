@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroAdmin - Portfolio</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "card-dark": "#1c3024",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112117; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a4032; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #36e27b; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white overflow-hidden">
+<div class="flex h-screen w-full flex-row overflow-hidden">
+<aside class="hidden md:flex flex-col w-72 h-full border-r border-white/10 bg-background-dark flex-shrink-0">
+<div class="flex flex-col h-full p-4">
+<div class="flex items-center gap-3 px-2 mb-8 mt-2">
+<div class="flex items-center justify-center size-10 rounded-xl bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-none tracking-tight">ElectroAdmin</h1>
+<p class="text-gray-400 text-xs font-medium mt-1">Powering Commerce</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">dashboard</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 border-l-4 border-primary group transition-colors" href="#">
+<span class="material-symbols-outlined text-primary group-hover:text-primary">person_book</span>
+<span class="text-white font-medium text-sm">Portfolio</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">inventory_2</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Products</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">shopping_cart</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">group</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">bar_chart</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Analytics</span>
+</a>
+<div class="my-4 border-t border-white/10"></div>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">settings</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex items-center gap-3 p-3 rounded-xl bg-card-dark border border-white/5">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border border-white/10" data-alt="Admin user avatar showing a smiling person" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBq_-oxROBy13n0pLHoWq1xwK-7c2YkJRgYuwAC9Z300gidVXH7ZCHKGGobSqiK_Otd3NgWblaLK63ntecUbXgQQYYz7rrDWwXSRl4dU6cpTZu7SLpJ9KcTNp4vXtusImJDT1MWTDHg8Ba6ddREbqfyVpRuAZJ4XPnkQGC3GiCpcNK_UkMsVxxYWdIK7SR61rOHIbiI6n5mIyBIaSMrC_qd283j2aXwQo40pJmm-6qqOANLyaeo17k8NfF20QbvOpqmLkaLx2j59lI");'></div>
+<div class="flex flex-col flex-1 min-w-0">
+<p class="text-white text-sm font-semibold truncate">Alex Morgan</p>
+<p class="text-primary text-xs truncate">Super Admin</p>
+</div>
+<button class="text-gray-400 hover:text-white">
+<span class="material-symbols-outlined text-xl">logout</span>
+</button>
+</div>
+</div>
+</aside>
+<div class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark relative">
+<header class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-background-dark/95 backdrop-blur z-10 shrink-0">
+<button class="md:hidden text-white mr-4">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex-1 max-w-xl">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 rounded-lg border-none bg-card-dark text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm transition-all" placeholder="Search orders, products, or customers..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-6">
+<button class="relative p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full border-2 border-background-dark"></span>
+</button>
+<button class="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto p-6 md:p-8 scroll-smooth">
+<div class="max-w-7xl mx-auto flex flex-col gap-8">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-3xl font-bold text-white tracking-tight">My Portfolio</h2>
+<p class="text-gray-400 mt-1">Showcase of your professional projects and certifications.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-card-dark border border-white/10 hover:bg-white/5 text-white rounded-lg text-sm font-medium transition-colors">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                                Public View
+                            </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-green-400 text-background-dark rounded-lg text-sm font-bold transition-colors shadow-[0_0_15px_rgba(54,226,123,0.3)]">
+<span class="material-symbols-outlined text-lg">add</span>
+                                Add Project
+                            </button>
+</div>
+</div>
+<div class="bg-card-dark rounded-xl border border-white/5 overflow-hidden relative shadow-lg">
+<div class="h-32 bg-gradient-to-r from-green-900 via-emerald-900 to-background-dark"></div>
+<div class="px-8 pb-8 flex flex-col md:flex-row gap-6 -mt-12 items-start relative z-10">
+<div class="size-32 rounded-full border-4 border-card-dark bg-background-dark bg-center bg-cover shadow-2xl" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBq_-oxROBy13n0pLHoWq1xwK-7c2YkJRgYuwAC9Z300gidVXH7ZCHKGGobSqiK_Otd3NgWblaLK63ntecUbXgQQYYz7rrDWwXSRl4dU6cpTZu7SLpJ9KcTNp4vXtusImJDT1MWTDHg8Ba6ddREbqfyVpRuAZJ4XPnkQGC3GiCpcNK_UkMsVxxYWdIK7SR61rOHIbiI6n5mIyBIaSMrC_qd283j2aXwQo40pJmm-6qqOANLyaeo17k8NfF20QbvOpqmLkaLx2j59lI");'></div>
+<div class="flex-1 pt-14 md:pt-12">
+<div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-1">
+<h2 class="text-3xl font-bold text-white">Alex Morgan</h2>
+<span class="bg-primary/20 text-primary px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider self-start md:self-auto">Available for Hire</span>
+</div>
+<p class="text-gray-300 font-medium text-lg">Master Electrician &amp; Store Owner</p>
+<div class="flex flex-wrap gap-3 mt-4">
+<span class="px-3 py-1.5 rounded-lg bg-background-dark/50 text-xs text-gray-300 border border-white/10 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span> Seattle, WA
+                                    </span>
+<span class="px-3 py-1.5 rounded-lg bg-background-dark/50 text-xs text-gray-300 border border-white/10 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-sm">business_center</span> 15+ Years Exp.
+                                    </span>
+<span class="px-3 py-1.5 rounded-lg bg-background-dark/50 text-xs text-gray-300 border border-white/10 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-sm">verified</span> Licensed Contractor
+                                    </span>
+</div>
+</div>
+<div class="mt-4 md:mt-12 flex gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none justify-center bg-white/10 hover:bg-white/20 text-white border border-white/10 font-medium py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">edit</span> Edit Profile
+                                </button>
+<button class="flex-1 md:flex-none justify-center bg-white/10 hover:bg-white/20 text-white border border-white/10 font-medium py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">share</span> Share
+                                </button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 bg-card-dark rounded-xl border border-white/5 p-8 flex flex-col">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">person</span>
+<h3 class="text-xl font-bold text-white">About Me</h3>
+</div>
+<p class="text-gray-400 leading-relaxed mb-4">
+                                I have dedicated over 15 years to the electrical industry, specializing in both residential and commercial high-voltage systems. My journey started as an apprentice and led to founding ElectroAdmin, where we provide top-tier electrical components to professionals.
+                            </p>
+<p class="text-gray-400 leading-relaxed">
+                                Passionate about safety, efficiency, and smart home automation, I personally vet every product in our catalog. My portfolio showcases some of the complex installations and system designs I've managed over the years, ensuring reliable power solutions for every client.
+                            </p>
+</div>
+<div class="bg-card-dark rounded-xl border border-white/5 p-8 flex flex-col gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">award_star</span>
+<h3 class="text-xl font-bold text-white">Core Competencies</h3>
+</div>
+<div class="space-y-4">
+<div class="group flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors cursor-default">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-blue-500/10 text-blue-400 rounded-lg group-hover:bg-blue-500/20 transition-colors">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<p class="text-white font-medium text-sm">High Voltage Systems</p>
+<p class="text-gray-500 text-xs">Expert Level</p>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors cursor-default">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-yellow-500/10 text-yellow-400 rounded-lg group-hover:bg-yellow-500/20 transition-colors">
+<span class="material-symbols-outlined">home_iot_device</span>
+</div>
+<div>
+<p class="text-white font-medium text-sm">Smart Automation</p>
+<p class="text-gray-500 text-xs">Advanced</p>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors cursor-default">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-green-500/10 text-green-400 rounded-lg group-hover:bg-green-500/20 transition-colors">
+<span class="material-symbols-outlined">eco</span>
+</div>
+<div>
+<p class="text-white font-medium text-sm">Sustainable Energy</p>
+<p class="text-gray-500 text-xs">Certified</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">folder_open</span>
+<h3 class="text-2xl font-bold text-white">Featured Projects</h3>
+</div>
+<a class="text-primary text-sm font-semibold hover:text-green-300 transition-colors flex items-center gap-1" href="#">
+                                View All Projects <span class="material-symbols-outlined text-base">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="bg-card-dark rounded-xl border border-white/5 overflow-hidden group hover:border-primary/50 transition-all hover:shadow-[0_0_20px_rgba(0,0,0,0.3)]">
+<div class="h-48 bg-cover bg-center relative group-hover:scale-105 transition-transform duration-500" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCKuOX1WuXGuZXqobm1-YAhauhd-JqZzO-cHcmHF3EwkUD6rZBnNLdA5qLe0plnyKPTNSxLR1ImDwMYb7R_nYFNjWWO_1FOsfCyX9H8oYZE2tyrG9khej5RvhRrzQe-a4rz1wHW_TJ56BaOkH___3K0CRD-sMsTZ6WXBSTQ4JtJPPYaNuiT3i2MkSWEsjQ_C5bqkDKLgwv9xxIGzybgUr2UX1lgUjs7Gi2pM9tq-_9_Sc2JayQOjax10VHWE0_VCY_tkU9TPCMSi6s");'>
+<div class="absolute inset-0 bg-gradient-to-t from-card-dark to-transparent opacity-80"></div>
+<div class="absolute top-3 left-3 bg-white/10 backdrop-blur px-2 py-1 rounded text-xs font-bold text-white border border-white/10 shadow-sm">Smart Home</div>
+</div>
+<div class="p-6 relative -mt-12">
+<h4 class="text-white font-bold text-lg mb-2 group-hover:text-primary transition-colors">Luxury Villa Automation</h4>
+<p class="text-gray-400 text-sm mb-4 line-clamp-2 h-10">Complete overhaul of electrical systems including voice-controlled lighting and HVAC integration.</p>
+<button class="w-full py-2 rounded-lg border border-white/10 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors font-medium">View Case Study</button>
+</div>
+</div>
+<div class="bg-card-dark rounded-xl border border-white/5 overflow-hidden group hover:border-primary/50 transition-all hover:shadow-[0_0_20px_rgba(0,0,0,0.3)]">
+<div class="h-48 bg-cover bg-center relative group-hover:scale-105 transition-transform duration-500" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAdel2_RIineyTHZmt9uMCxdB4xMvSuSClQz46IAa2nwkBFP7nJlfKU7TH1wU70awpr1s43A4lAkYTWrMdU320KnW8pOg89XAiE3UYRvnO4H6MhIdXa2HzagvSLlz7EcoNytqqw-27xtGbIUjb_ZJEpMH3h6Ee5H1h7jD5cXADLscm3jbbm7BzErhDNMcz3i1ZeEiba-hOm_-94Y59M71KfuYc4io0U7ViZT8BfLH2kJS6ozsIJSyE72rDoefDYAitP4sFOyqz_5hI");'>
+<div class="absolute inset-0 bg-gradient-to-t from-card-dark to-transparent opacity-80"></div>
+<div class="absolute top-3 left-3 bg-white/10 backdrop-blur px-2 py-1 rounded text-xs font-bold text-white border border-white/10 shadow-sm">Industrial</div>
+</div>
+<div class="p-6 relative -mt-12">
+<h4 class="text-white font-bold text-lg mb-2 group-hover:text-primary transition-colors">Factory Panel Upgrade</h4>
+<p class="text-gray-400 text-sm mb-4 line-clamp-2 h-10">Upgraded main distribution panels for a 50,000 sq ft manufacturing facility to handle new machinery.</p>
+<button class="w-full py-2 rounded-lg border border-white/10 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors font-medium">View Case Study</button>
+</div>
+</div>
+<div class="bg-card-dark rounded-xl border border-white/5 overflow-hidden group hover:border-primary/50 transition-all hover:shadow-[0_0_20px_rgba(0,0,0,0.3)]">
+<div class="h-48 bg-cover bg-center relative group-hover:scale-105 transition-transform duration-500" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCBkEj6zc-yln8F7zFeMU5YVACnI23Ug4P7THC7_oRc_JVf5_XRBtYdXXBfKl5ABGpYgmGYVXLlRP07KqULendy6eFaunG1mKBrZb9ECiJK115l-3H9rfaxbEb-mfTODShLj7BFrij2Egc00JoE8HRUl8J5bHNMvuERcaGPU4c6MLhWtVBuCjDRC0A62xmM7qQC-NbThHaEDANDofttut5DrZ0dWGeFvUsHWgIhYRZ17q9BEfD43kxO5OSXuQmHaOfCi2b9td_brrQ");'>
+<div class="absolute inset-0 bg-gradient-to-t from-card-dark to-transparent opacity-80"></div>
+<div class="absolute top-3 left-3 bg-white/10 backdrop-blur px-2 py-1 rounded text-xs font-bold text-white border border-white/10 shadow-sm">Commercial</div>
+</div>
+<div class="p-6 relative -mt-12">
+<h4 class="text-white font-bold text-lg mb-2 group-hover:text-primary transition-colors">Office Complex Lighting</h4>
+<p class="text-gray-400 text-sm mb-4 line-clamp-2 h-10">Retrofitting LED solutions across a 12-story office building, reducing energy costs by 40%.</p>
+<button class="w-full py-2 rounded-lg border border-white/10 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors font-medium">View Case Study</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-r from-primary/10 to-card-dark rounded-xl p-8 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+<div class="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
+<div class="relative z-10">
+<h3 class="text-2xl font-bold text-white mb-2">Ready to electrify your next project?</h3>
+<p class="text-gray-300 max-w-lg">I'm currently accepting new contracts for commercial and industrial consultation. Let's discuss how we can power your vision.</p>
+</div>
+<div class="flex gap-4 relative z-10 w-full md:w-auto">
+<button class="flex-1 md:flex-none justify-center bg-primary hover:bg-green-400 text-background-dark font-bold py-3 px-6 rounded-lg transition-colors shadow-lg flex items-center gap-2">
+<span class="material-symbols-outlined">mail</span>
+                                Get in Touch
+                            </button>
+<button class="flex-1 md:flex-none justify-center bg-card-dark hover:bg-white/5 text-white font-bold py-3 px-6 rounded-lg border border-white/10 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined">download</span>
+                                Resume
+                            </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroShop - Product Details</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1c3024",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for horizontal sections */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-200 min-h-screen flex flex-col">
+<!-- Navbar -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-[#254632] px-6 lg:px-10 py-3 bg-white/80 dark:bg-[#122118]/80 backdrop-blur-md">
+<div class="flex items-center gap-4 lg:gap-8">
+<div class="flex items-center gap-3 text-slate-900 dark:text-white cursor-pointer">
+<div class="size-8 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">ElectroShop</h2>
+</div>
+<label class="hidden md:flex flex-col min-w-40 !h-10 max-w-80 group">
+<div class="flex w-full flex-1 items-stretch rounded-full h-full border border-slate-200 dark:border-[#254632] group-focus-within:border-primary transition-colors">
+<div class="text-slate-400 dark:text-[#95c6a9] flex bg-transparent items-center justify-center pl-4">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-full text-slate-900 dark:text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-400 dark:placeholder:text-[#95c6a9] px-4 pl-2 text-sm font-normal leading-normal" placeholder="Search products..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex items-center justify-end gap-4 lg:gap-8">
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-slate-600 dark:text-white hover:text-primary transition-colors text-sm font-medium" href="#">Home</a>
+<a class="text-slate-600 dark:text-white hover:text-primary transition-colors text-sm font-medium" href="#">Lighting</a>
+<a class="text-slate-600 dark:text-white hover:text-primary transition-colors text-sm font-medium" href="#">Fans</a>
+<a class="text-slate-600 dark:text-white hover:text-primary transition-colors text-sm font-medium" href="#">Switches</a>
+<a class="text-slate-600 dark:text-white hover:text-primary transition-colors text-sm font-medium" href="#">Sale</a>
+</nav>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-full size-10 bg-slate-100 dark:bg-[#254632] text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-[#366348] transition-colors relative">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+<span class="absolute top-0 right-0 size-2.5 bg-primary rounded-full border-2 border-white dark:border-[#122118]"></span>
+</button>
+<button class="flex items-center justify-center rounded-full size-10 bg-slate-100 dark:bg-[#254632] text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-[#366348] transition-colors">
+<span class="material-symbols-outlined text-[20px]">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-grow w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap items-center gap-2 mb-8 text-sm text-slate-500 dark:text-[#95c6a9]">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-base">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Smart Home</a>
+<span class="material-symbols-outlined text-base">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Lighting</a>
+<span class="material-symbols-outlined text-base">chevron_right</span>
+<span class="text-slate-900 dark:text-white font-medium">Lumina Smart LED Bulb</span>
+</div>
+<!-- Product Main Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 mb-16">
+<!-- Left: Image Gallery -->
+<div class="flex flex-col gap-4">
+<div class="relative w-full aspect-square rounded-[2rem] overflow-hidden bg-slate-100 dark:bg-[#1c3024] group border border-slate-200 dark:border-transparent">
+<div class="absolute top-4 left-4 z-10 flex gap-2">
+<span class="bg-primary text-[#122118] text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">Best Seller</span>
+<span class="bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">-15%</span>
+</div>
+<img alt="Close up of a smart LED light bulb glowing with warm light" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105" data-alt="Close up of a smart LED light bulb glowing with warm light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWmhsWik6B_QyX6UPcFZBqXJicKi7ivJBKO3z9YHHSp-dRRlNjTFCgQg6rey_eVMAWuYbosL-uKjdLXhpWfyFslwXsroomgP3RjtvjVs8qnb2M8_GsBDVZnuzt9cLY38KSamGv0klMqf5FR89GHj7uK1Syf8nmzKvqFNAWW7STS1qw9UHVyRl4LSL9DI2n7Om-iUWEPw3d5IEjwqHJyjbFr8v0cJr0tX9s1El2wgXPvcLMEqKgcb8yXrUBeqjWJ8QiJ_6IQ0bSFLo"/>
+<!-- Image Nav Buttons (Overlay) -->
+<button class="absolute top-1/2 left-4 -translate-y-1/2 bg-white/10 backdrop-blur-md hover:bg-white/20 text-white p-2 rounded-full transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="absolute top-1/2 right-4 -translate-y-1/2 bg-white/10 backdrop-blur-md hover:bg-white/20 text-white p-2 rounded-full transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<!-- Thumbnail Carousel -->
+<div class="flex gap-4 overflow-x-auto hide-scrollbar py-2">
+<button class="flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary ring-2 ring-primary/20">
+<img alt="Thumbnail of smart LED bulb front view" class="w-full h-full object-cover" data-alt="Thumbnail of smart LED bulb front view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB36aJS-FpswIMCVr4k3V3FnZfRHgH9bLVW-9p5kr9WQZcU4iKfExFizDctxOKEFi5tAMFNC8TUpDDQ825-ajmTyCSGR20ZyODeYWmU3ezwMv9zbEQ3xxa58TkYiNcZZgAiah7uON7_ysElbOqQ7abj3YbWwt2_TRHdpcRWTaO-Zk75zKzov_32HM8R-gmcItTRp5BIQ2lE6uK4w2f8GZM8fIdxYFpyIQW1utULlVX8HVMV4P9FhUzU-sI_POiaBab-8RgtMY9bQqE"/>
+</button>
+<button class="flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden border-2 border-transparent hover:border-slate-300 dark:hover:border-slate-600 opacity-70 hover:opacity-100 transition-all">
+<img alt="Thumbnail of smart LED bulb showing internal filament" class="w-full h-full object-cover" data-alt="Thumbnail of smart LED bulb showing internal filament" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBo-hk2YTxCEyOk83af7M-tzo1geHCJStSHyDckCLJJ8NYIxDQe2jw1bgB-VWdhXPA86GdYI5I5bkYZUwJDi_hmfVTcRBdtv_iPWV4ezh2HtQOtPQ6eeOe3i1mRcJIfZ4BiiJnYbsXy5bAQJOcUPnS9OcsbVFBzXbP-nptnwrsLy5FnuPyYboDnTcZCffHXyOA1t2wKRkZdicxcEcXycYZg8ZpMwjLagA0wXEfg6EFl3KBGGEB58n1AhalkXY4Wtf1vugVMbfuXXxY"/>
+</button>
+<button class="flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden border-2 border-transparent hover:border-slate-300 dark:hover:border-slate-600 opacity-70 hover:opacity-100 transition-all">
+<img alt="Thumbnail of smart LED bulb in a modern lamp fixture" class="w-full h-full object-cover" data-alt="Thumbnail of smart LED bulb in a modern lamp fixture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCylA9Ld2SZJ7XuRKh7KECOL4J0NfhKxl_xWmdTH-sl5K-mqaw8n_Vdctk-aWdLVhyuVHRa2cEjseUEJ_hmco8_2wpNZp0W3Ckqpqo-hddi_qNB3LbaDXYrxUS7Ktj1_aCMeea5xTvHcbUgsf7topm0c19SZQ5U3rW9w3UeQpFVNRZfvsFncN9qingjtGTNr0dE_LU8Yf6vA9peiOh7Rs3RIDbB1URzFrlQi77_DB9Qx9NBVvZyZEjFUgCFM09vJ4D-CsS1GsH95dY"/>
+</button>
+<button class="flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden border-2 border-transparent hover:border-slate-300 dark:hover:border-slate-600 opacity-70 hover:opacity-100 transition-all">
+<img alt="Thumbnail of smart LED bulb packaging box" class="w-full h-full object-cover" data-alt="Thumbnail of smart LED bulb packaging box" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFusEhB5OG7jqDsXWb5EexvK8wGQDmfhiRouj3jdRu05zgNbuVo4zGR_97Ge0_UsdXYFRG3Qyygkek_mEAFB8u5zkBz5xptU-8L4Vj0yKrRmnrnbzQEMy13i7k6yvlafGz5eX0T690XkXWS_AtKkujb8-WFCBhouNpaRxSd5TC1t1JLuSh6e2dSII4ZN3GDvHSEqatSc5TXjEh60Fw9OikzlFlXPiUS6cEbDOY46fyVGhY5e1n0JYrUUcStJA6P0hU9MAhuJM0iC8"/>
+</button>
+</div>
+</div>
+<!-- Right: Product Info -->
+<div class="flex flex-col h-full">
+<div class="mb-2 flex items-center gap-2">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px]">star</span>
+</div>
+<span class="text-sm text-slate-500 dark:text-slate-400 font-medium hover:text-primary cursor-pointer transition-colors">(128 Reviews)</span>
+</div>
+<h1 class="text-3xl sm:text-4xl lg:text-[40px] font-bold text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-4">Lumina Smart LED Bulb <span class="block text-2xl lg:text-3xl font-normal text-slate-500 dark:text-slate-400 mt-1">10W RGBW - E26 Base</span></h1>
+<div class="flex items-end gap-4 mb-6">
+<span class="text-4xl font-bold text-primary">$12.99</span>
+<span class="text-xl text-slate-400 dark:text-slate-500 line-through mb-1.5">$15.99</span>
+</div>
+<div class="p-4 rounded-xl bg-slate-50 dark:bg-[#1c3024] border border-slate-100 dark:border-transparent mb-8">
+<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Control your lighting from anywhere with the Lumina Smart LED Bulb. Compatible with Alexa and Google Home, this energy-efficient bulb offers 16 million colors and adjustable white temperatures to set the perfect mood for any occasion.
+                    </p>
+</div>
+<!-- Specs Grid (Quick View) -->
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 dark:bg-[#254632] flex items-center justify-center text-slate-700 dark:text-primary">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 dark:text-[#95c6a9]">Wattage</p>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">10W (60W Equiv)</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 dark:bg-[#254632] flex items-center justify-center text-slate-700 dark:text-primary">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 dark:text-[#95c6a9]">Lumens</p>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">800 lm</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 dark:bg-[#254632] flex items-center justify-center text-slate-700 dark:text-primary">
+<span class="material-symbols-outlined">wifi</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 dark:text-[#95c6a9]">Connectivity</p>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">Wi-Fi 2.4GHz</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 dark:bg-[#254632] flex items-center justify-center text-slate-700 dark:text-primary">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 dark:text-[#95c6a9]">Warranty</p>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">2 Years</p>
+</div>
+</div>
+</div>
+<div class="h-px w-full bg-slate-200 dark:bg-[#254632] mb-8"></div>
+<!-- Actions -->
+<div class="flex flex-col gap-6">
+<!-- Stock & Qty -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-2 text-primary font-medium text-sm">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+                            In Stock (45 available)
+                        </div>
+<div class="flex items-center rounded-full bg-slate-100 dark:bg-[#254632] p-1">
+<button class="size-10 rounded-full bg-white dark:bg-[#122118] text-slate-600 dark:text-white hover:bg-slate-50 dark:hover:bg-[#1c3024] shadow-sm flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<input class="w-12 bg-transparent text-center border-none p-0 text-slate-900 dark:text-white font-bold focus:ring-0" type="text" value="1"/>
+<button class="size-10 rounded-full bg-white dark:bg-[#122118] text-slate-600 dark:text-white hover:bg-slate-50 dark:hover:bg-[#1c3024] shadow-sm flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<!-- Buttons -->
+<div class="flex gap-4">
+<button class="flex-1 bg-primary hover:bg-[#2ec56a] text-[#112117] font-bold text-lg h-14 rounded-full flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(54,226,123,0.3)] hover:shadow-[0_0_30px_rgba(54,226,123,0.5)]">
+<span class="material-symbols-outlined">shopping_cart</span>
+                            Add to Cart
+                        </button>
+<button class="size-14 rounded-full border border-slate-300 dark:border-[#366348] text-slate-600 dark:text-[#95c6a9] hover:border-primary hover:text-primary dark:hover:text-primary dark:hover:border-primary flex items-center justify-center transition-all">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center gap-6 text-xs text-slate-500 dark:text-[#5e7f6d] mt-2 justify-center lg:justify-start">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">local_shipping</span> Free Shipping over $50</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">security</span> Secure Checkout</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">sync</span> 30-Day Returns</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Info Tabs/Accordion -->
+<div class="w-full mb-16">
+<div class="border-b border-slate-200 dark:border-[#254632] mb-8 overflow-x-auto hide-scrollbar">
+<div class="flex gap-8 min-w-max">
+<button class="pb-4 border-b-2 border-primary text-primary font-bold text-lg px-2">Description</button>
+<button class="pb-4 border-b-2 border-transparent text-slate-500 dark:text-[#95c6a9] hover:text-slate-800 dark:hover:text-white font-medium text-lg px-2 transition-colors">Specifications</button>
+<button class="pb-4 border-b-2 border-transparent text-slate-500 dark:text-[#95c6a9] hover:text-slate-800 dark:hover:text-white font-medium text-lg px-2 transition-colors">Reviews (128)</button>
+<button class="pb-4 border-b-2 border-transparent text-slate-500 dark:text-[#95c6a9] hover:text-slate-800 dark:hover:text-white font-medium text-lg px-2 transition-colors">Installation Guide</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<div class="lg:col-span-2 text-slate-600 dark:text-slate-300 space-y-6">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Smart lighting made simple.</h3>
+<p class="leading-relaxed">
+                        Transform your home with the Lumina Smart LED Bulb. Whether you're setting the mood for a movie night, waking up gently with a sunrise simulation, or throwing a party with dynamic colors, this bulb does it all. No hub required—simply connect to your Wi-Fi and control via the Lumina app, Alexa, or Google Assistant.
+                    </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+<div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#1c3024] border border-slate-100 dark:border-transparent">
+<div class="size-12 rounded-full bg-slate-200 dark:bg-[#254632] flex items-center justify-center text-primary mb-4">
+<span class="material-symbols-outlined">palette</span>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white mb-2">16 Million Colors</h4>
+<p class="text-sm">Choose from a vast spectrum of colors to create the perfect ambiance for any moment.</p>
+</div>
+<div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#1c3024] border border-slate-100 dark:border-transparent">
+<div class="size-12 rounded-full bg-slate-200 dark:bg-[#254632] flex items-center justify-center text-primary mb-4">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white mb-2">Schedules &amp; Timers</h4>
+<p class="text-sm">Set your lights to turn on/off automatically based on your daily routine.</p>
+</div>
+</div>
+</div>
+<div class="lg:col-span-1">
+<div class="bg-slate-50 dark:bg-[#1c3024] rounded-2xl p-6 border border-slate-100 dark:border-[#254632]">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Technical Specs</h3>
+<div class="space-y-4">
+<div class="flex justify-between pb-4 border-b border-slate-200 dark:border-[#254632]">
+<span class="text-slate-500 dark:text-[#95c6a9]">Brand</span>
+<span class="font-medium text-slate-900 dark:text-white">Lumina</span>
+</div>
+<div class="flex justify-between pb-4 border-b border-slate-200 dark:border-[#254632]">
+<span class="text-slate-500 dark:text-[#95c6a9]">Model</span>
+<span class="font-medium text-slate-900 dark:text-white">LM-Smart-E26</span>
+</div>
+<div class="flex justify-between pb-4 border-b border-slate-200 dark:border-[#254632]">
+<span class="text-slate-500 dark:text-[#95c6a9]">Base Type</span>
+<span class="font-medium text-slate-900 dark:text-white">E26 (Standard)</span>
+</div>
+<div class="flex justify-between pb-4 border-b border-slate-200 dark:border-[#254632]">
+<span class="text-slate-500 dark:text-[#95c6a9]">Wattage</span>
+<span class="font-medium text-slate-900 dark:text-white">10 Watts</span>
+</div>
+<div class="flex justify-between pb-4 border-b border-slate-200 dark:border-[#254632]">
+<span class="text-slate-500 dark:text-[#95c6a9]">Voltage</span>
+<span class="font-medium text-slate-900 dark:text-white">110V - 240V</span>
+</div>
+<div class="flex justify-between pb-4 border-b border-slate-200 dark:border-[#254632]">
+<span class="text-slate-500 dark:text-[#95c6a9]">Lifespan</span>
+<span class="font-medium text-slate-900 dark:text-white">25,000 Hours</span>
+</div>
+<div class="flex justify-between">
+<span class="text-slate-500 dark:text-[#95c6a9]">Material</span>
+<span class="font-medium text-slate-900 dark:text-white">Plastic / Aluminum</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Reviews Section -->
+<div class="mb-16">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white">Customer Reviews</h2>
+<button class="text-primary font-bold hover:underline">Write a Review</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Review Card 1 -->
+<div class="p-6 rounded-2xl bg-white dark:bg-[#122118] border border-slate-200 dark:border-[#254632] shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-[#254632] flex items-center justify-center font-bold text-slate-700 dark:text-white">JD</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white text-sm">John Doe</h4>
+<p class="text-xs text-slate-500 dark:text-[#95c6a9]">Verified Buyer</p>
+</div>
+</div>
+<span class="text-xs text-slate-400">2 days ago</span>
+</div>
+<div class="flex text-primary mb-3">
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+</div>
+<h5 class="font-bold text-slate-900 dark:text-white mb-2">Amazing brightness!</h5>
+<p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        I installed these in my garage and the difference is night and day. The app is super easy to use and the colors are vibrant. Highly recommend!
+                    </p>
+</div>
+<!-- Review Card 2 -->
+<div class="p-6 rounded-2xl bg-white dark:bg-[#122118] border border-slate-200 dark:border-[#254632] shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-[#254632] flex items-center justify-center font-bold text-slate-700 dark:text-white">AS</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white text-sm">Alice Smith</h4>
+<p class="text-xs text-slate-500 dark:text-[#95c6a9]">Verified Buyer</p>
+</div>
+</div>
+<span class="text-xs text-slate-400">1 week ago</span>
+</div>
+<div class="flex text-primary mb-3">
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] text-slate-300 dark:text-[#254632]">star</span>
+</div>
+<h5 class="font-bold text-slate-900 dark:text-white mb-2">Good, but connectivity issues</h5>
+<p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        The bulbs themselves are great quality, but I had some trouble connecting them to my older router. Once connected, they work flawlessly.
+                    </p>
+</div>
+<!-- Review Card 3 -->
+<div class="p-6 rounded-2xl bg-white dark:bg-[#122118] border border-slate-200 dark:border-[#254632] shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-[#254632] flex items-center justify-center font-bold text-slate-700 dark:text-white">MR</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white text-sm">Mike Ross</h4>
+<p class="text-xs text-slate-500 dark:text-[#95c6a9]">Verified Buyer</p>
+</div>
+</div>
+<span class="text-xs text-slate-400">3 weeks ago</span>
+</div>
+<div class="flex text-primary mb-3">
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+</div>
+<h5 class="font-bold text-slate-900 dark:text-white mb-2">Perfect for my smart home setup</h5>
+<p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Integration with Google Home was seamless. I love the 'Reading' mode preset. Will definitely buy more for the other rooms.
+                    </p>
+</div>
+</div>
+<div class="flex justify-center mt-8 gap-2">
+<button class="size-10 rounded-full bg-slate-100 dark:bg-[#254632] text-slate-500 dark:text-[#95c6a9] hover:bg-primary hover:text-[#112117] flex items-center justify-center transition-colors">1</button>
+<button class="size-10 rounded-full bg-transparent text-slate-500 dark:text-[#95c6a9] hover:bg-slate-100 dark:hover:bg-[#254632] flex items-center justify-center transition-colors">2</button>
+<button class="size-10 rounded-full bg-transparent text-slate-500 dark:text-[#95c6a9] hover:bg-slate-100 dark:hover:bg-[#254632] flex items-center justify-center transition-colors">3</button>
+<button class="size-10 rounded-full bg-transparent text-slate-500 dark:text-[#95c6a9] hover:bg-slate-100 dark:hover:bg-[#254632] flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Related Products -->
+<div class="mb-16">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-8">Related Products</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+<!-- Related Item 1 -->
+<div class="group flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#1c3024] mb-3">
+<img alt="Modern pendant light fixture hanging from ceiling" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Modern pendant light fixture hanging from ceiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKxzom9xnLXlsp8E7BIjui3OXb7zNQp0Mhg7xeBo-mfOjLJI44FJQjfjW2zovjs1cd3qE-JT7oeiaKmOe0rmb2ALrSA99JiffTvdCLdnbuslMkzHofUr6X9Ej7nnW-O4dBXXjz7ddhhDeCIJdfH1Gt44kCcG5KMhGEP92iXov1bSb9SosSnUL6lwsBFsGZfUufGZUbvXRu-oQfFcBaOblXcrS14UvfxDKMpUOkDbwPG3VbD0FzjEQYBq9FdBrJHkoyJbN3Pwu8q7E"/>
+<button class="absolute bottom-3 right-3 size-10 rounded-full bg-white dark:bg-[#254632] text-slate-900 dark:text-white shadow-lg flex items-center justify-center hover:bg-primary dark:hover:bg-primary hover:text-[#112117] transition-colors">
+<span class="material-symbols-outlined text-xl">shopping_bag</span>
+</button>
+</div>
+<h3 class="text-sm font-medium text-slate-900 dark:text-white truncate">Industrial Pendant Light</h3>
+<p class="text-sm font-bold text-slate-500 dark:text-[#95c6a9]">$45.00</p>
+</div>
+<!-- Related Item 2 -->
+<div class="group flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#1c3024] mb-3">
+<img alt="White LED ceiling fan spinning" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="White LED ceiling fan spinning" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZJrH6ItX7vVFpguytQY3QpUBgUhseklIdNjQGK7Un2iY_t77auzpp8ZyQca7MYaVQwvNfEwPYoisDPi_l4GkyzZQ87snWQuWmfQGaTsJFmVW44W9RIYDNITshD9bV2H7AXte-5AVz0fDYlO9EBlUMCLsJii9lr7HKxTV-l6eM5CXMrEGbqAw2X5sX1RbxSgf5MJCr7wVrRAn6CImw8VzHeRkkkE7CzMwrpRQ5T4WrxGheKcO3HOn-XRPYifIywyukeleRyQ-Gyfw"/>
+<button class="absolute bottom-3 right-3 size-10 rounded-full bg-white dark:bg-[#254632] text-slate-900 dark:text-white shadow-lg flex items-center justify-center hover:bg-primary dark:hover:bg-primary hover:text-[#112117] transition-colors">
+<span class="material-symbols-outlined text-xl">shopping_bag</span>
+</button>
+</div>
+<h3 class="text-sm font-medium text-slate-900 dark:text-white truncate">AeroSmart Ceiling Fan</h3>
+<p class="text-sm font-bold text-slate-500 dark:text-[#95c6a9]">$129.99</p>
+</div>
+<!-- Related Item 3 -->
+<div class="group flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#1c3024] mb-3">
+<span class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase">Sale</span>
+<img alt="Modern smart light switch on a wall" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Modern smart light switch on a wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAx2XceXC7Ei60rxo8r4ab-FG2Aa5tXCgDvfzBMv1gJFYUVYSwMB-X-zZne4nkqWoHfRRcg2-UpvxBkGMmW2s0yBlQQZUQGNOldf0xKveZF6oKptqCnQ-Ntgo18yTPcq9nFXRemJ3A6Fhq-ISG9xVxlxj06bLzpNZ1MMDIkZBi0Yv1LX-IOj1oQIMNd8m8YLJcY3sDUylbDuouki7J1xZf1TbuuRE78y4J0jw3fwaGo6McrQOLc3aTabyL1gc6Isdj-QDQt2nPyGQ"/>
+<button class="absolute bottom-3 right-3 size-10 rounded-full bg-white dark:bg-[#254632] text-slate-900 dark:text-white shadow-lg flex items-center justify-center hover:bg-primary dark:hover:bg-primary hover:text-[#112117] transition-colors">
+<span class="material-symbols-outlined text-xl">shopping_bag</span>
+</button>
+</div>
+<h3 class="text-sm font-medium text-slate-900 dark:text-white truncate">Touch Smart Switch</h3>
+<div class="flex gap-2 items-center">
+<p class="text-sm font-bold text-red-500">$22.50</p>
+<p class="text-xs text-slate-400 line-through">$30.00</p>
+</div>
+</div>
+<!-- Related Item 4 -->
+<div class="group flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#1c3024] mb-3">
+<img alt="Outdoor security spotlight camera" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Outdoor security spotlight camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGtk2tt5aLZmPTfGKHOwtXyntYIuhva7GzKbe_Bf_g-qPjo1Y2Xco7yruFycdORtpYluPK86B1bkkn0b5VyYPDDsBukqFokjl1dwHApPT6GMG8TCfEVTjkBtPlXjCRM2CJgIY-aiN1k7-IKy6YglP68-3VSEimLmU3lrOXXu4a6ukw9GpL9SvS-_C-eSJwAYVrs1UufjmRxp4pC26CjG6ppF4JardqMGDEsGz4qFs7pIiSom6ZQzw47qitag-T7mCNjV0ZBwYU1vc"/>
+<button class="absolute bottom-3 right-3 size-10 rounded-full bg-white dark:bg-[#254632] text-slate-900 dark:text-white shadow-lg flex items-center justify-center hover:bg-primary dark:hover:bg-primary hover:text-[#112117] transition-colors">
+<span class="material-symbols-outlined text-xl">shopping_bag</span>
+</button>
+</div>
+<h3 class="text-sm font-medium text-slate-900 dark:text-white truncate">Outdoor Spot Cam</h3>
+<p class="text-sm font-bold text-slate-500 dark:text-[#95c6a9]">$89.99</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Chat Button -->
+<div class="fixed bottom-6 right-6 z-50">
+<button class="size-16 rounded-full bg-primary text-[#112117] shadow-lg hover:shadow-primary/50 flex items-center justify-center transition-all hover:scale-110 relative group">
+<span class="material-symbols-outlined text-3xl">chat_bubble</span>
+<span class="absolute top-0 right-0 size-4 bg-red-500 rounded-full border-2 border-[#112117]"></span>
+<span class="absolute right-full mr-4 bg-white dark:bg-[#254632] text-slate-900 dark:text-white px-3 py-1 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">Need Help?</span>
+</button>
+</div>
+<!-- Footer -->
+<footer class="bg-white dark:bg-[#0c1610] border-t border-slate-200 dark:border-[#254632] pt-16 pb-8">
+<div class="max-w-[1440px] mx-auto px-6 lg:px-10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 text-slate-900 dark:text-white mb-6">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight">ElectroShop</h2>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-6">
+                        Your trusted partner for high-quality electrical components and smart home solutions. Illuminating lives since 2010.
+                    </p>
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">social_leaderboard</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<!-- public icon used as a generic social placeholder -->
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+</div>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-white font-bold mb-4">Shop</h3>
+<ul class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="#">Lighting</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Fans &amp; Cooling</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Switches &amp; Outlets</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Smart Home</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Tools &amp; Accessories</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-white font-bold mb-4">Support</h3>
+<ul class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="#">Order Status</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Shipping &amp; Returns</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">FAQ</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Warranty Info</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-white font-bold mb-4">Stay Connected</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
+<form class="flex flex-col gap-2">
+<input class="w-full rounded-xl bg-slate-100 dark:bg-[#1c3024] border-none px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary placeholder:text-slate-400 dark:placeholder:text-[#5e7f6d]" placeholder="Enter your email" type="email"/>
+<button class="w-full bg-primary hover:bg-[#2ec56a] text-[#112117] font-bold py-3 rounded-xl transition-colors">Subscribe</button>
+</form>
+</div>
+</div>
+<div class="border-t border-slate-200 dark:border-[#254632] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 dark:text-[#5e7f6d]">
+<p>© 2024 ElectroShop Inc. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-slate-600 dark:hover:text-[#95c6a9] transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-slate-600 dark:hover:text-[#95c6a9] transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

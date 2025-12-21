@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroAdmin - Dashboard</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#36e27b",
+              "background-light": "#f6f8f7",
+              "background-dark": "#112117",
+              "card-dark": "#1c3024", // Slightly lighter than background-dark for cards
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112117; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a4032; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #36e27b; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white overflow-hidden">
+<div class="flex h-screen w-full flex-row overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col w-72 h-full border-r border-white/10 bg-background-dark flex-shrink-0">
+<div class="flex flex-col h-full p-4">
+<!-- Brand -->
+<div class="flex items-center gap-3 px-2 mb-8 mt-2">
+<div class="flex items-center justify-center size-10 rounded-xl bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-none tracking-tight">ElectroAdmin</h1>
+<p class="text-gray-400 text-xs font-medium mt-1">Powering Commerce</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 border-l-4 border-primary group transition-colors" href="#">
+<span class="material-symbols-outlined text-primary group-hover:text-primary">dashboard</span>
+<span class="text-white font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">inventory_2</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Products</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">shopping_cart</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">group</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">bar_chart</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Analytics</span>
+</a>
+<div class="my-4 border-t border-white/10"></div>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 group transition-colors border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white">settings</span>
+<span class="text-gray-300 group-hover:text-white font-medium text-sm">Settings</span>
+</a>
+</nav>
+<!-- User Profile (Bottom Sidebar) -->
+<div class="mt-auto flex items-center gap-3 p-3 rounded-xl bg-card-dark border border-white/5">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border border-white/10" data-alt="Admin user avatar showing a smiling person" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBq_-oxROBy13n0pLHoWq1xwK-7c2YkJRgYuwAC9Z300gidVXH7ZCHKGGobSqiK_Otd3NgWblaLK63ntecUbXgQQYYz7rrDWwXSRl4dU6cpTZu7SLpJ9KcTNp4vXtusImJDT1MWTDHg8Ba6ddREbqfyVpRuAZJ4XPnkQGC3GiCpcNK_UkMsVxxYWdIK7SR61rOHIbiI6n5mIyBIaSMrC_qd283j2aXwQo40pJmm-6qqOANLyaeo17k8NfF20QbvOpqmLkaLx2j59lI");'></div>
+<div class="flex flex-col flex-1 min-w-0">
+<p class="text-white text-sm font-semibold truncate">Alex Morgan</p>
+<p class="text-primary text-xs truncate">Super Admin</p>
+</div>
+<button class="text-gray-400 hover:text-white">
+<span class="material-symbols-outlined text-xl">logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark relative">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-background-dark/95 backdrop-blur z-10 shrink-0">
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-white mr-4">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Search -->
+<div class="flex-1 max-w-xl">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 rounded-lg border-none bg-card-dark text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm transition-all" placeholder="Search orders, products, or customers..." type="text"/>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4 ml-6">
+<button class="relative p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full border-2 border-background-dark"></span>
+</button>
+<button class="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto p-6 md:p-8 scroll-smooth">
+<div class="max-w-7xl mx-auto flex flex-col gap-8">
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-3xl font-bold text-white tracking-tight">Dashboard Overview</h2>
+<p class="text-gray-400 mt-1">Here's what's happening with your store today.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-card-dark border border-white/10 hover:bg-white/5 text-white rounded-lg text-sm font-medium transition-colors">
+<span class="material-symbols-outlined text-lg">cloud_download</span>
+                            Export Report
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-green-400 text-background-dark rounded-lg text-sm font-bold transition-colors shadow-[0_0_15px_rgba(54,226,123,0.3)]">
+<span class="material-symbols-outlined text-lg">add</span>
+                            Add Product
+                        </button>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Stat 1 -->
+<div class="bg-card-dark p-5 rounded-xl border border-white/5 shadow-sm hover:border-primary/30 transition-colors group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-background-dark rounded-lg text-primary">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="flex items-center text-primary text-xs font-bold bg-primary/10 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>
+                                +12.5%
+                            </span>
+</div>
+<p class="text-gray-400 text-sm font-medium">Total Revenue</p>
+<h3 class="text-2xl font-bold text-white mt-1">$124,592</h3>
+</div>
+<!-- Stat 2 -->
+<div class="bg-card-dark p-5 rounded-xl border border-white/5 shadow-sm hover:border-primary/30 transition-colors group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-background-dark rounded-lg text-blue-400">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<span class="flex items-center text-primary text-xs font-bold bg-primary/10 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>
+                                +5.2%
+                            </span>
+</div>
+<p class="text-gray-400 text-sm font-medium">Total Orders</p>
+<h3 class="text-2xl font-bold text-white mt-1">1,485</h3>
+</div>
+<!-- Stat 3 -->
+<div class="bg-card-dark p-5 rounded-xl border border-white/5 shadow-sm hover:border-primary/30 transition-colors group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-background-dark rounded-lg text-purple-400">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="flex items-center text-primary text-xs font-bold bg-primary/10 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>
+                                +8.1%
+                            </span>
+</div>
+<p class="text-gray-400 text-sm font-medium">Total Users</p>
+<h3 class="text-2xl font-bold text-white mt-1">3,203</h3>
+</div>
+<!-- Stat 4 -->
+<div class="bg-card-dark p-5 rounded-xl border border-white/5 shadow-sm hover:border-red-500/30 transition-colors group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-background-dark rounded-lg text-red-500">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<span class="flex items-center text-red-400 text-xs font-bold bg-red-400/10 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm mr-1">priority_high</span>
+                                Action Needed
+                            </span>
+</div>
+<p class="text-gray-400 text-sm font-medium">Low Stock Items</p>
+<h3 class="text-2xl font-bold text-white mt-1">12</h3>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Main Chart -->
+<div class="lg:col-span-2 bg-card-dark rounded-xl border border-white/5 p-6">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-lg font-bold text-white">Revenue Analytics</h3>
+<p class="text-sm text-gray-400">Year to Date Performance</p>
+</div>
+<select class="bg-background-dark border border-white/10 text-white text-sm rounded-lg p-2 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none">
+<option>This Year</option>
+<option>Last Year</option>
+</select>
+</div>
+<!-- Line Chart Simulation -->
+<div class="relative h-64 w-full">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 800 200">
+<defs>
+<lineargradient id="gradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#36e27b" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#36e27b" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="rgba(255,255,255,0.05)" stroke-width="1" x1="0" x2="800" y1="0" y2="0"></line>
+<line stroke="rgba(255,255,255,0.05)" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="rgba(255,255,255,0.05)" stroke-width="1" x1="0" x2="800" y1="100" y2="100"></line>
+<line stroke="rgba(255,255,255,0.05)" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<line stroke="rgba(255,255,255,0.05)" stroke-width="1" x1="0" x2="800" y1="200" y2="200"></line>
+<!-- The Chart Line -->
+<path d="M0,150 Q100,100 200,130 T400,80 T600,100 T800,20" fill="url(#gradient)" stroke="#36e27b" stroke-width="3"></path>
+<!-- Data Points -->
+<circle cx="200" cy="130" fill="#112117" r="4" stroke="#36e27b" stroke-width="2"></circle>
+<circle cx="400" cy="80" fill="#112117" r="4" stroke="#36e27b" stroke-width="2"></circle>
+<circle cx="600" cy="100" fill="#112117" r="4" stroke="#36e27b" stroke-width="2"></circle>
+<circle cx="800" cy="20" fill="#112117" r="4" stroke="#36e27b" stroke-width="2"></circle>
+</svg>
+</div>
+<div class="flex justify-between text-xs text-gray-500 mt-4 px-2">
+<span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+</div>
+</div>
+<!-- Secondary Chart -->
+<div class="bg-card-dark rounded-xl border border-white/5 p-6 flex flex-col">
+<h3 class="text-lg font-bold text-white mb-1">Orders by Status</h3>
+<p class="text-sm text-gray-400 mb-6">Last 30 Days</p>
+<div class="flex-1 flex flex-col justify-center gap-6">
+<!-- Progress Bar Items -->
+<div class="group">
+<div class="flex justify-between text-sm mb-1">
+<span class="text-white font-medium">Pending</span>
+<span class="text-gray-400">24%</span>
+</div>
+<div class="w-full bg-background-dark rounded-full h-2">
+<div class="bg-yellow-400 h-2 rounded-full" style="width: 24%"></div>
+</div>
+</div>
+<div class="group">
+<div class="flex justify-between text-sm mb-1">
+<span class="text-white font-medium">Shipped</span>
+<span class="text-gray-400">56%</span>
+</div>
+<div class="w-full bg-background-dark rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 56%"></div>
+</div>
+</div>
+<div class="group">
+<div class="flex justify-between text-sm mb-1">
+<span class="text-white font-medium">Delivered</span>
+<span class="text-gray-400">15%</span>
+</div>
+<div class="w-full bg-background-dark rounded-full h-2">
+<div class="bg-blue-400 h-2 rounded-full" style="width: 15%"></div>
+</div>
+</div>
+<div class="group">
+<div class="flex justify-between text-sm mb-1">
+<span class="text-white font-medium">Returned</span>
+<span class="text-gray-400">5%</span>
+</div>
+<div class="w-full bg-background-dark rounded-full h-2">
+<div class="bg-red-400 h-2 rounded-full" style="width: 5%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity & Stock -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+<!-- Recent Orders Table -->
+<div class="xl:col-span-2 bg-card-dark rounded-xl border border-white/5 overflow-hidden flex flex-col">
+<div class="p-6 border-b border-white/5 flex justify-between items-center">
+<h3 class="text-lg font-bold text-white">Recent Orders</h3>
+<a class="text-primary text-sm font-semibold hover:underline" href="#">View All</a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm text-gray-400">
+<thead class="bg-background-dark text-xs uppercase font-semibold text-gray-500">
+<tr>
+<th class="px-6 py-4">Order ID</th>
+<th class="px-6 py-4">Product</th>
+<th class="px-6 py-4">Customer</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-right">Total</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-mono text-white">#ORD-0092</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-background-dark bg-center bg-cover border border-white/10" data-alt="Small thumbnail of a copper wire spool" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA91ACENJ5eP06cVPRwLUgRMVbbkAq-TdGdd8JPLDxDetLQ0Lx64pg_MUj6hk_D4IkJ-UURda0YehJsH_eZo9M_A-2US2sG4LIJTh-D3ypGD3T8olBwDDUMI4AB5WOoUN9vm-42xU0i9sO-8W1143k2NwU1ocORV56cG9m6HuEhK11OwyxJTz8K2JIQOMnOYWREjMEZXgOSmwVm4gG9X4EGOlTsSfRHbIV5PLqFWaXMqmRt86xmwFNVEOab2EKEqgYghyDXakU0s6Y");'></div>
+<span class="font-medium text-white">Copper Wire Spool</span>
+</div>
+</td>
+<td class="px-6 py-4">Sarah Connor</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-400/10 text-yellow-400">
+<span class="size-1.5 rounded-full bg-yellow-400"></span>
+                                                Pending
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right text-white font-medium">$450.00</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-mono text-white">#ORD-0091</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-background-dark bg-center bg-cover border border-white/10" data-alt="Small thumbnail of a circuit breaker" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAdel2_RIineyTHZmt9uMCxdB4xMvSuSClQz46IAa2nwkBFP7nJlfKU7TH1wU70awpr1s43A4lAkYTWrMdU320KnW8pOg89XAiE3UYRvnO4H6MhIdXa2HzagvSLlz7EcoNytqqw-27xtGbIUjb_ZJEpMH3h6Ee5H1h7jD5cXADLscm3jbbm7BzErhDNMcz3i1ZeEiba-hOm_-94Y59M71KfuYc4io0U7ViZT8BfLH2kJS6ozsIJSyE72rDoefDYAitP4sFOyqz_5hI");'></div>
+<span class="font-medium text-white">Circuit Breaker 20A</span>
+</div>
+</td>
+<td class="px-6 py-4">John Doe</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+<span class="size-1.5 rounded-full bg-primary"></span>
+                                                Shipped
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right text-white font-medium">$85.50</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-mono text-white">#ORD-0090</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-background-dark bg-center bg-cover border border-white/10" data-alt="Small thumbnail of a led light bulb" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCBkEj6zc-yln8F7zFeMU5YVACnI23Ug4P7THC7_oRc_JVf5_XRBtYdXXBfKl5ABGpYgmGYVXLlRP07KqULendy6eFaunG1mKBrZb9ECiJK115l-3H9rfaxbEb-mfTODShLj7BFrij2Egc00JoE8HRUl8J5bHNMvuERcaGPU4c6MLhWtVBuCjDRC0A62xmM7qQC-NbThHaEDANDofttut5DrZ0dWGeFvUsHWgIhYRZ17q9BEfD43kxO5OSXuQmHaOfCi2b9td_brrQ");'></div>
+<span class="font-medium text-white">LED Smart Bulb 4pk</span>
+</div>
+</td>
+<td class="px-6 py-4">Emily Blunt</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-400/10 text-blue-400">
+<span class="size-1.5 rounded-full bg-blue-400"></span>
+                                                Delivered
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right text-white font-medium">$129.99</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-mono text-white">#ORD-0089</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-background-dark bg-center bg-cover border border-white/10" data-alt="Small thumbnail of an electric drill" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAmaNVapODLyUyKEY98sY_FX75aGIU0jHAaQefZ4PmFIwpjjkIEsgjSaivp3lFHvAvMToB-zM8oU9zMCRD1FcQnw1xznzUddGQugdCoIywiBbKCfS6ppI6diH66Hd3YfDtIbV3nZdNZ-60w68ZoHDa6fyd5SesXI2crqGIPdkvFKnt2mAozVRIOH1g5bz2UCEN34yEuyxlqgsAJxiDTcOBz8dxqpC8oxwPaprmCWRvUaR2cYpB7OsEHBLyVs8LpMr0k-QDXhn0uVfM");'></div>
+<span class="font-medium text-white">Power Drill 18V</span>
+</div>
+</td>
+<td class="px-6 py-4">Mark Wahlberg</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-400/10 text-red-400">
+<span class="size-1.5 rounded-full bg-red-400"></span>
+                                                Cancelled
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right text-white font-medium">$199.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Low Stock Alert -->
+<div class="bg-card-dark rounded-xl border border-white/5 flex flex-col">
+<div class="p-6 border-b border-white/5">
+<h3 class="text-lg font-bold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-red-500">warning</span>
+                                Low Stock Alert
+                            </h3>
+</div>
+<div class="p-4 flex flex-col gap-3">
+<div class="flex items-center gap-4 p-3 rounded-lg bg-background-dark border border-white/5">
+<div class="bg-center bg-cover size-12 rounded-lg" data-alt="Smart switch device" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCKuOX1WuXGuZXqobm1-YAhauhd-JqZzO-cHcmHF3EwkUD6rZBnNLdA5qLe0plnyKPTNSxLR1ImDwMYb7R_nYFNjWWO_1FOsfCyX9H8oYZE2tyrG9khej5RvhRrzQe-a4rz1wHW_TJ56BaOkH___3K0CRD-sMsTZ6WXBSTQ4JtJPPYaNuiT3i2MkSWEsjQ_C5bqkDKLgwv9xxIGzybgUr2UX1lgUjs7Gi2pM9tq-_9_Sc2JayQOjax10VHWE0_VCY_tkU9TPCMSi6s");'></div>
+<div class="flex-1">
+<p class="text-white text-sm font-medium">Smart Wall Switch</p>
+<p class="text-gray-500 text-xs">ID: PRD-221</p>
+</div>
+<div class="text-right">
+<p class="text-red-500 font-bold text-sm">3 left</p>
+<button class="text-primary text-xs hover:underline mt-1">Restock</button>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded-lg bg-background-dark border border-white/5">
+<div class="bg-center bg-cover size-12 rounded-lg" data-alt="Extension cord" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBUxGX0ntPosXrBE7YWp5MFHAwgHYBwx_U1rlgjS-XaMVcmBFqJPSjjM-j63Lqu7U8rjcWZ5JRusCgC53vNCFkExzAqNfmrUCjwBC7xfG-dk3ai_oWa0PnmslyQNCzXw-oHWnxg5IQgFlAxT7bQ_gzDqdB3pCLv_eFP5JwelK2YTU8GEfiNTb7piVuDgWWy_YouBBQCfQtws6DNAmkbnO12K5pQ3nWHXTFcs64DJP0HrTAMicg9Z0HaYhnNs7UrAyZs2H9YZphIP4w");'></div>
+<div class="flex-1">
+<p class="text-white text-sm font-medium">Extension Cord 25ft</p>
+<p class="text-gray-500 text-xs">ID: PRD-098</p>
+</div>
+<div class="text-right">
+<p class="text-red-500 font-bold text-sm">5 left</p>
+<button class="text-primary text-xs hover:underline mt-1">Restock</button>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded-lg bg-background-dark border border-white/5">
+<div class="bg-center bg-cover size-12 rounded-lg" data-alt="Multimeter tool" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDSz9mkaHJPzXS5cTmre3lDjnNbhXh0KJ1-K7qITm5W51CargOzZFvjRvh4DLDXziL-px2o_oF0gk7FYY5xr6qDrYkTEZqNs0_AWVjRz9hTVUvEx0YsQ5ZDhLCFnJ9hXNX2a9A-XW0Xb8OMvP5-iScKmjOAu1aRH-fLSJ32tJFkxZpa1ulk0FbO-uzF9khHQdQqH0Y_ERqk_fkhuagmyfy3kT685meaOMJS257cQGjw3E2cCKEW1cAuXtbtOnSUx-WCBoo35csktVs");'></div>
+<div class="flex-1">
+<p class="text-white text-sm font-medium">Digital Multimeter</p>
+<p class="text-gray-500 text-xs">ID: PRD-554</p>
+</div>
+<div class="text-right">
+<p class="text-red-500 font-bold text-sm">1 left</p>
+<button class="text-primary text-xs hover:underline mt-1">Restock</button>
+</div>
+</div>
+</div>
+<div class="mt-auto p-4 border-t border-white/5">
+<button class="w-full py-2 rounded-lg border border-white/10 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors">View All Low Stock</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

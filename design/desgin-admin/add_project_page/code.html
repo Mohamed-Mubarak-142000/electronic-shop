@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add Project - ElectroStore</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1b3224", // Derived from example input bg
+                        "border-dark": "#366348", // Derived from example border
+                        "text-muted": "#95c6a9", // Derived from example placeholder
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top Navigation -->
+<div class="border-b border-solid border-[#254632] px-4 py-3 bg-[#122118]">
+<div class="layout-container max-w-[1280px] mx-auto w-full">
+<header class="flex items-center justify-between whitespace-nowrap">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">ElectroStore</h2>
+</div>
+<div class="hidden md:flex items-center gap-9">
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Shop</a>
+<a class="text-primary text-sm font-medium leading-normal" href="#">Portfolio</a>
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-4 md:gap-8">
+<label class="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-text-muted flex border-none bg-[#254632] items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-[#254632] focus:border-none h-full placeholder:text-text-muted px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Search" value=""/>
+</div>
+</label>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg size-10 bg-[#254632] text-white hover:bg-primary hover:text-black transition-colors">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+</button>
+<button class="flex items-center justify-center rounded-lg size-10 bg-[#254632] text-white hover:bg-primary hover:text-black transition-colors">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary cursor-pointer" data-alt="User profile picture showing a smiling electrician in uniform" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuApf-ZvyJJvt4Aj3MEBGftAUlmH1wDTKV9Icu1cIsN5anInl5HeZ0fVex-TPSFThZ1CAtt4zcXi1-3N2gbKaUZ8OZfmbjbVN4MdOPO4aZjpxrhBNq-ULdHmnpynic8gKQqsAIuU8BJguH_s4q8b89IAldyogMH-12FQgPWhPYkZj14DBecWgOjC6cy1p4mNPahNKq9StTgc14tYOmdiV8mr4lcG4VezcpEfMtbX5wU6bTDsnpPmQrmYY6RpgN6WaD32S3eIkatixaw");'></div>
+</div>
+</header>
+</div>
+</div>
+<!-- Main Content -->
+<div class="flex-1 px-4 py-8 md:px-8 md:py-10 justify-center flex">
+<div class="max-w-[1280px] w-full flex flex-col gap-8">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 text-sm md:text-base">
+<a class="text-text-muted font-medium hover:text-primary" href="#">Home</a>
+<span class="text-text-muted font-medium">/</span>
+<a class="text-text-muted font-medium hover:text-primary" href="#">Portfolio</a>
+<span class="text-text-muted font-medium">/</span>
+<span class="text-white font-medium">Add Project</span>
+</div>
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row justify-between gap-6 md:items-end pb-4 border-b border-border-dark">
+<div class="flex flex-col gap-2">
+<h1 class="text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Add New Project</h1>
+<p class="text-text-muted text-base">Share your latest electrical installation work with the community.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-3 rounded-lg border border-border-dark text-white font-bold hover:bg-surface-dark transition-colors">Save Draft</button>
+<button class="px-6 py-3 rounded-lg bg-primary text-[#122118] font-bold hover:bg-[#2bc466] transition-colors shadow-[0_0_15px_rgba(54,226,123,0.3)]">Publish Project</button>
+</div>
+</div>
+<!-- Form Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Column: Main Input -->
+<div class="lg:col-span-2 flex flex-col gap-8">
+<!-- Basic Info Card -->
+<section class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-white text-lg font-bold">Project Details</label>
+<label class="flex flex-col w-full">
+<p class="text-white text-sm font-medium pb-2">Project Title</p>
+<input class="form-input w-full rounded-lg text-white focus:ring-1 focus:ring-primary border border-border-dark bg-surface-dark h-12 placeholder:text-text-muted px-4" placeholder="e.g. Modern Office Wiring Renovation"/>
+</label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+<label class="flex flex-col w-full">
+<p class="text-white text-sm font-medium pb-2">Client / Location</p>
+<input class="form-input w-full rounded-lg text-white focus:ring-1 focus:ring-primary border border-border-dark bg-surface-dark h-12 placeholder:text-text-muted px-4" placeholder="e.g. Downtown Corporate Center"/>
+</label>
+<label class="flex flex-col w-full">
+<p class="text-white text-sm font-medium pb-2">Category</p>
+<div class="relative">
+<select class="form-select w-full rounded-lg text-white focus:ring-1 focus:ring-primary border border-border-dark bg-surface-dark h-12 px-4 appearance-none">
+<option disabled="" selected="" value="">Select Category</option>
+<option value="residential">Residential Installation</option>
+<option value="commercial">Commercial Wiring</option>
+<option value="industrial">Industrial Maintenance</option>
+<option value="smart-home">Smart Home Automation</option>
+</select>
+</div>
+</label>
+</div>
+</div>
+</section>
+<!-- Rich Text Editor -->
+<section class="flex flex-col gap-2">
+<label class="text-white text-lg font-bold">Description</label>
+<div class="border border-border-dark rounded-lg bg-surface-dark overflow-hidden focus-within:ring-1 focus-within:ring-primary">
+<!-- Toolbar -->
+<div class="flex items-center gap-1 p-2 border-b border-border-dark bg-[#122118]">
+<button class="p-2 rounded hover:bg-surface-dark text-text-muted hover:text-white transition-colors" title="Bold">
+<span class="material-symbols-outlined text-[20px]">format_bold</span>
+</button>
+<button class="p-2 rounded hover:bg-surface-dark text-text-muted hover:text-white transition-colors" title="Italic">
+<span class="material-symbols-outlined text-[20px]">format_italic</span>
+</button>
+<button class="p-2 rounded hover:bg-surface-dark text-text-muted hover:text-white transition-colors" title="Underline">
+<span class="material-symbols-outlined text-[20px]">format_underlined</span>
+</button>
+<div class="w-px h-6 bg-border-dark mx-1"></div>
+<button class="p-2 rounded hover:bg-surface-dark text-text-muted hover:text-white transition-colors" title="List">
+<span class="material-symbols-outlined text-[20px]">format_list_bulleted</span>
+</button>
+<button class="p-2 rounded hover:bg-surface-dark text-text-muted hover:text-white transition-colors" title="Ordered List">
+<span class="material-symbols-outlined text-[20px]">format_list_numbered</span>
+</button>
+<div class="w-px h-6 bg-border-dark mx-1"></div>
+<button class="p-2 rounded hover:bg-surface-dark text-text-muted hover:text-white transition-colors" title="Link">
+<span class="material-symbols-outlined text-[20px]">link</span>
+</button>
+</div>
+<!-- Text Area -->
+<textarea class="w-full h-48 bg-surface-dark text-white p-4 border-none focus:ring-0 resize-y placeholder:text-text-muted" placeholder="Describe the challenges, solutions, and outcomes of this project..."></textarea>
+</div>
+</section>
+<!-- Media Upload -->
+<section class="flex flex-col gap-2">
+<label class="text-white text-lg font-bold">Project Gallery</label>
+<div class="border-2 border-dashed border-border-dark hover:border-primary rounded-xl bg-[#122118] hover:bg-surface-dark transition-all group cursor-pointer p-8 flex flex-col items-center justify-center text-center">
+<div class="size-16 rounded-full bg-surface-dark flex items-center justify-center mb-4 group-hover:bg-[#122118] transition-colors">
+<span class="material-symbols-outlined text-primary text-[32px]">cloud_upload</span>
+</div>
+<p class="text-white font-medium text-lg">Click to upload or drag and drop</p>
+<p class="text-text-muted text-sm mt-1">SVG, PNG, JPG or GIF (max. 800x400px)</p>
+</div>
+<!-- Uploaded Preview -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2">
+<div class="relative group rounded-lg overflow-hidden border border-border-dark aspect-square">
+<img alt="Electric wires connected to a breaker box" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCed3VOL35uM98XwaInxgr6VEPkiHfjf4eMB00oFE9Y3pYWnFQOtdcNp77k7BcVkigill5WEwo3vtjmq8mrotS0wq81RGoVQM4084ASZPp0lDLPcTwCySpmAuibeXUqB-6B7il9NT6J8upEMP1J_5eUuldUFNnsJYJwKbF8N7os8420K4C3oOmV__s87z3qxj6jvQfSJq7SnzO_kgHtN4vnlGh8Kobqk-RXcjx9d3iK3oZRjTMpqCuEXUXjnwOycCF-krAJ9BgyY3o"/>
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="text-red-400 hover:text-red-300">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="relative group rounded-lg overflow-hidden border border-border-dark aspect-square">
+<img alt="Close up of electrical outlet installation" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOk7PCmL9CMRNBX22zqg5Ze8Aa4YZd49EWWC2n95cn6lefXApsy0zTjz24Dn9MvbonFZsd4IDl72VVW3mtb10obG1gs5vPMUjyGBc5FJRRUhcL05knx75o0BsDiWbN9awZMmlxuXLS7DFjhj8Tq_qjaQA8GZJzq84qxxoNEWdzGqDDM4l8qV-WA6IBO-IA4XBt5Qho_Yj350Ed23DBoBx87DiQTOqpsuJzduOibphoSMZZ6iECehBC8OtFbgz1Zgv9acEp-9gfJG4"/>
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="text-red-400 hover:text-red-300">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Sidebar -->
+<div class="lg:col-span-1 flex flex-col gap-8">
+<!-- Publishing Settings -->
+<div class="bg-surface-dark rounded-xl p-6 border border-border-dark flex flex-col gap-6">
+<h3 class="text-white font-bold text-lg border-b border-border-dark pb-4">Publishing</h3>
+<div class="flex items-center justify-between">
+<span class="text-text-muted font-medium">Status</span>
+<span class="px-2 py-1 rounded bg-yellow-500/20 text-yellow-500 text-xs font-bold uppercase tracking-wide">Draft</span>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">Visibility</label>
+<div class="flex gap-2 p-1 bg-[#122118] rounded-lg">
+<button class="flex-1 py-2 text-sm font-medium rounded-md bg-surface-dark text-white shadow-sm">Public</button>
+<button class="flex-1 py-2 text-sm font-medium rounded-md text-text-muted hover:text-white transition-colors">Private</button>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium">Completion Date</label>
+<div class="relative">
+<input class="form-input w-full rounded-lg text-white focus:ring-1 focus:ring-primary border border-border-dark bg-[#122118] h-10 px-4 placeholder:text-text-muted [color-scheme:dark]" type="date"/>
+</div>
+</div>
+</div>
+<!-- Linked Products -->
+<div class="bg-surface-dark rounded-xl p-6 border border-border-dark flex flex-col gap-6">
+<h3 class="text-white font-bold text-lg border-b border-border-dark pb-4">Linked Products</h3>
+<p class="text-text-muted text-sm">Tag products used in this project to help customers find them.</p>
+<div class="relative">
+<div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-muted text-[20px]">search</span>
+</div>
+<input class="form-input w-full rounded-lg text-white focus:ring-1 focus:ring-primary border border-border-dark bg-[#122118] h-10 pl-10 pr-4 placeholder:text-text-muted text-sm" placeholder="Search products..."/>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Linked Item 1 -->
+<div class="flex items-center gap-3 bg-[#122118] p-2 rounded-lg border border-border-dark">
+<img class="size-10 rounded object-cover bg-white/10" data-alt="Roll of copper wire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4dJEhxtwveNwLS2RaoijlstDsT3qqbdb81_Sc9cFVW_hOFCYV3E_oCLKhIp59WKgEgFnzbPN1OasDNd_esyDCiMaC8cYB8N9JTGDM-XvqlYrpFKqShxUua81yO9Y2SpFe5NoPc6BpShw6zemBk7O6m8WoiSpu4JH6-OEZwMZmWhynKU-x2zUJKyK_HiXCRC5sJgoll6DbTVQf6cIM9H1R9IXqMXGlffsrtAhTmp6yC0FQWPt3JHphJL-WAl1e8ye31nTRD--S5Lw"/>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-medium truncate">Copper Wire 100m</p>
+<p class="text-text-muted text-xs">$45.00</p>
+</div>
+<button class="text-text-muted hover:text-red-400 p-1">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Linked Item 2 -->
+<div class="flex items-center gap-3 bg-[#122118] p-2 rounded-lg border border-border-dark">
+<img class="size-10 rounded object-cover bg-white/10" data-alt="Industrial circuit breaker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP98cSTiArjz2ylKE1iyhtFX_sO7KeUa2Bpf3CnZ5cXVIKzXg_-wg6ItWQffh0jOQ70mbsFfKUEr9uBmoyYWKboEbj4F1SDP5qHqEuoj9O75W1D7bGrlVFhihbEIWMhXg9GcPw1x4UH8gKGJeGZdaDQTnHsb_8twmdsqlHgJD-R1XQXLqgU6W9gjusjgG0KBGRONoB7pd4IcnlTr-y2dz8NTjJAln9RPiCbK-DyUbcP8onUGexd92QKeiZkgDLTAC_1qVS3W5L3Qg"/>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-medium truncate">Industrial Breaker Box</p>
+<p class="text-text-muted text-xs">$120.50</p>
+</div>
+<button class="text-text-muted hover:text-red-400 p-1">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

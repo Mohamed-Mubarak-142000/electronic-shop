@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brands Management - ElectroAdmin</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#36e27b",
+              "background-light": "#f6f8f7",
+              "background-dark": "#112117",
+              "surface-dark": "#16291d", 
+              "surface-border": "#254632",
+              "text-secondary": "#95c6a9",
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112117; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #254632; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #36e27b; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white overflow-hidden h-screen flex">
+<!-- Sidebar -->
+<aside class="w-64 flex flex-col border-r border-surface-border bg-background-dark h-full shrink-0 transition-all duration-300">
+<div class="p-6">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 shrink-0 border border-surface-border" data-alt="ElectroAdmin Logo gradient" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD3a_0HGTpsufXpniI3yvo9Vh4rJIbQAYEY-JjfFK8TBGEZWHbj68zqKK3ZOKxoUb9N7t5yRPJof_VOdlOvvLd85TTdcoG8hQkvm1QAo8pxeIwujI1g2r3TRJ8UfAfblHXD2326471Z6zmoYm89legzL96PdVrfMaavaVceh5QWGUnw4HaBCQ_mM6A-bwyeQ-NYCm55vjwnaWBJ0I1lsJOx2P0-ZofsM9Frfial1GzPl8Bz2m9S-Ps-bqORrBCOBuY4qXFOIjXgXAg");'></div>
+<div class="flex flex-col overflow-hidden">
+<h1 class="text-white text-base font-bold leading-tight truncate">ElectroAdmin</h1>
+<p class="text-text-secondary text-xs font-normal leading-normal truncate">Super Admin</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-surface-dark group transition-colors" href="#">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-primary transition-colors">dashboard</span>
+<p class="text-text-secondary group-hover:text-white text-sm font-medium transition-colors">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-surface-dark group transition-colors" href="#">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-primary transition-colors">inventory_2</span>
+<p class="text-text-secondary group-hover:text-white text-sm font-medium transition-colors">Products</p>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl bg-surface-dark border border-surface-border/50 shadow-sm" href="#">
+<span class="material-symbols-outlined text-primary fill-1">branding_watermark</span>
+<p class="text-white text-sm font-bold">Brands</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-surface-dark group transition-colors" href="#">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-primary transition-colors">shopping_cart</span>
+<p class="text-text-secondary group-hover:text-white text-sm font-medium transition-colors">Orders</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-surface-dark group transition-colors" href="#">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-primary transition-colors">settings</span>
+<p class="text-text-secondary group-hover:text-white text-sm font-medium transition-colors">Settings</p>
+</a>
+</nav>
+<div class="p-4 border-t border-surface-border">
+<button class="flex items-center gap-3 px-3 py-2 w-full rounded-xl hover:bg-red-500/10 group transition-colors text-left">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-red-400 transition-colors">logout</span>
+<p class="text-text-secondary group-hover:text-red-400 text-sm font-medium transition-colors">Log Out</p>
+</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- Top Navbar -->
+<header class="h-16 border-b border-surface-border flex items-center justify-between px-8 bg-background-dark/95 backdrop-blur z-10 shrink-0">
+<!-- Breadcrumbs -->
+<nav class="flex items-center text-sm font-medium">
+<a class="text-text-secondary hover:text-white transition-colors" href="#">Home</a>
+<span class="mx-2 text-surface-border">/</span>
+<a class="text-text-secondary hover:text-white transition-colors" href="#">Catalog</a>
+<span class="mx-2 text-surface-border">/</span>
+<span class="text-white">Brands</span>
+</nav>
+<div class="flex items-center gap-4">
+<button class="size-10 rounded-full hover:bg-surface-dark flex items-center justify-center text-text-secondary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full ring-2 ring-background-dark"></span>
+</button>
+<div class="size-9 rounded-full bg-cover bg-center border border-surface-border cursor-pointer" data-alt="User profile picture placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCL3JSMmXP9zJiJPhaUSS2KO4LkE8z1RlZtYqI-kV-7aMS1L7vvkaA0NVcT3Use5DojaWGgdjCWEr-KhLkLPsNoM6zRmnbR6-hr-epP_5LEj6IBFtDhgjHBCDDw5OIBQ6yRYZKoAgydDl_i_3PrUUYOB_DCF3q8wULZUlaYzpomV9cRuRNsrXi7tInRe2qKro6pDWF8psiuxMhQLVJO-cLPdbR1cYrYPZxZHD5Fkv_XizLikeYFjaM333bhSf97pj87wBZxj29xGTE");'></div>
+</div>
+</header>
+<!-- Scrollable Page Content -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="max-w-6xl mx-auto space-y-6">
+<!-- Page Heading & Actions -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h2 class="text-3xl font-bold tracking-tight text-white">Brands Management</h2>
+<p class="text-text-secondary mt-1">Manage electrical product brands and partnerships.</p>
+</div>
+<button class="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-background-dark font-bold px-6 py-3 rounded-full transition-all shadow-[0_0_15px_rgba(54,226,123,0.3)] hover:shadow-[0_0_20px_rgba(54,226,123,0.5)]">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Add New Brand</span>
+</button>
+</div>
+<!-- Filters & Search -->
+<div class="bg-surface-dark border border-surface-border rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+<!-- Search -->
+<div class="relative w-full md:w-96 group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary group-focus-within:text-primary transition-colors material-symbols-outlined">search</span>
+<input class="w-full h-12 bg-background-dark border-transparent focus:border-primary focus:ring-0 rounded-xl pl-12 pr-4 text-white placeholder-text-secondary transition-all" placeholder="Search brand name..." type="text"/>
+</div>
+<!-- Filters -->
+<div class="flex gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+<div class="relative">
+<select class="appearance-none h-12 bg-background-dark border-transparent focus:border-primary focus:ring-0 rounded-xl pl-4 pr-10 text-white cursor-pointer min-w-[140px]">
+<option>All Status</option>
+<option>Active</option>
+<option>Inactive</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none">expand_more</span>
+</div>
+<div class="relative">
+<select class="appearance-none h-12 bg-background-dark border-transparent focus:border-primary focus:ring-0 rounded-xl pl-4 pr-10 text-white cursor-pointer min-w-[140px]">
+<option>Newest First</option>
+<option>Oldest First</option>
+<option>Name A-Z</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none">sort</span>
+</div>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-surface-dark border border-surface-border rounded-2xl overflow-hidden shadow-lg">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-surface-border text-text-secondary text-xs uppercase tracking-wider font-semibold">
+<th class="p-5 pl-8">Brand Details</th>
+<th class="p-5">Products</th>
+<th class="p-5">Status</th>
+<th class="p-5">Last Updated</th>
+<th class="p-5 text-right pr-8">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-border">
+<!-- Row 1 -->
+<tr class="group hover:bg-background-dark/50 transition-colors">
+<td class="p-5 pl-8">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-white p-1 shrink-0 overflow-hidden flex items-center justify-center">
+<img class="w-full h-auto object-contain" data-alt="Samsung logo" onerror="this.src='https://placeholder.pics/svg/100x100/DEDEDE/555555/S'" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNg1Ay9qmBEgOE2b7coXfUrxwhTS9_6htXFgl-jJhxtXk3dPCHBPPafbwpPZ94CKu2Gyi8G4SbkHQ7YBOqLHRAoWQFrDRWS_hMQPFSQ65OppOJSwBuG0uMOmuXoU6cOIVkpPD7GnzOuCQ3Fn4gUt6d9Bx4vQ2u4W1YFaozhsTIDR4oPqMOQl6_9G5fgUL5u_-Dg6QI8h1KHp5e2-wqSSsG4qcEh4mBD9_qWKG-tUFRd7BxISLf5AcCMjJ84Ms87OXQUIwGzrkYuRY"/>
+</div>
+<div>
+<p class="text-white font-medium">Samsung Electronics</p>
+<a class="text-text-secondary text-xs hover:text-primary hover:underline" href="#">samsung.com</a>
+</div>
+</div>
+</td>
+<td class="p-5">
+<div class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-background-dark text-white border border-surface-border">
+                                            142
+                                        </div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/20 text-primary border border-primary/20">
+<span class="size-1.5 rounded-full bg-primary"></span>
+                                            Active
+                                        </span>
+</td>
+<td class="p-5 text-text-secondary text-sm">Oct 24, 2023</td>
+<td class="p-5 text-right pr-8">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-full hover:bg-background-dark text-text-secondary hover:text-white transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-full hover:bg-red-500/10 text-text-secondary hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-background-dark/50 transition-colors">
+<td class="p-5 pl-8">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-white p-1 shrink-0 overflow-hidden flex items-center justify-center">
+<img class="w-full h-auto object-contain" data-alt="Philips logo" onerror="this.src='https://placeholder.pics/svg/100x100/DEDEDE/555555/P'" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCprkH9kwuwhrTuw2i_P8mAbGPTQbhjmCbIhzGFXbvbPYvhd14JRkNzs9d5JxHDrZ0dAr1AIIFqJZS_vSxUjpPafny6GFvmrV7B6IPa65q-zkKlFoBEPFapFtFS0qVW8I0Dy5hghplatfK6LKiLliBPiipuemvx_FgbhBQIdkCSFIH0sOKILlNB4sRaYPpXwdQDcHhUWzpSH7mtaTj07b1DblQIhy17pHiWgmsFNfSs3p2ryXBMeJh28oQNReDa-gCfI8NUbkuE0nM"/>
+</div>
+<div>
+<p class="text-white font-medium">Philips Lighting</p>
+<a class="text-text-secondary text-xs hover:text-primary hover:underline" href="#">philips.com</a>
+</div>
+</div>
+</td>
+<td class="p-5">
+<div class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-background-dark text-white border border-surface-border">
+                                            89
+                                        </div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/20 text-primary border border-primary/20">
+<span class="size-1.5 rounded-full bg-primary"></span>
+                                            Active
+                                        </span>
+</td>
+<td class="p-5 text-text-secondary text-sm">Oct 22, 2023</td>
+<td class="p-5 text-right pr-8">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-full hover:bg-background-dark text-text-secondary hover:text-white transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-full hover:bg-red-500/10 text-text-secondary hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-background-dark/50 transition-colors">
+<td class="p-5 pl-8">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-white p-1 shrink-0 overflow-hidden flex items-center justify-center">
+<img class="w-full h-auto object-contain" data-alt="Schneider Electric logo" onerror="this.src='https://placeholder.pics/svg/100x100/DEDEDE/555555/SE'" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBasLvI6bsJ_yYHgS0513XW5CF4m86WIfT358QoI24Othud4kbeU_KtNdLtKX1jHTu4vNO7CKof_Uqz8DhlFu6zccdls7aIxFixXxh_T2uJo4PWuRrK1hyAyvGspE_uKv7-tcfUYmm0Y1DcEwZZEFuNJ_OoTIcjR7d_q-lI5A85Zb5fQEX0Gc7MFLhuAqHYkGGtFOZ7Mqo17mbSxa6tYhB79jho8QgooHWqn819KfwNjP-IbXV4ARNfwwBRpF3wIMNaRvbzkrFpL-E"/>
+</div>
+<div>
+<p class="text-white font-medium">Schneider Electric</p>
+<a class="text-text-secondary text-xs hover:text-primary hover:underline" href="#">se.com</a>
+</div>
+</div>
+</td>
+<td class="p-5">
+<div class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-background-dark text-white border border-surface-border">
+                                            204
+                                        </div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/20 text-yellow-500 border border-yellow-500/20">
+<span class="size-1.5 rounded-full bg-yellow-500"></span>
+                                            Review
+                                        </span>
+</td>
+<td class="p-5 text-text-secondary text-sm">Oct 20, 2023</td>
+<td class="p-5 text-right pr-8">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-full hover:bg-background-dark text-text-secondary hover:text-white transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-full hover:bg-red-500/10 text-text-secondary hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-background-dark/50 transition-colors">
+<td class="p-5 pl-8">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-white p-1 shrink-0 overflow-hidden flex items-center justify-center">
+<img class="w-full h-auto object-contain" data-alt="Siemens logo" onerror="this.src='https://placeholder.pics/svg/100x100/DEDEDE/555555/Si'" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_lGjA7AMhV3hBVgv3ij7bHtRHWlwHS9zkNVNfb_laXoh1UJAN5PRGwRlrWaofvg58YBCTR_O8cSTV64LKoQuQD2HMpoxPVGGaR9_WLtLyG7AREBYeyjjOPTYLZNvm-XjJekujD2iDn5vntTwPD-HXAOBd5qMEAqMjFeriGA3EYuNfbODxCFWc-ESFSnxgPPjetD63Ud03BuPjsg2X0XpCLIt6SpTJlSbJj1mZmZopxcECsRjE8pt3Uh8SN1bVYdHkzkeqW_lukEo"/>
+</div>
+<div>
+<p class="text-white font-medium">Siemens</p>
+<a class="text-text-secondary text-xs hover:text-primary hover:underline" href="#">siemens.com</a>
+</div>
+</div>
+</td>
+<td class="p-5">
+<div class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-background-dark text-white border border-surface-border">
+                                            156
+                                        </div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gray-600/20 text-gray-400 border border-gray-600/20">
+<span class="size-1.5 rounded-full bg-gray-500"></span>
+                                            Inactive
+                                        </span>
+</td>
+<td class="p-5 text-text-secondary text-sm">Sep 14, 2023</td>
+<td class="p-5 text-right pr-8">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-full hover:bg-background-dark text-text-secondary hover:text-white transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-full hover:bg-red-500/10 text-text-secondary hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-background-dark/50 transition-colors">
+<td class="p-5 pl-8">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-white p-1 shrink-0 overflow-hidden flex items-center justify-center">
+<img class="w-full h-auto object-contain" data-alt="LG logo" onerror="this.src='https://placeholder.pics/svg/100x100/DEDEDE/555555/LG'" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATdFxu2x0tUk9KcDAUoyaEzqoRXpp85Ej8tHvsuokolwbHIqac911vcxWeBgFf_Bamdi-rd0zSP_g0UQJHN6-jjQTsnxb37ZIpHkuwuXi3oTEgowUNQOfdO8DXWrbQrQarRn7QmVqP6pSW3JwtE6CmwIwmyEx3tFq9i91h54TxrU4WlY79ktlhkTncUU2cOn2IXeyrNAUjgDEbxwGlDA4Cw8S2bFmxz2Pn1LjrbouoE-S6sN4oS7v6jxZsJKPJIJCuu2fPl6QKOtc"/>
+</div>
+<div>
+<p class="text-white font-medium">LG Electronics</p>
+<a class="text-text-secondary text-xs hover:text-primary hover:underline" href="#">lg.com</a>
+</div>
+</div>
+</td>
+<td class="p-5">
+<div class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-background-dark text-white border border-surface-border">
+                                            78
+                                        </div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/20 text-primary border border-primary/20">
+<span class="size-1.5 rounded-full bg-primary"></span>
+                                            Active
+                                        </span>
+</td>
+<td class="p-5 text-text-secondary text-sm">Oct 19, 2023</td>
+<td class="p-5 text-right pr-8">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-full hover:bg-background-dark text-text-secondary hover:text-white transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-full hover:bg-red-500/10 text-text-secondary hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="border-t border-surface-border p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+<p class="text-sm text-text-secondary">Showing <span class="text-white font-medium">1-5</span> of <span class="text-white font-medium">128</span> brands</p>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-xl text-text-secondary hover:bg-background-dark hover:text-white disabled:opacity-50 transition-colors">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg bg-primary text-background-dark font-bold text-sm shadow-[0_0_10px_rgba(54,226,123,0.3)]">1</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-text-secondary hover:bg-background-dark hover:text-white text-sm transition-colors">2</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-text-secondary hover:bg-background-dark hover:text-white text-sm transition-colors">3</button>
+<span class="text-text-secondary text-sm px-1">...</span>
+<button class="size-9 flex items-center justify-center rounded-lg text-text-secondary hover:bg-background-dark hover:text-white text-sm transition-colors">12</button>
+<button class="p-2 rounded-xl text-text-secondary hover:bg-background-dark hover:text-white disabled:opacity-50 transition-colors">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<footer class="mt-12 text-center text-text-secondary text-sm pb-4">
+<p>© 2023 ElectroAdmin. All rights reserved.</p>
+</footer>
+</div>
+</main>
+</body></html>
