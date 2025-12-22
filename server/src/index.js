@@ -38,12 +38,14 @@ import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import brandRoutes from './routes/brandRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/brands', brandRoutes);
+app.use('/api/users', userRoutes);
 
 // Basic route
 app.get('/', (req, res) => {

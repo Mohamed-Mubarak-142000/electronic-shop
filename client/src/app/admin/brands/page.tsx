@@ -20,10 +20,12 @@ export default function BrandsPage() {
                         <h2 className="text-3xl font-bold tracking-tight text-white">Brands Management</h2>
                         <p className="text-gray-400 mt-1">Manage electrical product brands and partnerships.</p>
                     </div>
-                    <button className="flex items-center justify-center gap-2 bg-primary hover:bg-green-400 text-background-dark font-bold px-6 py-3 rounded-full transition-all shadow-[0_0_15px_rgba(54,226,123,0.3)] hover:shadow-[0_0_20px_rgba(54,226,123,0.5)]">
-                        <span className="material-symbols-outlined text-[20px]">add</span>
-                        <span>Add New Brand</span>
-                    </button>
+                    <Link href="/admin/brands/create">
+                        <button className="flex items-center justify-center gap-2 bg-primary hover:bg-green-400 text-background-dark font-bold px-6 py-3 rounded-full transition-all shadow-[0_0_15px_rgba(54,226,123,0.3)] hover:shadow-[0_0_20px_rgba(54,226,123,0.5)]">
+                            <span className="material-symbols-outlined text-[20px]">add</span>
+                            <span>Add New Brand</span>
+                        </button>
+                    </Link>
                 </div>
 
                 {/* Filters & Search */}

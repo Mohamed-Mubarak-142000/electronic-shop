@@ -23,10 +23,12 @@ export default function CategoriesPage() {
                         <h1 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">Categories Management</h1>
                         <p className="text-gray-400 text-lg font-light max-w-2xl">Organize your product inventory structure and manage visibility.</p>
                     </div>
-                    <button className="group flex items-center gap-2 bg-primary hover:bg-[#2dc46b] active:scale-95 transition-all text-background-dark px-6 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(54,226,123,0.3)] hover:shadow-[0_0_30px_rgba(54,226,123,0.5)]">
-                        <span className="material-symbols-outlined font-bold">add</span>
-                        <span>Add Category</span>
-                    </button>
+                    <Link href="/admin/categories/create">
+                        <button className="group flex items-center gap-2 bg-primary hover:bg-[#2dc46b] active:scale-95 transition-all text-background-dark px-6 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(54,226,123,0.3)] hover:shadow-[0_0_30px_rgba(54,226,123,0.5)]">
+                            <span className="material-symbols-outlined font-bold">add</span>
+                            <span>Add Category</span>
+                        </button>
+                    </Link>
                 </div>
 
                 {/* Stats */}
