@@ -13,8 +13,25 @@ const createSlug = (name) => {
 // @access  Public
 export const getCategories = async (req, res) => {
     try {
-        const categories = await Category.find({});
+        const categories = await Category.find({}).populate('brand', 'name');
         res.json(categories);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get category by ID
+// @route   GET /api/categories/:id
+// @access  Public
+export const getCategoryById = async (req, res) => {
+    try {
+        const category = await Category.findById(req.params.id).populate('brand', 'name');
+
+        if (category) {
+            res.json(category);
+        } else {
+            res.status(404).json({ message: 'Category not found' });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -25,7 +42,7 @@ export const getCategories = async (req, res) => {
 // @access  Private/Admin
 export const createCategory = async (req, res) => {
     try {
-        const { name, imageUrl, description } = req.body;
+        const { name, imageUrl, description, brand } = req.body;
 
         const categoryExists = await Category.findOne({ name });
         if (categoryExists) {
@@ -36,7 +53,8 @@ export const createCategory = async (req, res) => {
             name,
             slug: createSlug(name),
             imageUrl,
-            description
+            description,
+            brand: brand || undefined
         });
 
         res.status(201).json(category);
@@ -50,13 +68,14 @@ export const createCategory = async (req, res) => {
 // @access  Private/Admin
 export const updateCategory = async (req, res) => {
     try {
-        const { name, imageUrl, description } = req.body;
+        const { name, imageUrl, description, brand } = req.body;
         const category = await Category.findById(req.params.id);
 
         if (category) {
             category.name = name || category.name;
             category.imageUrl = imageUrl || category.imageUrl;
             category.description = description || category.description;
+            category.brand = brand || category.brand;
 
             if (name && name !== category.name) {
                 category.slug = createSlug(name);

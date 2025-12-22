@@ -13,8 +13,25 @@ const createSlug = (name) => {
 // @access  Public
 export const getBrands = async (req, res) => {
     try {
-        const brands = await Brand.find({});
+        const brands = await Brand.find({}).populate('category', 'name');
         res.json(brands);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get brand by ID
+// @route   GET /api/brands/:id
+// @access  Public
+export const getBrandById = async (req, res) => {
+    try {
+        const brand = await Brand.findById(req.params.id).populate('category', 'name');
+
+        if (brand) {
+            res.json(brand);
+        } else {
+            res.status(404).json({ message: 'Brand not found' });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -25,7 +42,7 @@ export const getBrands = async (req, res) => {
 // @access  Private/Admin
 export const createBrand = async (req, res) => {
     try {
-        const { name, logoUrl, description } = req.body;
+        const { name, logoUrl, description, category } = req.body;
 
         const brandExists = await Brand.findOne({ name });
         if (brandExists) {
@@ -36,7 +53,8 @@ export const createBrand = async (req, res) => {
             name,
             slug: createSlug(name),
             logoUrl,
-            description
+            description,
+            category: category || undefined
         });
 
         res.status(201).json(brand);
@@ -50,13 +68,14 @@ export const createBrand = async (req, res) => {
 // @access  Private/Admin
 export const updateBrand = async (req, res) => {
     try {
-        const { name, logoUrl, description } = req.body;
+        const { name, logoUrl, description, category } = req.body;
         const brand = await Brand.findById(req.params.id);
 
         if (brand) {
             brand.name = name || brand.name;
             brand.logoUrl = logoUrl || brand.logoUrl;
             brand.description = description || brand.description;
+            brand.category = category || brand.category;
 
             if (name && name !== brand.name) {
                 brand.slug = createSlug(name);
