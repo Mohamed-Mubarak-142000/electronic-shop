@@ -1,9 +1,21 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import CategoriesTable from '@/components/admin/CategoriesTable';
+import { categoryService } from '@/services/metadataService';
+import { useQuery } from '@tanstack/react-query';
 
 export default function CategoriesPage() {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const { data: stats, isLoading: statsLoading } = useQuery({
+        queryKey: ['category-stats'],
+        queryFn: categoryService.getCategoryStats,
+    });
+
     return (
-        <>
+        <div className="flex flex-col gap-8">
             {/* Breadcrumbs */}
             <div className="flex items-center gap-2 text-sm">
                 <Link href="/admin" className="text-gray-400 hover:text-primary transition-colors font-medium">Dashboard</Link>
@@ -33,8 +45,9 @@ export default function CategoriesPage() {
                         <span className="material-symbols-outlined text-primary">grid_view</span>
                     </div>
                     <div className="flex items-baseline gap-2 mt-2">
-                        <p className="text-white text-2xl font-bold">45</p>
-                        <p className="text-primary text-xs font-medium bg-primary/10 px-2 py-0.5 rounded-full">+3%</p>
+                        <p className="text-white text-2xl font-bold">
+                            {statsLoading ? '...' : stats?.totalCategories || 0}
+                        </p>
                     </div>
                 </div>
                 <div className="flex flex-col gap-1 rounded-xl p-5 border border-white/10 bg-surface-dark shadow-sm">
@@ -43,7 +56,9 @@ export default function CategoriesPage() {
                         <span className="material-symbols-outlined text-primary">visibility</span>
                     </div>
                     <div className="flex items-baseline gap-2 mt-2">
-                        <p className="text-white text-2xl font-bold">42</p>
+                        <p className="text-white text-2xl font-bold">
+                            {statsLoading ? '...' : stats?.activeCategories || 0}
+                        </p>
                         <p className="text-primary text-xs font-medium bg-primary/10 px-2 py-0.5 rounded-full">Live</p>
                     </div>
                 </div>
@@ -53,8 +68,12 @@ export default function CategoriesPage() {
                         <span className="material-symbols-outlined text-orange-400">visibility_off</span>
                     </div>
                     <div className="flex items-baseline gap-2 mt-2">
-                        <p className="text-white text-2xl font-bold">3</p>
-                        <p className="text-orange-400 text-xs font-medium bg-orange-400/10 px-2 py-0.5 rounded-full">Draft</p>
+                        <p className="text-white text-2xl font-bold">
+                            {statsLoading ? '...' : stats?.hiddenCategories || 0}
+                        </p>
+                        {stats?.hiddenCategories > 0 && (
+                            <p className="text-orange-400 text-xs font-medium bg-orange-400/10 px-2 py-0.5 rounded-full">Draft</p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -68,29 +87,26 @@ export default function CategoriesPage() {
                     </div>
                     <input
                         className="block w-full pl-10 pr-3 py-2.5 border-none rounded-lg leading-5 bg-background-dark text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary sm:text-sm"
-                        placeholder="Search categories by name or ID..."
+                        placeholder="Search categories..."
                         type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
                 {/* Filters */}
                 <div className="flex flex-wrap gap-3 w-full lg:w-auto">
-                    <select className="form-select block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-none rounded-lg bg-background-dark text-white focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer">
-                        <option>Status: All</option>
-                        <option>Active</option>
-                        <option>Hidden</option>
-                    </select>
                     <div className="h-9 w-px bg-white/10 mx-1 hidden sm:block"></div>
                     <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background-dark hover:bg-white/5 text-white text-sm font-medium transition-colors">
-                        <span className="material-symbols-outlined text-[18px]">filter_list</span>
-                        <span>Sort</span>
+                        <span className="material-symbols-outlined text-[18px]">sort</span>
+                        <span>Name (A-Z)</span>
                     </button>
                 </div>
             </div>
 
-            <CategoriesTable />
+            <CategoriesTable filters={{ searchTerm }} />
 
             <div className="h-10"></div>
-        </>
+        </div>
     );
 }
 

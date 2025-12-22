@@ -24,6 +24,11 @@ export const categoryService = {
     async deleteCategory(id: string) {
         const response = await api.delete(`/categories/${id}`);
         return response.data;
+    },
+
+    async getCategoryStats() {
+        const response = await api.get('/dashboard/categories/stats');
+        return response.data;
     }
 };
 
@@ -50,6 +55,11 @@ export const brandService = {
 
     async deleteBrand(id: string) {
         const response = await api.delete(`/brands/${id}`);
+        return response.data;
+    },
+
+    async getBrandStats() {
+        const response = await api.get('/dashboard/brands/stats');
         return response.data;
     }
 };

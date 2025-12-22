@@ -1,7 +1,19 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import BrandsTable from '@/components/admin/BrandsTable';
+import { brandService } from '@/services/metadataService';
+import { useQuery } from '@tanstack/react-query';
 
 export default function BrandsPage() {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const { data: stats, isLoading: statsLoading } = useQuery({
+        queryKey: ['brand-stats'],
+        queryFn: brandService.getBrandStats,
+    });
+
     return (
         <div className="flex flex-col gap-8">
             {/* Breadcrumbs */}
@@ -33,8 +45,9 @@ export default function BrandsPage() {
                         <span className="material-symbols-outlined text-primary">verified</span>
                     </div>
                     <div className="flex items-baseline gap-2 mt-2">
-                        <p className="text-white text-2xl font-bold">12</p>
-                        <p className="text-primary text-xs font-medium bg-primary/10 px-2 py-0.5 rounded-full">+1 new</p>
+                        <p className="text-white text-2xl font-bold">
+                            {statsLoading ? '...' : stats?.totalBrands || 0}
+                        </p>
                     </div>
                 </div>
                 <div className="flex flex-col gap-1 rounded-xl p-5 border border-white/10 bg-surface-dark shadow-sm">
@@ -43,7 +56,9 @@ export default function BrandsPage() {
                         <span className="material-symbols-outlined text-primary">handshake</span>
                     </div>
                     <div className="flex items-baseline gap-2 mt-2">
-                        <p className="text-white text-2xl font-bold">10</p>
+                        <p className="text-white text-2xl font-bold">
+                            {statsLoading ? '...' : stats?.activeBrands || 0}
+                        </p>
                         <p className="text-primary text-xs font-medium bg-primary/10 px-2 py-0.5 rounded-full">Live</p>
                     </div>
                 </div>
@@ -53,8 +68,12 @@ export default function BrandsPage() {
                         <span className="material-symbols-outlined text-orange-400">block</span>
                     </div>
                     <div className="flex items-baseline gap-2 mt-2">
-                        <p className="text-white text-2xl font-bold">2</p>
-                        <p className="text-orange-400 text-xs font-medium bg-orange-400/10 px-2 py-0.5 rounded-full">Archived</p>
+                        <p className="text-white text-2xl font-bold">
+                            {statsLoading ? '...' : stats?.inactiveBrands || 0}
+                        </p>
+                        {stats?.inactiveBrands > 0 && (
+                            <p className="text-orange-400 text-xs font-medium bg-orange-400/10 px-2 py-0.5 rounded-full">Archived</p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -68,26 +87,23 @@ export default function BrandsPage() {
                     </div>
                     <input
                         className="block w-full pl-10 pr-3 py-2.5 border-none rounded-lg leading-5 bg-background-dark text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary sm:text-sm"
-                        placeholder="Search brands by name..."
+                        placeholder="Search brands..."
                         type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
                 {/* Filters */}
                 <div className="flex flex-wrap gap-3 w-full lg:w-auto">
-                    <select className="form-select block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-none rounded-lg bg-background-dark text-white focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer">
-                        <option>Status: All</option>
-                        <option>Active</option>
-                        <option>Inactive</option>
-                    </select>
                     <div className="h-9 w-px bg-white/10 mx-1 hidden sm:block"></div>
                     <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background-dark hover:bg-white/5 text-white text-sm font-medium transition-colors">
-                        <span className="material-symbols-outlined text-[18px]">filter_list</span>
-                        <span>Sort</span>
+                        <span className="material-symbols-outlined text-[18px]">sort</span>
+                        <span>Name (A-Z)</span>
                     </button>
                 </div>
             </div>
 
-            <BrandsTable />
+            <BrandsTable filters={{ searchTerm }} />
 
             <div className="h-10"></div>
         </div>

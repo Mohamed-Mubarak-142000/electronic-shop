@@ -1,74 +1,106 @@
-import ProductCard from "@/components/shared/ProductCard";
-import Link from "next/link";
+'use client';
 
-// Mock Data based on design HTML
-const products = [
-    {
-        _id: "1",
-        name: "Smart Wi-Fi LED Bulb, Color Ambiance",
-        description: "Philips Hue", // Using description for Brand as per card layout
-        price: 49.99,
-        imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuDx6nL-zSFEhHia4iFBfbNyEPDlVOCbbh9Pmhde4zQTZZn-c1NUNOampn2PI_42B2Gxa7embHYmFgbcfl5vKUKcroFtE6uGVbgz--jFhNaH5QiAE4CpoYXcqZLBMG3qcxPbb39C5ir-milycZ5tDhakuL3U6nvKUhlrwPKNHbKeMjSLgsVCEnTwtb_Tc-eePMHsTWjyJEeKN9tvzIuy-2adyojYb5J3IKkSMddAV_iok7U6qVn3OGG8ZZBGuSdzMP1l1ZksPJGYpqw",
-        rating: 4.5,
-        reviewCount: 128,
-        discount: 0,
-        isNew: true,
-    },
-    {
-        _id: "2",
-        name: "20 Amp Single-Pole Circuit Breaker",
-        description: "Siemens",
-        price: 8.49,
-        imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBzy8r9Xw_SvE2ysGDpW_xvSV6IQDDs7sxMaoWXFVd3c8q6Z9QjBWYjCKnt7R3BqaLclVcVZSnyoAFJLm1iM_2NMc7msvfhdX3SU8h-ECLdSduCH-huxi9DFiV19BO2kdeS5lc_BV_dVrDf7XuI7Nc4hSVe5JVnaDtr-3VdWquSZlSlXwqv4K5IJ7bhYdJZ0ueQbkzQAs6yKrGzDYjgJXozeWFxDCaKV4cwPllEkzZqgeQjc0fq8tJBRKxGPW4RLuDPs8C5A3AVxqk",
-        rating: 4.8,
-        reviewCount: 42,
-        discount: 15,
-    },
-    {
-        _id: "3",
-        name: "T9 Smart Thermostat with Sensor",
-        description: "Honeywell",
-        price: 169.00,
-        imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuATO-_-nuvqnEHalsJF4uZvPIjJrGYckTBK9QG_YDHbu_jYu276vNGL5XSUGPyTBrLREGJiHYcUQqBpOsdlkiRsqCL6Vww6XUS_VAAC3QPnCWqJfJhnlUKNNNeCvtaFVMsa7u90dDoaJe1mpapT_QlzIk3DyeTIhCEA26XyYqvFKSh1RlccttX5DWR-DLxWJUVLrS9bG7pKsH_QL0C-FbSMb-z-o0nFIMfUoQUdOtgILJC89Xc49t35yxK8QhKfCV5mrDBfmP62CFY",
-        rating: 5,
-        reviewCount: 856,
-        discount: 0,
-        lowStock: true,
-    },
-    {
-        _id: "4",
-        name: "Heavy Duty Wire Stripper & Cutter",
-        description: "Klein Tools",
-        price: 24.97,
-        imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBBLODAGyWVHs_0nfVjzrNUkIVWQAsS1sI9BCeNDNHnY5iyjf_5mgKrCjhdkbefm9xfmpelrA3JsogIlZV58aKXUoElu-j_PwySEn-cemOEc-DenJDIiYIwta466U_m43b1wO7Ho2w00jGej2Z3VA9BdzPxSZ4kdhGegCs6eNY2TOspUuKg2d_6hi9fyqfwRder_Nkjc_GTi5zg1rak4BJkimyNeJjxacyv-9NV6gmJ37defXVissSoUFNvi1J-kvLeWsW3uSth9pM",
-        rating: 4.5,
-        reviewCount: 210,
-        discount: 0,
-    },
-    {
-        _id: "5",
-        name: "Kasa Smart Plug Ultra Mini (4-Pack)",
-        description: "TP-Link",
-        price: 29.99,
-        imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuDdgdW6X4BH4gfBizC9-YUsw9IZQhMdS1zhxOsvODQXh_nTKif7akSNumQPonfARNKyt3-04VE0eyq4vqMgtrhq_sbwjWn_JA6BiAVCQ5-DoQtHwEtPD91v1UqEKO8-nGpNpVnsp-mirRkc1pEf725Gyu-TozaDAKHLFulC4GUa_17lVQN8EdM97ndAyZCtje0Fi5rikexAY3mqQiLn2bKVi79bBcnJoVDn0UOeodhZMzBREpGphxUNVUcxX-foLssG5ApTii9yAeo",
-        rating: 5,
-        reviewCount: 3450,
-        discount: 0,
-        bundle: true,
-    },
-    {
-        _id: "6",
-        name: "Dempsey Low Profile Ceiling Fan with Light",
-        description: "Hunter Fan",
-        price: 149.99,
-        imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBIUyH1VFXwtoVtNiLwOA8bqGkUYqAljSJWsyMuWXT49BeiMZ9wwn24oSGsd8ZTyBIc1dk78TS_3zr6S2ujWXl_soxal1yUteCBQcyJ6Dek0a6b8veItRl5Tm88jGRM_k_DU4nYOnedaVQrMB11bwmTAGAl0OTqPSVUSMhdtfQWUzHUfih1uIGg_KOOwqoZP3dNTvdLTFui6zDGOa14nYo_phnPd-2nFlW-lmIXJYXa86n25S4FZ3K0XzIJiiQ7pe3rwztjN4qxE-I",
-        rating: 4.5,
-        reviewCount: 94,
-        discount: 0,
-    },
-];
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import ProductCard from "@/components/shared/ProductCard";
+import { productService } from "@/services/productService";
+import { categoryService, brandService } from "@/services/metadataService";
 
 export default function ShopPage() {
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    const [products, setProducts] = useState<any[]>([]);
+    const [categories, setCategories] = useState<any[]>([]);
+    const [brands, setBrands] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
+    const [pages, setPages] = useState(1);
+    const [total, setTotal] = useState(0);
+
+    // Filter states
+    const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
+    const [selectedBrand, setSelectedBrand] = useState(searchParams.get('brand') || '');
+    const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
+    const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
+    const [sortBy, setSortBy] = useState(searchParams.get('sort') || '-createdAt');
+
+    const fetchMetadata = async () => {
+        try {
+            const [cats, brs] = await Promise.all([
+                categoryService.getCategories(),
+                brandService.getBrands()
+            ]);
+            setCategories(cats);
+            setBrands(brs);
+        } catch (error) {
+            console.error("Error fetching metadata:", error);
+        }
+    };
+
+    const fetchProducts = useCallback(async () => {
+        setLoading(true);
+        try {
+            const params: any = {
+                page,
+                limit: 9,
+                sort: sortBy
+            };
+            if (selectedCategory) params.category = selectedCategory;
+            if (selectedBrand) params.brand = selectedBrand;
+            if (minPrice) params.minPrice = minPrice;
+            if (maxPrice) params.maxPrice = maxPrice;
+
+            const data = await productService.getProducts(params);
+            setProducts(data.products);
+            setPages(data.pages);
+            setTotal(data.total);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        } finally {
+            setLoading(false);
+        }
+    }, [page, selectedCategory, selectedBrand, minPrice, maxPrice, sortBy]);
+
+    useEffect(() => {
+        fetchMetadata();
+    }, []);
+
+    useEffect(() => {
+        fetchProducts();
+
+        // Update URL
+        const params = new URLSearchParams(searchParams.toString());
+        if (page > 1) params.set('page', page.toString()); else params.delete('page');
+        if (selectedCategory) params.set('category', selectedCategory); else params.delete('category');
+        if (selectedBrand) params.set('brand', selectedBrand); else params.delete('brand');
+        if (minPrice) params.set('minPrice', minPrice); else params.delete('minPrice');
+        if (maxPrice) params.set('maxPrice', maxPrice); else params.delete('maxPrice');
+        if (sortBy !== '-createdAt') params.set('sort', sortBy); else params.delete('sort');
+
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    }, [fetchProducts, page, selectedCategory, selectedBrand, minPrice, maxPrice, sortBy, pathname, router]);
+
+    const handleCategoryToggle = (id: string) => {
+        setSelectedCategory(prev => prev === id ? '' : id);
+        setPage(1);
+    };
+
+    const handleBrandToggle = (id: string) => {
+        setSelectedBrand(prev => prev === id ? '' : id);
+        setPage(1);
+    };
+
+    const clearFilters = () => {
+        setSelectedCategory('');
+        setSelectedBrand('');
+        setMinPrice('');
+        setMaxPrice('');
+        setPage(1);
+    };
+
     return (
         <div className="flex-1 flex flex-col items-center py-8 px-4 md:px-10 lg:px-20 bg-background-dark font-display min-h-screen">
             <div className="w-full max-w-[1440px] flex flex-col gap-8">
@@ -100,22 +132,28 @@ export default function ShopPage() {
                     <aside className="w-full lg:w-72 flex-shrink-0 flex flex-col gap-6 p-6 rounded-2xl bg-surface-dark border border-surface-highlight">
                         <div className="flex items-center justify-between">
                             <h3 className="text-white font-bold text-lg">Filters</h3>
-                            <button className="text-[#95c6a9] text-sm hover:text-primary">Clear All</button>
+                            <button
+                                onClick={clearFilters}
+                                className="text-[#95c6a9] text-sm hover:text-primary transition-colors"
+                            >
+                                Clear All
+                            </button>
                         </div>
 
                         {/* Category Filter */}
                         <div className="flex flex-col gap-3">
                             <h4 className="text-white font-semibold text-sm uppercase tracking-wider opacity-80">Category</h4>
-                            <div className="flex flex-col gap-2">
-                                {["Lighting", "Wiring Devices", "Smart Home", "Circuit Breakers", "Tools & Gear"].map((cat) => (
-                                    <label key={cat} className="flex items-center gap-3 cursor-pointer group">
+                            <div className="flex flex-col gap-2 max-h-48 overflow-y-auto custom-scrollbar pr-2">
+                                {categories.map((cat) => (
+                                    <label key={cat._id} className="flex items-center gap-3 cursor-pointer group">
                                         <input
                                             type="checkbox"
-                                            defaultChecked={cat === "Smart Home"}
+                                            checked={selectedCategory === cat._id}
+                                            onChange={() => handleCategoryToggle(cat._id)}
                                             className="rounded border-2 border-surface-highlight bg-transparent text-primary focus:ring-0 focus:ring-offset-0 size-5"
                                         />
-                                        <span className={`transition-colors ${cat === "Smart Home" ? "text-white font-medium" : "text-[#95c6a9] group-hover:text-white"}`}>
-                                            {cat}
+                                        <span className={`transition-colors ${selectedCategory === cat._id ? "text-white font-medium" : "text-[#95c6a9] group-hover:text-white"}`}>
+                                            {cat.name}
                                         </span>
                                     </label>
                                 ))}
@@ -126,21 +164,15 @@ export default function ShopPage() {
                         {/* Price Filter */}
                         <div className="flex flex-col gap-4">
                             <h4 className="text-white font-semibold text-sm uppercase tracking-wider opacity-80">Price Range</h4>
-                            <div className="flex items-center justify-between text-sm text-white font-bold">
-                                <span>$10</span>
-                                <span>$500+</span>
-                            </div>
-                            <div className="relative h-1.5 w-full bg-surface-highlight rounded-full">
-                                <div className="absolute left-0 top-0 h-full w-1/2 bg-primary rounded-full"></div>
-                                <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 size-4 bg-white rounded-full cursor-pointer shadow-lg shadow-black/50"></div>
-                            </div>
                             <div className="flex gap-2 mt-1">
                                 <div className="flex-1 bg-surface-highlight rounded-lg px-3 py-2">
                                     <span className="text-xs text-[#95c6a9] block">Min</span>
                                     <input
                                         className="w-full bg-transparent border-none p-0 text-white text-sm focus:ring-0 font-bold"
                                         type="number"
-                                        defaultValue={10}
+                                        value={minPrice}
+                                        onChange={(e) => { setMinPrice(e.target.value); setPage(1); }}
+                                        placeholder="0"
                                     />
                                 </div>
                                 <div className="flex-1 bg-surface-highlight rounded-lg px-3 py-2">
@@ -148,7 +180,9 @@ export default function ShopPage() {
                                     <input
                                         className="w-full bg-transparent border-none p-0 text-white text-sm focus:ring-0 font-bold"
                                         type="number"
-                                        defaultValue={250}
+                                        value={maxPrice}
+                                        onChange={(e) => { setMaxPrice(e.target.value); setPage(1); }}
+                                        placeholder="Any"
                                     />
                                 </div>
                             </div>
@@ -158,26 +192,21 @@ export default function ShopPage() {
                         {/* Brand Filter */}
                         <div className="flex flex-col gap-3">
                             <h4 className="text-white font-semibold text-sm uppercase tracking-wider opacity-80">Brand</h4>
-                            <div className="flex flex-col gap-2">
-                                {["Philips Hue", "Lutron", "Siemens", "Klein Tools"].map((brand) => (
-                                    <label key={brand} className="flex items-center gap-3 cursor-pointer group">
+                            <div className="flex flex-col gap-2 max-h-48 overflow-y-auto custom-scrollbar pr-2">
+                                {brands.map((brand) => (
+                                    <label key={brand._id} className="flex items-center gap-3 cursor-pointer group">
                                         <input
                                             type="checkbox"
+                                            checked={selectedBrand === brand._id}
+                                            onChange={() => handleBrandToggle(brand._id)}
                                             className="rounded border-2 border-surface-highlight bg-transparent text-primary focus:ring-0 focus:ring-offset-0 size-5"
                                         />
-                                        <span className="text-[#95c6a9] group-hover:text-white transition-colors">{brand}</span>
+                                        <span className={`transition-colors ${selectedBrand === brand._id ? "text-white font-medium" : "text-[#95c6a9] group-hover:text-white"}`}>
+                                            {brand.name}
+                                        </span>
                                     </label>
                                 ))}
                             </div>
-                        </div>
-                        <div className="h-px bg-surface-highlight w-full"></div>
-
-                        {/* Availability */}
-                        <div className="flex items-center justify-between">
-                            <span className="text-white font-medium">In Stock Only</span>
-                            <button className="relative w-11 h-6 bg-surface-highlight peer-checked:bg-primary rounded-full transition-colors">
-                                <div className="absolute top-1 left-1 bg-white size-4 rounded-full transition-transform translate-x-5"></div>
-                            </button>
                         </div>
                     </aside>
 
@@ -186,15 +215,19 @@ export default function ShopPage() {
                         {/* Toolbar */}
                         <div className="flex flex-wrap items-center justify-between gap-4 mb-6 bg-surface-dark p-4 rounded-2xl border border-surface-highlight">
                             <p className="text-[#95c6a9] text-sm font-medium">
-                                <span className="text-white font-bold">124</span> results found
+                                <span className="text-white font-bold">{total}</span> results found
                             </p>
                             <div className="flex items-center gap-3">
                                 <div className="relative group">
-                                    <select className="appearance-none bg-surface-highlight text-white text-sm font-medium h-10 pl-4 pr-10 rounded-full border-none focus:ring-1 focus:ring-primary cursor-pointer">
-                                        <option>Newest Arrivals</option>
-                                        <option>Price: Low to High</option>
-                                        <option>Price: High to Low</option>
-                                        <option>Best Selling</option>
+                                    <select
+                                        value={sortBy}
+                                        onChange={(e) => { setSortBy(e.target.value); setPage(1); }}
+                                        className="appearance-none bg-surface-highlight text-white text-sm font-medium h-10 pl-4 pr-10 rounded-full border-none focus:ring-1 focus:ring-primary cursor-pointer outline-none"
+                                    >
+                                        <option value="-createdAt">Newest Arrivals</option>
+                                        <option value="price">Price: Low to High</option>
+                                        <option value="-price">Price: High to Low</option>
+                                        <option value="-rating">Top Rated</option>
                                     </select>
                                     <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#95c6a9] pointer-events-none text-lg">
                                         expand_more
@@ -212,36 +245,69 @@ export default function ShopPage() {
                         </div>
 
                         {/* Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            {products.map((product) => (
-                                <ProductCard key={product._id} product={product} />
-                            ))}
-                        </div>
+                        {loading ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                {[...Array(6)].map((_, i) => (
+                                    <div key={i} className="bg-surface-dark rounded-[2rem] p-4 h-96 animate-pulse border border-surface-highlight"></div>
+                                ))}
+                            </div>
+                        ) : products.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                {products.map((product) => (
+                                    <ProductCard key={product._id} product={product} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-20 text-center">
+                                <span className="material-symbols-outlined text-6xl text-[#95c6a9] mb-4 opacity-20">inventory_2</span>
+                                <h3 className="text-white text-xl font-bold mb-2">No products found</h3>
+                                <p className="text-[#95c6a9]">Try adjusting your filters or search criteria.</p>
+                                <button
+                                    onClick={clearFilters}
+                                    className="mt-6 px-6 py-2 bg-primary text-background-dark font-bold rounded-full hover:bg-green-400 transition-colors"
+                                >
+                                    Clear All Filters
+                                </button>
+                            </div>
+                        )}
 
                         {/* Pagination */}
-                        <div className="mt-12 flex justify-center">
-                            <nav className="flex items-center gap-2 bg-surface-dark p-2 rounded-full border border-surface-highlight">
-                                <button className="size-10 flex items-center justify-center rounded-full text-[#95c6a9] hover:bg-surface-highlight hover:text-white transition-colors">
-                                    <span className="material-symbols-outlined">chevron_left</span>
-                                </button>
-                                <button className="size-10 flex items-center justify-center rounded-full bg-primary text-[#122118] font-bold shadow-lg shadow-primary/20">
-                                    1
-                                </button>
-                                <button className="size-10 flex items-center justify-center rounded-full text-white hover:bg-surface-highlight transition-colors font-medium">
-                                    2
-                                </button>
-                                <button className="size-10 flex items-center justify-center rounded-full text-white hover:bg-surface-highlight transition-colors font-medium">
-                                    3
-                                </button>
-                                <span className="text-[#95c6a9] px-2">...</span>
-                                <button className="size-10 flex items-center justify-center rounded-full text-white hover:bg-surface-highlight transition-colors font-medium">
-                                    12
-                                </button>
-                                <button className="size-10 flex items-center justify-center rounded-full text-[#95c6a9] hover:bg-surface-highlight hover:text-white transition-colors">
-                                    <span className="material-symbols-outlined">chevron_right</span>
-                                </button>
-                            </nav>
-                        </div>
+                        {pages > 1 && (
+                            <div className="mt-12 flex justify-center">
+                                <nav className="flex items-center gap-2 bg-surface-dark p-2 rounded-full border border-surface-highlight">
+                                    <button
+                                        disabled={page === 1}
+                                        onClick={() => setPage(prev => Math.max(1, prev - 1))}
+                                        className="size-10 flex items-center justify-center rounded-full text-[#95c6a9] hover:bg-surface-highlight hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                    >
+                                        <span className="material-symbols-outlined">chevron_left</span>
+                                    </button>
+
+                                    {[...Array(pages)].map((_, i) => {
+                                        const pageNum = i + 1;
+                                        // Simple pagination logic, showing all for now as pages might be low
+                                        // Can be optimized for many pages later
+                                        return (
+                                            <button
+                                                key={pageNum}
+                                                onClick={() => setPage(pageNum)}
+                                                className={`size-10 flex items-center justify-center rounded-full transition-colors font-bold ${page === pageNum ? 'bg-primary text-[#122118] shadow-lg shadow-primary/20' : 'text-white hover:bg-surface-highlight hover:text-white'}`}
+                                            >
+                                                {pageNum}
+                                            </button>
+                                        );
+                                    })}
+
+                                    <button
+                                        disabled={page === pages}
+                                        onClick={() => setPage(prev => Math.min(pages, prev + 1))}
+                                        className="size-10 flex items-center justify-center rounded-full text-[#95c6a9] hover:bg-surface-highlight hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                    >
+                                        <span className="material-symbols-outlined">chevron_right</span>
+                                    </button>
+                                </nav>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

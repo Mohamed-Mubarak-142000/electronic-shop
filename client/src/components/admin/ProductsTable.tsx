@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { DataTable, Column } from '@/components/ui/data-table';
 import Pagination from './ui/Pagination';
@@ -14,27 +14,53 @@ type Product = {
     images: string[];
     name: string;
     sku: string;
-    category: { name: string } | null;
-    brand: { name: string } | null;
+    category: { _id: string; name: string } | null;
+    brand: { _id: string; name: string } | null;
     price: number;
     stock: number;
-    // status: 'In Stock' | 'Low Stock' | 'Out of Stock'; // Derived from stock
 };
 
-export default function ProductsTable() {
+interface ProductsTableProps {
+    filters: {
+        searchTerm: string;
+        category: string;
+        brand: string;
+        stockStatus: string;
+        sort: string;
+    };
+}
+
+export default function ProductsTable({ filters }: ProductsTableProps) {
     const [page, setPage] = useState(1);
     const limit = 10;
     const queryClient = useQueryClient();
 
+    // Reset page on filter change
+    useEffect(() => {
+        setPage(1);
+    }, [filters]);
+
     const { data, isLoading } = useQuery({
-        queryKey: ['products', page],
-        queryFn: () => productService.getProducts({ page, limit }),
+        queryKey: ['products', page, filters],
+        queryFn: () => productService.getProducts({
+            page,
+            limit,
+            search: filters.searchTerm,
+            category: filters.category,
+            brand: filters.brand,
+            sort: filters.sort,
+            // Assuming backend handles stockStatus or we derive filters here
+            ...(filters.stockStatus === 'low-stock' && { maxStock: 10, minStock: 1 }),
+            ...(filters.stockStatus === 'out-of-stock' && { maxStock: 0 }),
+            ...(filters.stockStatus === 'in-stock' && { minStock: 11 }),
+        }),
     });
 
     const deleteMutation = useMutation({
         mutationFn: productService.deleteProduct,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
+            queryClient.invalidateQueries({ queryKey: ['product-stats'] });
             toast.success('Product deleted successfully');
         },
         onError: (error: any) => {
@@ -69,20 +95,17 @@ export default function ProductsTable() {
         },
         {
             header: 'Category',
-            accessorKey: 'category',
             cell: (row) => <span className="text-gray-300">{row.category?.name || 'N/A'}</span>,
             className: 'text-gray-300'
         },
         {
             header: 'Brand',
-            accessorKey: 'brand',
             cell: (row) => <span className="text-gray-300">{row.brand?.name || 'N/A'}</span>,
             className: 'text-gray-300'
         },
         {
             header: 'Price',
-            accessorKey: 'price',
-            cell: (row) => <span className="text-white font-medium">${row.price}</span>,
+            cell: (row) => <span className="text-white font-medium">${row.price.toFixed(2)}</span>,
             className: 'text-white font-medium text-right'
         },
         {
@@ -135,7 +158,11 @@ export default function ProductsTable() {
         }
     ];
 
-    if (isLoading) return <div className="text-white">Loading...</div>;
+    if (isLoading) return (
+        <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+    );
 
     const products = data?.products || [];
     const totalPages = data?.pages || 1;
@@ -148,13 +175,15 @@ export default function ProductsTable() {
                 columns={columns}
                 className="bg-surface-dark border-white/5"
             />
-            <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                totalItems={totalItems}
-                itemsPerPage={limit}
-                onPageChange={setPage}
-            />
+            {totalItems > limit && (
+                <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    totalItems={totalItems}
+                    itemsPerPage={limit}
+                    onPageChange={setPage}
+                />
+            )}
         </div>
     );
 }

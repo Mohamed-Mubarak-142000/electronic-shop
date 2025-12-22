@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { DataTable, Column } from '@/components/ui/data-table';
 import Pagination from './ui/Pagination';
@@ -16,31 +16,41 @@ type Category = {
     description: string;
 };
 
-export default function CategoriesTable() {
+interface CategoriesTableProps {
+    filters: {
+        searchTerm: string;
+    };
+}
+
+export default function CategoriesTable({ filters }: CategoriesTableProps) {
     const [page, setPage] = useState(1);
     const limit = 10;
     const queryClient = useQueryClient();
 
     const { data, isLoading } = useQuery({
-        queryKey: ['categories'], // Categories endpoint might not support pagination yet based on previous file reads, but let's assume it returns array or we handle it.
-        // If metadataService.getCategories returns just array:
+        queryKey: ['categories'],
         queryFn: categoryService.getCategories,
     });
 
-    // The current getCategories controller sends all categories (res.json(categories)). 
-    // If I need pagination I might need to splice it client side or update backend. 
-    // For now assuming all categories are returned.
     const categories: Category[] = Array.isArray(data) ? data : [];
-    // Client-side pagination for now since backend might just send all
-    const totalItems = categories.length;
-    const totalPages = Math.ceil(totalItems / limit);
-    const paginatedCategories = categories.slice((page - 1) * limit, page * limit);
 
+    // Client-side filtering
+    const filteredCategories = useMemo(() => {
+        return categories.filter(cat =>
+            cat.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+            cat.description.toLowerCase().includes(filters.searchTerm.toLowerCase())
+        );
+    }, [categories, filters.searchTerm]);
+
+    const totalItems = filteredCategories.length;
+    const totalPages = Math.ceil(totalItems / limit);
+    const paginatedCategories = filteredCategories.slice((page - 1) * limit, page * limit);
 
     const deleteMutation = useMutation({
         mutationFn: categoryService.deleteCategory,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['categories'] });
+            queryClient.invalidateQueries({ queryKey: ['category-stats'] });
             toast.success('Category deleted successfully');
         },
         onError: (error: any) => {
@@ -96,7 +106,11 @@ export default function CategoriesTable() {
         }
     ];
 
-    if (isLoading) return <div className="text-white">Loading...</div>;
+    if (isLoading) return (
+        <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+    );
 
     return (
         <div className="flex flex-col">
@@ -105,14 +119,16 @@ export default function CategoriesTable() {
                 columns={columns}
                 className="rounded-3xl shadow-xl bg-surface-dark border-[#254632]"
             />
-            <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                totalItems={totalItems}
-                itemsPerPage={limit}
-                onPageChange={setPage}
-                className="rounded-3xl shadow-xl mt-4"
-            />
+            {totalItems > limit && (
+                <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    totalItems={totalItems}
+                    itemsPerPage={limit}
+                    onPageChange={setPage}
+                    className="rounded-3xl shadow-xl mt-4"
+                />
+            )}
         </div>
     );
 }

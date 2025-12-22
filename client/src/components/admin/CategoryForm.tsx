@@ -5,15 +5,16 @@ import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { categoryService } from '@/services/metadataService';
+import { categoryService, brandService } from '@/services/metadataService';
 
 const categorySchema = z.object({
     name: z.string().min(1, 'Name is required'),
     description: z.string().min(1, 'Description is required'),
     imageUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
     isPublished: z.boolean().default(true),
+    brand: z.string().optional().or(z.literal('')),
 });
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
@@ -25,6 +26,8 @@ interface CategoryFormProps {
 export default function CategoryForm({ initialData }: CategoryFormProps) {
     const router = useRouter();
     const queryClient = useQueryClient();
+    const { data: brandsData } = useQuery({ queryKey: ['brands'], queryFn: brandService.getBrands });
+    const brandsList = Array.isArray(brandsData) ? brandsData : [];
 
     const form = useForm<CategoryFormValues>({
         resolver: zodResolver(categorySchema) as any,
@@ -33,6 +36,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
             description: initialData?.description || '',
             imageUrl: initialData?.imageUrl || '',
             isPublished: initialData?.isPublished ?? true,
+            brand: typeof initialData?.brand === 'string' ? initialData.brand : initialData?.brand?._id || '',
         },
         mode: 'onChange'
     });
@@ -44,6 +48,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                 description: initialData.description,
                 imageUrl: initialData.imageUrl,
                 isPublished: initialData.isPublished ?? true,
+                brand: typeof initialData.brand === 'string' ? initialData.brand : initialData.brand?._id || '',
             });
         }
     }, [initialData, form]);
@@ -149,6 +154,19 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                             >
                                 <option value="true">Active / Published</option>
                                 <option value="false">Hidden / Draft</option>
+                            </select>
+                        </label>
+                        {/* Brand Select Box */}
+                        <label className="flex flex-col w-full">
+                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Brand</span>
+                            <select
+                                {...form.register('brand')}
+                                className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
+                            >
+                                <option value="">Select Brand</option>
+                                {brandsList.map((brand: any) => (
+                                    <option key={brand._id} value={brand._id}>{brand.name}</option>
+                                ))}
                             </select>
                         </label>
                     </div>
