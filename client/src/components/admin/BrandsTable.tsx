@@ -50,40 +50,42 @@ export default function BrandsTable() {
 
     const columns: Column<Brand>[] = [
         {
-            header: <span className="pl-8">Brand Details</span>,
+            header: <span className="text-gray-400">Brand</span>,
             cell: (row) => (
                 <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-white p-1 shrink-0 overflow-hidden flex items-center justify-center">
+                    <div className="size-12 rounded-full bg-white p-2 shrink-0 overflow-hidden flex items-center justify-center border-2 border-[#254632] group-hover:border-primary transition-colors">
                         <img className="w-full h-auto object-contain" src={row.logoUrl || '/placeholder.png'} alt={row.name} />
                     </div>
                     <div>
                         <p className="text-white font-medium">{row.name}</p>
                     </div>
                 </div>
-            ),
-            className: "pl-8"
+            )
         },
         {
-            header: 'Description',
-            accessorKey: 'description',
+            header: <span className="hidden md:table-cell text-gray-400">Slug</span>,
+            cell: (row) => <span className="text-gray-400">{row.slug}</span>,
+            className: "hidden md:table-cell font-mono"
+        },
+        {
+            header: <span className="text-gray-400">Description</span>,
             cell: (row) => <span className="text-gray-400 truncate max-w-xs block">{row.description}</span>,
-            className: 'text-gray-400 text-sm'
         },
         {
-            header: 'Actions',
-            className: 'text-right pr-8',
+            header: <span className="text-gray-400">Actions</span>,
+            className: "text-right pr-6",
             cell: (row) => (
                 <div className="flex items-center justify-end gap-2 text-right">
                     <Link href={`/admin/brands/edit/${row._id}`}>
-                        <button className="p-2 rounded-full hover:bg-background-dark text-gray-400 hover:text-white transition-colors" title="Edit">
-                            <span className="material-symbols-outlined text-[20px]">edit</span>
+                        <button className="size-8 flex items-center justify-center rounded-full bg-[#254632] text-white hover:bg-primary hover:text-background-dark transition-colors" title="Edit">
+                            <span className="material-symbols-outlined text-lg">edit</span>
                         </button>
                     </Link>
                     <button
                         onClick={() => handleDelete(row._id)}
-                        className="p-2 rounded-full hover:bg-red-500/10 text-gray-400 hover:text-red-500 transition-colors" title="Delete"
+                        className="size-8 flex items-center justify-center rounded-full bg-[#254632] text-white hover:bg-red-500 hover:text-white transition-colors" title="Delete"
                     >
-                        <span className="material-symbols-outlined text-[20px]">delete</span>
+                        <span className="material-symbols-outlined text-lg">delete</span>
                     </button>
                 </div>
             )
@@ -97,7 +99,7 @@ export default function BrandsTable() {
             <DataTable
                 data={paginatedBrands}
                 columns={columns}
-                className="bg-surface-dark border-white/5 border-0"
+                className="rounded-3xl shadow-xl bg-surface-dark border-[#254632]"
             />
             <Pagination
                 currentPage={page}
@@ -105,6 +107,7 @@ export default function BrandsTable() {
                 totalItems={totalItems}
                 itemsPerPage={limit}
                 onPageChange={setPage}
+                className="rounded-3xl shadow-xl mt-4"
             />
         </div>
     );

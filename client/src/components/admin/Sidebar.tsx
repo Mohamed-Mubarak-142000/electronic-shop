@@ -27,8 +27,8 @@ export default function Sidebar() {
                     <Link
                         href="/admin"
                         className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin') && pathname === '/admin' // Exact match for dashboard root
-                                ? 'bg-primary/10 border-primary'
-                                : 'hover:bg-white/5 border-transparent'
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
                             } group`}
                     >
                         <span
@@ -48,8 +48,8 @@ export default function Sidebar() {
                     <Link
                         href="/admin/products"
                         className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/products')
-                                ? 'bg-primary/10 border-primary'
-                                : 'hover:bg-white/5 border-transparent'
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
                             } group`}
                     >
                         <span
@@ -67,10 +67,52 @@ export default function Sidebar() {
                     </Link>
 
                     <Link
+                        href="/admin/categories"
+                        className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/categories')
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
+                            } group`}
+                    >
+                        <span
+                            className={`material-symbols-outlined group-hover:text-white ${isActive('/admin/categories') ? 'text-primary' : 'text-gray-400'
+                                }`}
+                        >
+                            grid_view
+                        </span>
+                        <span
+                            className={`font-medium text-sm group-hover:text-white ${isActive('/admin/categories') ? 'text-white' : 'text-gray-300'
+                                }`}
+                        >
+                            Categories
+                        </span>
+                    </Link>
+
+                    <Link
+                        href="/admin/brands"
+                        className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/brands')
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
+                            } group`}
+                    >
+                        <span
+                            className={`material-symbols-outlined group-hover:text-white ${isActive('/admin/brands') ? 'text-primary' : 'text-gray-400'
+                                }`}
+                        >
+                            verified
+                        </span>
+                        <span
+                            className={`font-medium text-sm group-hover:text-white ${isActive('/admin/brands') ? 'text-white' : 'text-gray-300'
+                                }`}
+                        >
+                            Brands
+                        </span>
+                    </Link>
+
+                    <Link
                         href="/admin/orders"
                         className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/orders')
-                                ? 'bg-primary/10 border-primary'
-                                : 'hover:bg-white/5 border-transparent'
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
                             } group`}
                     >
                         <span
@@ -90,8 +132,8 @@ export default function Sidebar() {
                     <Link
                         href="/admin/customers"
                         className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/customers')
-                                ? 'bg-primary/10 border-primary'
-                                : 'hover:bg-white/5 border-transparent'
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
                             } group`}
                     >
                         <span
@@ -111,8 +153,8 @@ export default function Sidebar() {
                     <Link
                         href="/admin/analytics"
                         className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/analytics')
-                                ? 'bg-primary/10 border-primary'
-                                : 'hover:bg-white/5 border-transparent'
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
                             } group`}
                     >
                         <span
@@ -134,8 +176,8 @@ export default function Sidebar() {
                     <Link
                         href="/admin/settings"
                         className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/settings')
-                                ? 'bg-primary/10 border-primary'
-                                : 'hover:bg-white/5 border-transparent'
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
                             } group`}
                     >
                         <span
