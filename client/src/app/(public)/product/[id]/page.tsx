@@ -3,7 +3,10 @@
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 import { toast } from "react-hot-toast";
+import ProductCard from "@/components/shared/ProductCard";
 
 interface Product {
     _id: string;
@@ -29,7 +32,11 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState("Description");
 
+    const user = useAuthStore((state) => state.user);
     const { addItem } = useCartStore();
+    const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+
+    const isWishlisted = product ? isInWishlist(product._id) : false;
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -74,6 +81,10 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     };
 
     const handleAddToCart = () => {
+        if (!user) {
+            toast.error("Please login to add items to cart");
+            return;
+        }
         if (product) {
             addItem({
                 id: product._id,
@@ -84,6 +95,28 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                 inStock: product.stock > 0
             });
             toast.success("Added to cart!");
+        }
+    };
+
+    const handleWishlistToggle = () => {
+        if (!user) {
+            toast.error("Please login to manage your wishlist");
+            return;
+        }
+        if (product) {
+            if (isWishlisted) {
+                removeFromWishlist(product._id);
+                toast.success("Removed from wishlist");
+            } else {
+                addToWishlist({
+                    id: product._id,
+                    name: product.name,
+                    price: product.price,
+                    imageUrl: product.images[0] || "",
+                    description: product.description
+                });
+                toast.success("Added to wishlist!");
+            }
         }
     };
 
@@ -290,8 +323,11 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                                     <span className="material-symbols-outlined">shopping_cart</span>
                                     Add to Cart
                                 </button>
-                                <button className="size-14 rounded-full border border-slate-300 dark:border-[#366348] text-slate-600 dark:text-[#95c6a9] hover:border-primary hover:text-primary dark:hover:text-primary dark:hover:border-primary flex items-center justify-center transition-all">
-                                    <span className="material-symbols-outlined">favorite</span>
+                                <button
+                                    onClick={handleWishlistToggle}
+                                    className={`size-14 rounded-full border flex items-center justify-center transition-all ${isWishlisted ? 'bg-red-500/10 border-red-500 text-red-500' : 'border-slate-300 dark:border-[#366348] text-slate-600 dark:text-[#95c6a9] hover:border-red-500 hover:text-red-500'}`}
+                                >
+                                    <span className={`material-symbols-outlined ${isWishlisted ? 'filled' : ''}`} style={{ fontVariationSettings: isWishlisted ? "'FILL' 1" : "" }}>favorite</span>
                                 </button>
                             </div>
 
@@ -357,21 +393,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                     <div className="mb-16">
                         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">Related Products</h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-                            {relatedProducts.map((item) => (
-                                <Link key={item._id} href={`/product/${item._id}`} className="group flex flex-col">
-                                    <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 dark:bg-surface-dark mb-3">
-                                        <img
-                                            alt={item.name}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                            src={item.images?.[0] || "/placeholder.jpg"}
-                                        />
-                                        <div className="absolute bottom-3 right-3 size-10 rounded-full bg-white dark:bg-surface-highlight text-slate-900 dark:text-white shadow-lg flex items-center justify-center hover:bg-primary dark:hover:bg-primary hover:text-[#112117] transition-colors">
-                                            <span className="material-symbols-outlined text-xl">shopping_bag</span>
-                                        </div>
-                                    </div>
-                                    <h3 className="text-sm font-medium text-slate-900 dark:text-white truncate">{item.name}</h3>
-                                    <p className="text-sm font-bold text-primary">${item.price.toFixed(2)}</p>
-                                </Link>
+                            {relatedProducts.map((item: any) => (
+                                <ProductCard key={item._id} product={item} />
                             ))}
                         </div>
                     </div>

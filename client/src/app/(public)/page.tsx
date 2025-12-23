@@ -4,27 +4,30 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/shared/ProductCard";
 import { productService } from "@/services/productService";
-import { categoryService } from "@/services/metadataService";
+import { categoryService, brandService } from "@/services/metadataService";
 
 export default function Home() {
   const [bestSellers, setBestSellers] = useState<any[]>([]);
   const [homeCategories, setHomeCategories] = useState<any[]>([]);
   const [newArrivals, setNewArrivals] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [productsData, categoriesData, arrivalsData] = await Promise.all([
+        const [productsData, categoriesData, arrivalsData, brandsData] = await Promise.all([
           productService.getProducts({ limit: 4 }),
           categoryService.getCategories(),
           productService.getProducts({ limit: 5, sort: "-createdAt" }),
+          brandService.getBrands(),
         ]);
 
         setBestSellers(productsData.products || []);
         setHomeCategories(categoriesData || []);
         setNewArrivals(arrivalsData.products || []);
+        setBrands(brandsData || []);
       } catch (error) {
         console.error("Error fetching home page data:", error);
       } finally {
@@ -92,21 +95,23 @@ export default function Home() {
             Trusted by top brands
           </p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            <div className="text-2xl font-black text-white tracking-tighter">
-              PHILIPS
-            </div>
-            <div className="text-2xl font-bold text-white italic">
-              Schneider
-            </div>
-            <div className="text-xl font-bold text-white border-2 border-white px-2 py-0.5">
-              SIEMENS
-            </div>
-            <div className="text-2xl font-bold text-white tracking-widest">
-              LUTRON
-            </div>
-            <div className="flex items-center gap-1 text-xl font-bold text-white">
-              <span className="material-symbols-outlined">bolt</span>ABB
-            </div>
+            {brands.length > 0 ? (
+              brands.map((brand) => (
+                <div key={brand._id} className="text-2xl font-black text-white tracking-tighter uppercase">
+                  {brand.name}
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="text-2xl font-black text-white tracking-tighter">PHILIPS</div>
+                <div className="text-2xl font-bold text-white italic">Schneider</div>
+                <div className="text-xl font-bold text-white border-2 border-white px-2 py-0.5">SIEMENS</div>
+                <div className="text-2xl font-bold text-white tracking-widest">LUTRON</div>
+                <div className="flex items-center gap-1 text-xl font-bold text-white">
+                  <span className="material-symbols-outlined">bolt</span>ABB
+                </div>
+              </>
+            )}
           </div>
         </div>
 

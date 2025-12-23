@@ -3,9 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
+    const router = useRouter();
     const { cartItems, updateQuantity, removeItem } = useCartStore();
+    const { user } = useAuthStore();
     const [activeTab, setActiveTab] = useState("cart");
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -20,6 +25,16 @@ export default function CartPage() {
 
     const handleRemoveItem = (id: string) => {
         removeItem(id);
+    };
+
+    const handleCheckout = () => {
+        if (!user) {
+            toast.error("Please login to proceed to checkout");
+            router.push('/login');
+            return;
+        }
+        toast.success("Proceeding to checkout...");
+        // In a real app, redirect to checkout page
     };
 
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -254,7 +269,10 @@ export default function CartPage() {
                                     </button>
                                 </div>
                             </div>
-                            <button className="w-full bg-primary hover:bg-green-400 text-surface-dark font-black text-lg py-4 rounded-full shadow-[0_0_20px_rgba(54,226,123,0.3)] hover:shadow-[0_0_30px_rgba(54,226,123,0.5)] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-4">
+                            <button
+                                onClick={handleCheckout}
+                                className="w-full bg-primary hover:bg-green-400 text-surface-dark font-black text-lg py-4 rounded-full shadow-[0_0_20px_rgba(54,226,123,0.3)] hover:shadow-[0_0_30px_rgba(54,226,123,0.5)] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-4"
+                            >
                                 <span>Checkout</span>
                                 <span className="material-symbols-outlined">arrow_forward</span>
                             </button>

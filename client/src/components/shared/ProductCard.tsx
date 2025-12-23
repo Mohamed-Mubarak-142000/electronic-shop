@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import { useCartStore } from "@/store/useCartStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
+import { toast } from "react-hot-toast";
 
 interface Product {
     _id: string;
@@ -22,7 +25,11 @@ interface Product {
 }
 
 export default function ProductCard({ product }: { product: Product }) {
+    const user = useAuthStore((state) => state.user);
     const addItem = useCartStore((state) => state.addItem);
+    const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+
+    const isWishlisted = isInWishlist(product._id);
 
     // Helper to determine image source
     const imageSrc = product.imageUrl ||
@@ -33,6 +40,10 @@ export default function ProductCard({ product }: { product: Product }) {
     const brandName = typeof product.brand === 'object' ? product.brand?.name : '';
 
     const handleAddToCart = () => {
+        if (!user) {
+            toast.error("Please login to add items to cart");
+            return;
+        }
         addItem({
             id: product._id,
             name: product.name,
@@ -43,6 +54,31 @@ export default function ProductCard({ product }: { product: Product }) {
             sku: product._id.substring(0, 8).toUpperCase(),
             inStock: true
         });
+        toast.success("Added to cart!");
+    };
+
+    const handleWishlistToggle = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!user) {
+            toast.error("Please login to manage your wishlist");
+            return;
+        }
+
+        if (isWishlisted) {
+            removeFromWishlist(product._id);
+            toast.success("Removed from wishlist");
+        } else {
+            addToWishlist({
+                id: product._id,
+                name: product.name,
+                price: product.price,
+                imageUrl: imageSrc,
+                description: product.description
+            });
+            toast.success("Added to wishlist!");
+        }
     };
 
     return (
@@ -103,12 +139,20 @@ export default function ProductCard({ product }: { product: Product }) {
                             <span className="text-primary text-xl font-bold">${product.price.toFixed(2)}</span>
                         )}
                     </div>
-                    <button
-                        onClick={handleAddToCart}
-                        className="size-10 rounded-full bg-[#122118] border border-surface-highlight text-white flex items-center justify-center hover:bg-primary hover:text-[#122118] hover:border-primary transition-all shadow-[0_0_15px_rgba(54,226,123,0)_hover:shadow-[0_0_15px_rgba(54,226,123,0.3)]"
-                    >
-                        <span className="material-symbols-outlined">add_shopping_cart</span>
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={handleWishlistToggle}
+                            className={`size-10 rounded-full border flex items-center justify-center transition-all ${isWishlisted ? 'bg-red-500/10 border-red-500 text-red-500' : 'bg-[#122118] border-surface-highlight text-white hover:border-red-500 hover:text-red-500'}`}
+                        >
+                            <span className={`material-symbols-outlined ${isWishlisted ? 'filled' : ''}`} style={{ fontVariationSettings: isWishlisted ? "'FILL' 1" : "" }}>favorite</span>
+                        </button>
+                        <button
+                            onClick={handleAddToCart}
+                            className="size-10 rounded-full bg-[#122118] border border-surface-highlight text-white flex items-center justify-center hover:bg-primary hover:text-[#122118] hover:border-primary transition-all shadow-[0_0_15px_rgba(54,226,123,0)_hover:shadow-[0_0_15px_rgba(54,226,123,0.3)]"
+                        >
+                            <span className="material-symbols-outlined">add_shopping_cart</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

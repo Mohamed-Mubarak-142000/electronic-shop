@@ -3,11 +3,17 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { toast } from "react-hot-toast";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const cartItems = useCartStore((state) => state.cartItems);
+    const wishlistItems = useWishlistStore((state) => state.wishlistItems);
+    const user = useAuthStore((state) => state.user);
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const wishlistCount = wishlistItems.length;
 
     return (
         <div className="sticky top-0 z-50 bg-background-dark/95 backdrop-blur-md border-b border-surface-highlight">
@@ -69,11 +75,18 @@ export default function Navbar() {
 
                     {/* Action Buttons */}
                     <div className="flex gap-3">
-                        <button className="flex items-center justify-center size-10 rounded-full bg-surface-highlight hover:bg-primary hover:text-[#122118] text-white transition-all duration-300">
-                            <span className="material-symbols-outlined text-[20px]">
-                                favorite
-                            </span>
-                        </button>
+                        <Link href="/wishlist">
+                            <button className="relative flex items-center justify-center size-10 rounded-full bg-surface-highlight hover:bg-primary hover:text-[#122118] text-white transition-all duration-300">
+                                <span className="material-symbols-outlined text-[20px]">
+                                    favorite
+                                </span>
+                                {wishlistCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                                        {wishlistCount}
+                                    </span>
+                                )}
+                            </button>
+                        </Link>
                         <Link href="/cart">
                             <button className="relative flex items-center justify-center size-10 rounded-full bg-surface-highlight hover:bg-primary hover:text-[#122118] text-white transition-all duration-300">
                                 <span className="material-symbols-outlined text-[20px]">
@@ -86,11 +99,31 @@ export default function Navbar() {
                                 )}
                             </button>
                         </Link>
-                        <Link href="/login">
-                            <button className="hidden sm:flex h-10 px-5 items-center justify-center rounded-full bg-primary text-[#122118] text-sm font-bold hover:brightness-110 transition-all">
-                                Sign In
-                            </button>
-                        </Link>
+                        {user ? (
+                            <div className="flex items-center gap-3">
+                                <span className="hidden md:block text-white text-sm font-medium">
+                                    Hello, {user.name.split(' ')[0]}
+                                </span>
+                                <button
+                                    onClick={() => {
+                                        const { logout } = useAuthStore.getState();
+                                        const { clearCart } = useCartStore.getState();
+                                        logout();
+                                        clearCart();
+                                        toast.success("Logged out successfully");
+                                    }}
+                                    className="hidden sm:flex h-10 px-5 items-center justify-center rounded-full bg-surface-highlight text-white text-sm font-bold hover:bg-red-500/20 hover:text-red-500 transition-all border border-transparent hover:border-red-500/50"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <Link href="/login">
+                                <button className="hidden sm:flex h-10 px-5 items-center justify-center rounded-full bg-primary text-[#122118] text-sm font-bold hover:brightness-110 transition-all">
+                                    Sign In
+                                </button>
+                            </Link>
+                        )}
                         {/* Mobile Menu Button */}
                         <button
                             className="lg:hidden text-white ml-2"
