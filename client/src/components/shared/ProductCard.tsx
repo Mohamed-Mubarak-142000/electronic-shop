@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import { useCartStore } from "@/store/useCartStore";
 
 interface Product {
     _id: string;
@@ -22,6 +22,8 @@ interface Product {
 }
 
 export default function ProductCard({ product }: { product: Product }) {
+    const addItem = useCartStore((state) => state.addItem);
+
     // Helper to determine image source
     const imageSrc = product.imageUrl ||
         (product.images && product.images.length > 0 ? product.images[0] : null) ||
@@ -29,6 +31,19 @@ export default function ProductCard({ product }: { product: Product }) {
 
     // Brand name fallback
     const brandName = typeof product.brand === 'object' ? product.brand?.name : '';
+
+    const handleAddToCart = () => {
+        addItem({
+            id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            imageUrl: imageSrc,
+            subtitle: product.description,
+            sku: product._id.substring(0, 8).toUpperCase(),
+            inStock: true
+        });
+    };
 
     return (
         <div className="group relative bg-surface-dark rounded-[2rem] p-4 hover:bg-surface-highlight transition-all duration-300 flex flex-col h-full font-display border border-surface-highlight/10 hover:border-primary/20">
@@ -88,7 +103,10 @@ export default function ProductCard({ product }: { product: Product }) {
                             <span className="text-primary text-xl font-bold">${product.price.toFixed(2)}</span>
                         )}
                     </div>
-                    <button className="size-10 rounded-full bg-[#122118] border border-surface-highlight text-white flex items-center justify-center hover:bg-primary hover:text-[#122118] hover:border-primary transition-all shadow-[0_0_15px_rgba(54,226,123,0)_hover:shadow-[0_0_15px_rgba(54,226,123,0.3)]">
+                    <button
+                        onClick={handleAddToCart}
+                        className="size-10 rounded-full bg-[#122118] border border-surface-highlight text-white flex items-center justify-center hover:bg-primary hover:text-[#122118] hover:border-primary transition-all shadow-[0_0_15px_rgba(54,226,123,0)_hover:shadow-[0_0_15px_rgba(54,226,123,0.3)]"
+                    >
                         <span className="material-symbols-outlined">add_shopping_cart</span>
                     </button>
                 </div>

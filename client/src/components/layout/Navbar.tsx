@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useCartStore } from "@/store/useCartStore";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const cartItems = useCartStore((state) => state.cartItems);
+    const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
         <div className="sticky top-0 z-50 bg-background-dark/95 backdrop-blur-md border-b border-surface-highlight">
@@ -76,9 +79,11 @@ export default function Navbar() {
                                 <span className="material-symbols-outlined text-[20px]">
                                     shopping_cart
                                 </span>
-                                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-[#122118]">
-                                    2
-                                </span>
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-[#122118]">
+                                        {cartCount}
+                                    </span>
+                                )}
                             </button>
                         </Link>
                         <Link href="/login">

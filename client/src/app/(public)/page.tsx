@@ -1,62 +1,47 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/shared/ProductCard";
+import { productService } from "@/services/productService";
+import { categoryService } from "@/services/metadataService";
 
 export default function Home() {
-  // Dummy data mirroring the design content
-  const featuredProducts = [
-    {
-      _id: "1",
-      name: "Lumina Smart WiFi LED Bulb RGB",
-      description: "Voice controlled, 16M colors",
-      price: 19.99,
-      discount: 20,
-      rating: 4.5,
-      reviewCount: 42,
-      imageUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuCEhqjaDROppyY2TUY_L7w7dMfsEqft2xsWky41Wt7lqS3yzspvyV-eRR7ysfVD33izLaz8RWfMymEtBS1fqFOCe1qp4BahIkO6UCwueilB8Za6f49TQq7n7RNWhEukNt8PkYZZZiK9UM-KDwc0mNabhoWEsPR9ild8kN14ExdO6iHRXJYZMJg71h5OV9mn5invwOzMUf0rxBxBOr4-hwqPe684T_oFbGxD_vnDPR6rFqXQfd-TiSrNGaYPeqH4alivH7xz60DbULs",
-    },
-    {
-      _id: "2",
-      name: "ProSeries 20V Cordless Drill",
-      description: "Includes 2 batteries & charger",
-      price: 129.0,
-      rating: 5,
-      reviewCount: 128,
-      imageUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuAPk49J0H__oSv1d3kwcxiJ18Q8fgxpCcvVb7-fVZc5osxIAlOn3a2hW606dw6Oq3pGUUCsSdpqDKoJg54s7Hj7DQ7JY9t8vRFmM1XavJOs1PHID0eLmexvPKSSBMp2YaTOUILQEV3U4TY_dRsQZYzQ-rkjpnHAmp257FxodlPBdzXOA1RHztnBxNInJeH5yDFvcRMGKyYIG8VpNDOIClXDLyK4S9RN_LDlMk5T75zVCyEBsKEKXiPmDoohdtbGWfvK3JMgI7e87u8",
-    },
-    {
-      _id: "3",
-      name: "Matte Black Rocker Switch",
-      description: "Single pole, modern finish",
-      price: 8.5,
-      rating: 4,
-      reviewCount: 8,
-      imageUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuCVqEoCSCRpEcFCS1Po174Cj3S1BipRQpUvCnJ8N2FhlbDrsQbTht_uowCt1UBHt-bZ-drOIdOBdY8X-AIxOSK48IS9J9o0GSl797hgE0b1yNhCpLbUGyOPRkHHdzrY5paP9zj4YWH-hmBID8amN9JkwWtvcp32mtHrZyrxOrkVTe6y42lqo1M3arPWzxHRT7odD49k9mDeUXcDg6QDPfGrPRpgNbF48gGjY5QYutYRrVvlDibn6IxRnnE-Yy1A2cv8fZy0And5yvo",
-    },
-    {
-      _id: "4",
-      name: "12/2 NM-B Wire, 250ft",
-      description: "Copper building wire, indoor",
-      price: 145.0,
-      rating: 5,
-      reviewCount: 56,
-      imageUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuCDM4sPuhBY1KXO4_eJFYBN3Exy9FaAZyzEtL3HkwVeOnzX8biRhzxZ8yqwBj13fwyVMIwUObvouDlm1WwF73mnpr617p5PmSqnZm8Pf2ZoZOGXCO2iBk4iVlnCOlka9iY-he1m621DszTBTRRsbSaoI26S4pYpwaDLRPvLr3z0yKBxJ58QlIlLuKsWP16p8Zarf5qMfIOZI3knmvTeNAsULwe0dZAQ8vypz8Gr56e7TOiSn-iwCfqfNzXfkgbq7IScOFpAXlKubqc",
-    },
-  ];
+  const [bestSellers, setBestSellers] = useState<any[]>([]);
+  const [homeCategories, setHomeCategories] = useState<any[]>([]);
+  const [newArrivals, setNewArrivals] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const categories = [
-    { name: "Lighting", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB2NRObgQzMNCoyO1sxx8e90pmltnkBjJV1qUga4yToomAUirfarj02OQVn6QilMbs-aYhaUFpIju8OwrvL_52W8zB9gh5pzK9PqawhqqLBIju2XiHipppuv4LZXSViZnCS-cxDioiCACHZFMw-B2Akz0E3oixMFEDKMxNwr0C5oC2Pk26BhyZ4Nz4IV3wZ8jfrAThSNPGGlDnQ6Ejxrk8YHXP7cl7ur2rBJEMo-gm6mJx3lMdYdr21OdEhoz1qeAw9NW_huLBbg8o" },
-    { name: "Fans", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuATl8jfbIc2D08_rRUGnTl60B2lBKLEbH0HxqtFbnJBx9b0bz0rR8LeesHOH3QIqBwm1AKeO8TsxQ_O2X4OeN9bPxOWwi-CTaNThNbh-USmR__MQ_JOLi9TMyyxLIErr05KQWL0Q3HMksJRheZg29i5qtk8c4pdcHbisovV4cCUQR5dY2Hse6rImlkWJV20g-W019X2A7VgoPPjHCR57jOTK2OuKrhTTIakWkQP5Gx2SW4cp9hZmAQXd1uR9_u2qRMBHlsB8GLp5RQ" },
-    { name: "Switches", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCkz-taY3W0wQF_3FaQYmybdwHwR92HDYgdUZLguo8h-QFNnvzwkamJte5xndb6TELq4xNkQTF26hObWXfXqUmIjljgMZlEChTc8_7d6pBmsd2XVr4CX7yt5_4YFiD9TJTtLdxJeX_W8lH0ziKN6NT2iB-DNQF7CbtJ6hn3Qa_BR4JH4GyrX_Sa_5p03dDC2JMlmL9xRbijrj8eXTeozoaGJn3Cvr2kSaD49ycBCkosWcfUajhF0tu6vDWhW-x7a_eVPr1P47kmLac" },
-    { name: "Wiring", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDgUNNtFS0oDkj_k_32zPl65hOfSRnCuPu7Y7R9tHOdFD4Mf4BGDox4CSSWY0auIi8cSyFs1Ydl9jmGb2MecMmXMwJ1Lg4Q7RzXYwWlMGA2_5f-pMAWXXjKBFZ6vLRK4cytCJ4FQ2wMqxcR5GHzZaySqv2Wld8vm8SzelwGBe5-gNfigDENqskPw67veRZRXqLloSAoXBJWHKlolYUlQp12mVVPBy-JIhE8-fHIWPxq3OKhEVICxC7rVbe1x8w5rKRE__PTFQXvU-o" },
-    { name: "Protection", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBSdINFmHKclKXocFuMUZ6_syNjmorufssVR2X09WNh0lQcDP91t8U_32g_hpo9ClyvylGX1vOawILRLXAqkawaWpyjMkg7wBhSZEvhH4HjgifOm863Nzlp90AjEDAEeWELshIEfKu0Qluos8_ATWv2dDaiUK-vqPm694GAqGpA7BaBz2Lk77aUH33Ypgebv0pyhqoevKUvJdZNxlaGLiZgkKbBU7pEtXxV3bR8zj-aNipz52xCGiaH7DGdc95eGWA4_poB0FmHwjA" },
-    { name: "Tools", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDe86GIwoOS_1kKJ9g-OoYEKQFbnhmA_SgiDYv5qil41ZEYWq6eyYCHj_Jg_ELW5CArk9tKgk3WC6X0Sda0-WcZSIQkjLXsxmXiyFyfNRGVv9PD12xA9xQ7q34uos23Dw7mRN4z0d2UHpB46dknzbQTy_Coq_QUdt82584CeMLzcXYZA5wrjQ--bkFZniVLcON0w48OrUiGJKZk-zReuWdTCuzP9LniO9xAiPxZf5V-DGcNqWKNtmcGn_ptFwZwUM-z-qq8ddxxryA" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [productsData, categoriesData, arrivalsData] = await Promise.all([
+          productService.getProducts({ limit: 4 }),
+          categoryService.getCategories(),
+          productService.getProducts({ limit: 5, sort: "-createdAt" }),
+        ]);
+
+        setBestSellers(productsData.products || []);
+        setHomeCategories(categoriesData || []);
+        setNewArrivals(arrivalsData.products || []);
+      } catch (error) {
+        console.error("Error fetching home page data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background-light dark:bg-background-dark">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center w-full bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display">
@@ -147,20 +132,27 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {categories.map((cat) => (
-              <Link key={cat.name} href={`/shop?category=${cat.name}`} className="group flex flex-col items-center gap-4">
-                <div className="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                    style={{ backgroundImage: `url("${cat.image}")` }}
-                  ></div>
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
-                </div>
-                <span className="text-white font-medium text-center group-hover:text-primary transition-colors">
-                  {cat.name}
-                </span>
-              </Link>
-            ))}
+            {homeCategories.length > 0 ? (
+              homeCategories.map((cat) => (
+                <Link key={cat._id} href={`/shop?category=${cat._id}`} className="group flex flex-col items-center gap-4">
+                  <div className="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                      style={{ backgroundImage: `url("${cat.imageUrl || 'https://placehold.co/400x400?text=' + cat.name}")` }}
+                    ></div>
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+                  </div>
+                  <span className="text-white font-medium text-center group-hover:text-primary transition-colors">
+                    {cat.name}
+                  </span>
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-full py-10 flex flex-col items-center justify-center bg-surface-dark/30 rounded-3xl border border-surface-highlight/10">
+                <span className="material-symbols-outlined text-4xl text-gray-600 mb-2">category</span>
+                <p className="text-gray-500 font-medium">No categories found</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -181,9 +173,17 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
+            {bestSellers.length > 0 ? (
+              bestSellers.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))
+            ) : (
+              <div className="col-span-full py-20 flex flex-col items-center justify-center bg-surface-dark/30 rounded-[3rem] border border-surface-highlight/10">
+                <span className="material-symbols-outlined text-5xl text-gray-600 mb-4 animate-pulse">shopping_cart_off</span>
+                <p className="text-gray-400 text-lg font-medium">No best sellers available yet</p>
+                <p className="text-gray-600 text-sm mt-2">Check back soon for our top picks!</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -250,22 +250,26 @@ export default function Home() {
             <Link href="/shop" className="text-primary font-bold text-sm hover:underline">See All</Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {/* Mini Cards */}
-            {[
-              { name: "Digital Multimeter", price: 45.00, img: "https://lh3.googleusercontent.com/aida-public/AB6AXuC3snYJFR1yAkK23XP8wgOQrl9Egqk83o5777kVcGbvqgTdWDiigb1BprXkLyKOHutKoXJggw_wv3dc_3TlXlFjg2lqfwampm-mCNOkx_cR9hbm_4nBA89CtsP8m6xp0NLHnsD5JsbhYZNZxkECgt4i1Z2lHVLVHRyY4EzGTzXPjt0kMBklyZfBnAHCx8cNx8wfrhA2O_3yY6acWr1NAajFGh8EylpSVlJctdRJJgPrnDGTApNWbp3y3q97RvWF4Hc0cYhP5m-0TIk" },
-              { name: "Extension Cord 50ft", price: 32.99, img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB0qBIMIpsBj5e4-SZ-sqM17KTgNDdtDbD6KUHoFFzglU3AwV1UgY9sfCqeEvywd4cgyOaW7dFAGC-wCg6RJUxEJozvbO_tpjPI2XU1aeYimuYJlVKAjqIAHUXPm5qiN0qilf3dYjaAqz1DRZIG_qmodtHSr_vAp3KuCnrIgEm7hrX92-7ecHOLTbmZRHTKSdRIyyaeNmJU7lEkxR7PD4CYmhvhnRpnHmTGGE-bJcCVjSo-EtMjo1m0wy5jVn5JjfgHqjE7L1RjUSw" },
-              { name: "Solar Charge Controller", price: 89.50, img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBSPU52XHgxIjg0bQu0-4QHqq68zqLQskVgwlWI2l3oaPcZBGV8yX7Oy_Q7ix4DmxOU3Bf-myGVZRMGhJOi3HqUuw5i21wUW36N5qsEN4Kwkxv-akHJnq1k71m7l0r2-iO9hsgTvzCqHfmgE3s5KtTpeIqXvpAY4JUEAv64e_B7yNUow3XURyxR4GhPUVkiMJKlOqmNUkeAKvNLmS31EBadA8CSr13GWlBL41AxWfwDPXhnK__TwPkEK-o6du88fYs3nm4cTZur-jw" },
-              { name: "Industrial Pendant", price: 55.00, img: "https://lh3.googleusercontent.com/aida-public/AB6AXuA_H67mgU8aOXuCYL7vMof5uAo_uAK1YhOc0RYPEunO_q418wBXwBUvcmxrEcHPO65fwK-nWkpr6EZd6VggKAfFj1TZnVSKhvvAEzoKG1Jy_KrOJUrgEGBamD_Pzw5nzJ2d9sVbzDM6-sWZlcoHlDr1F1uasMhGhcY3RgeFtzKi5bWmIjdqLOkR9JqlPT6T5RB0orcYFJex_Xgjp5QGII6-sHBBwqUAHZ51KYicw3mdShPMQr8jPUou7uD6-xaJ07XJA4IkOKU-Pc4" },
-              { name: "Smart Thermostat", price: 199.00, img: "https://lh3.googleusercontent.com/aida-public/AB6AXuALhnV-skOGzv9QbO8xmv5eYJ52zl8tcdtrr2TL7XPcEj7zrMnrTP2pz-SOkyzEr7yLp-4jXk8mAzdRfUVCDiQAOLvPzDUrBwhbvlCK0hXXbopuTKSMySeMDXU4fIdLiU6PY1k0qC4F1aC8CEgP_r8yV3tD3kHAg9SIr_Bs6i4dfA2A3k4H9zKRZqYnRzdlxP_Odx0AIBn26OE0390cYrLsonEw9LR-yFIEIB5dGUo69BjZ_ePY0jw1OE4JRqUWUm15mGeN-BE7Iwg" }
-            ].map((item, idx) => (
-              <div key={idx} className="bg-surface-dark p-4 rounded-2xl hover:bg-surface-highlight transition-colors cursor-pointer group">
-                <div className="aspect-square bg-white rounded-xl mb-3 overflow-hidden">
-                  <img alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" src={item.img} />
-                </div>
-                <p className="text-white font-bold text-sm truncate">{item.name}</p>
-                <p className="text-primary font-bold text-sm">${item.price.toFixed(2)}</p>
+            {newArrivals.length > 0 ? (
+              newArrivals.map((item) => (
+                <Link key={item._id} href={`/product/${item._id}`} className="bg-surface-dark p-4 rounded-2xl hover:bg-surface-highlight transition-colors cursor-pointer group">
+                  <div className="aspect-square bg-white rounded-xl mb-3 overflow-hidden">
+                    <img
+                      alt={item.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                      src={item.imageUrl || (item.images && item.images[0]) || "https://placehold.co/400x400?text=" + item.name}
+                    />
+                  </div>
+                  <p className="text-white font-bold text-sm truncate">{item.name}</p>
+                  <p className="text-primary font-bold text-sm">${item.price.toFixed(2)}</p>
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-full py-12 flex flex-col items-center justify-center bg-surface-dark/30 rounded-2xl border border-surface-highlight/10">
+                <span className="material-symbols-outlined text-4xl text-gray-600 mb-2">new_releases</span>
+                <p className="text-gray-500 font-medium">No new arrivals found</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
