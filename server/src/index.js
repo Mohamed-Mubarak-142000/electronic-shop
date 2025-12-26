@@ -40,6 +40,10 @@ import categoryRoutes from './routes/categoryRoutes.js';
 import brandRoutes from './routes/brandRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
+import Message from './models/Message.js';
+import jwt from 'jsonwebtoken';
+import User from './models/User.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -48,18 +52,83 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/brands', brandRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
     res.send('Electro Shop API is running...');
 });
 
+// Socket.IO authentication middleware
+io.use(async (socket, next) => {
+    try {
+        const token = socket.handshake.auth.token;
+        if (!token) return next(new Error("Authentication error"));
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id).select("-password");
+
+        if (!user) return next(new Error("User not found"));
+
+        socket.user = user;
+        next();
+    } catch (err) {
+        next(new Error("Authentication error"));
+    }
+});
+
 // Socket.IO connection
 io.on('connection', (socket) => {
-    console.log('New client connected', socket.id);
+    console.log(`User connected: ${socket.user?.name} (${socket.id})`);
+
+    socket.on('join_room', (roomId) => {
+        // Validation: user can only join their own room unless they are admin
+        if (socket.user.role !== 'admin' && socket.user._id.toString() !== roomId) {
+            console.log(`Unauthorized room access attempt by ${socket.user.name} to room ${roomId}`);
+            return;
+        }
+        socket.join(roomId);
+        console.log(`User ${socket.user.name} joined room: ${roomId}`);
+    });
+
+    socket.on('send_message', async (data) => {
+        const { roomId, text } = data;
+        let { to } = data;
+
+        try {
+            // if 'to' is not provided and sender is a user, find an admin
+            if (!to && socket.user.role === 'user') {
+                const admin = await User.findOne({ role: 'admin' });
+                if (admin) {
+                    to = admin._id;
+                } else {
+                    console.error('No admin found to receive message');
+                    return;
+                }
+            } else if (!to) {
+                console.error('Recipient "to" is required');
+                return;
+            }
+
+            const message = await Message.create({
+                from: socket.user._id,
+                to: to,
+                roomId,
+                text
+            });
+
+            const populatedMessage = await Message.findById(message._id)
+                .populate('from', 'name role')
+                .populate('to', 'name role');
+
+            io.to(roomId).emit('receive_message', populatedMessage);
+        } catch (error) {
+            console.error('Error saving message:', error);
+        }
+    });
 
     socket.on('disconnect', () => {
-        console.log('Client disconnected', socket.id);
+        console.log('User disconnected', socket.id);
     });
 });
 
