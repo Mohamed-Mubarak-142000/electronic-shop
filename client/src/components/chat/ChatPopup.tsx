@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, User, Headset, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Headset, Loader2 } from 'lucide-react';
 import { io, Socket } from 'socket.io-client';
 import { useAuthStore } from '@/store/useAuthStore';
 import chatService, { ChatMessage } from '@/services/chatService';
@@ -19,9 +19,6 @@ const ChatPopup = () => {
     const socketRef = useRef<Socket | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Only show for logged-in users who are NOT admins
-    if (!user || user.role === 'admin') return null;
-
     const scrollToBottom = () => {
         setTimeout(() => {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -31,13 +28,13 @@ const ChatPopup = () => {
     const connectSocket = () => {
         setIsConnecting(true);
         const socket = io(SOCKET_URL, {
-            auth: { token: user.token }
+            auth: { token: user?.token }
         });
 
         socket.on('connect', () => {
             console.log('Connected to chat server');
             setIsConnecting(false);
-            socket.emit('join_room', user._id);
+            socket.emit('join_room', user?._id);
         });
 
         socket.on('receive_message', (message: ChatMessage) => {
@@ -45,8 +42,8 @@ const ChatPopup = () => {
             scrollToBottom();
 
             // Mark as read if window is open
-            if (isOpen && message.to._id === user._id) {
-                chatService.markAsRead(user._id);
+            if (isOpen && message.to._id === user?._id) {
+                chatService.markAsRead(user?._id);
             }
         });
 
@@ -61,10 +58,10 @@ const ChatPopup = () => {
     const fetchHistory = async () => {
         setIsLoading(true);
         try {
-            const history = await chatService.getMessages(user._id);
+            const history = await chatService.getMessages(user?._id || '');
             setMessages(history);
             scrollToBottom();
-            chatService.markAsRead(user._id);
+            chatService.markAsRead(user?._id || '');
         } catch (error) {
             console.error('Failed to fetch chat history:', error);
         } finally {
@@ -84,7 +81,12 @@ const ChatPopup = () => {
                 socketRef.current = null;
             }
         };
+
+
     }, [isOpen, user]);
+
+    // Only show for logged-in users who are NOT admins
+    if (!user || user.role === 'admin') return null;
 
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault();
@@ -117,7 +119,7 @@ const ChatPopup = () => {
                                 </div>
                                 <div>
                                     <h3 className="font-semibold">Support Chat</h3>
-                                    <p className="text-xs text-white/80">We're online to help</p>
+                                    <p className="text-xs text-white/80">We&apos;re online to help</p>
                                 </div>
                             </div>
                             <button

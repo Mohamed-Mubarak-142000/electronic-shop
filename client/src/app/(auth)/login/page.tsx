@@ -34,19 +34,7 @@ export default function LoginPage() {
             return await authService.login(values);
         },
         onSuccess: (data) => {
-            // Login action in store is already called in authService, but redundancy is fine or we can remove it here if authService handles it. 
-            // authService currently calls useAuthStore.getState().login(data).
-            // So we don't need to call login(data) here again necessarily, but my authService implementation does it using getState().
-            // However, the hook version `const { login } = useAuthStore()` updates the state for *this* component instantly? 
-            // Actually Zustand updates are global.
-            // Let's keep it safe.
-            // localStorage is also handled in store persist? 
-            // My store uses `persist` middleware, so explicit `localStorage.setItem` in component is NOT needed and potentially conflicting.
-            // I'll remove explicit localStorage.
-
-            // if (data.role === 'admin') router.push('/admin'); // Optional redirect logic
-            router.push('/admin'); // Assuming admin. Or just '/'? User wanted "Authentication and autharization".
-            // Let's redirect to /admin if admin, else /
+            router.push('/admin');
             if (data.role === 'admin') router.push('/admin');
             else router.push('/');
         },

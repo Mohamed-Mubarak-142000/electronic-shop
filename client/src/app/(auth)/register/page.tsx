@@ -4,8 +4,6 @@ import Link from 'next/link';
 import * as z from 'zod';
 
 export default function RegisterPage() {
-    // Basic UI implementation for Register page matching design. 
-    // Logic can be added similar to Login page when backend is ready or using existing if available.
 
     return (
         <main className="relative flex min-h-screen w-full flex-col lg:flex-row">
