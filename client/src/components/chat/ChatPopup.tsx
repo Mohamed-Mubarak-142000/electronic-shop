@@ -5,12 +5,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Headset, Loader2 } from 'lucide-react';
 import { io, Socket } from 'socket.io-client';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useTranslation } from '@/hooks/useTranslation';
 import chatService, { ChatMessage } from '@/services/chatService';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5000';
 
 const ChatPopup = () => {
     const { user } = useAuthStore();
+    const { t, language } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [inputText, setInputText] = useState('');
@@ -101,8 +103,10 @@ const ChatPopup = () => {
         setInputText('');
     };
 
+    const isRtl = language === 'ar';
+
     return (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className={`fixed bottom-6 ${isRtl ? 'left-6' : 'right-6'} z-50`} dir={isRtl ? 'rtl' : 'ltr'}>
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -118,8 +122,8 @@ const ChatPopup = () => {
                                     <Headset size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold">Support Chat</h3>
-                                    <p className="text-xs text-white/80">We&apos;re online to help</p>
+                                    <h3 className="font-semibold">{t('chat.title')}</h3>
+                                    <p className="text-xs text-white/80">{t('chat.subtitle')}</p>
                                 </div>
                             </div>
                             <button
@@ -141,7 +145,7 @@ const ChatPopup = () => {
                                     {messages.length === 0 && (
                                         <div className="text-center py-10 opacity-50">
                                             <MessageCircle size={40} className="mx-auto mb-2" />
-                                            <p className="text-sm">Start a conversation with our team</p>
+                                            <p className="text-sm">{t('chat.startPrompt')}</p>
                                         </div>
                                     )}
                                     {messages.map((msg, index) => {
@@ -174,7 +178,7 @@ const ChatPopup = () => {
                                 type="text"
                                 value={inputText}
                                 onChange={(e) => setInputText(e.target.value)}
-                                placeholder="Type your message..."
+                                placeholder={t('chat.inputPlaceholder')}
                                 className="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none text-slate-900 dark:text-white"
                             />
                             <button
@@ -182,7 +186,7 @@ const ChatPopup = () => {
                                 disabled={!inputText.trim()}
                                 className="bg-primary text-white p-2 rounded-full hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
                             >
-                                <Send size={18} />
+                                <Send size={18} className={isRtl ? 'rotate-180' : ''} />
                             </button>
                         </form>
                     </motion.div>
@@ -201,7 +205,7 @@ const ChatPopup = () => {
             >
                 {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
                 {!isOpen && (
-                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className={`absolute -top-1 ${isRtl ? '-left-1' : '-right-1'} flex h-3 w-3`}>
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                     </span>

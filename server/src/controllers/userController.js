@@ -15,6 +15,9 @@ export const getUserProfile = async (req, res) => {
             role: user.role,
             isActive: user.isActive,
             verified: user.verified,
+            phone: user.phone,
+            address: user.address,
+            location: user.location
         });
     } else {
         res.status(404).json({ message: 'User not found' });
@@ -30,6 +33,9 @@ export const updateUserProfile = async (req, res) => {
     if (user) {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
+        user.phone = req.body.phone || user.phone;
+        user.address = req.body.address || user.address;
+        user.location = req.body.location || user.location;
         if (req.body.password) {
             user.password = req.body.password;
         }
@@ -41,6 +47,9 @@ export const updateUserProfile = async (req, res) => {
             name: updatedUser.name,
             email: updatedUser.email,
             role: updatedUser.role,
+            phone: updatedUser.phone,
+            address: updatedUser.address,
+            location: updatedUser.location,
             token: generateToken(updatedUser._id),
         });
     } else {
@@ -124,6 +133,21 @@ export const updateUser = async (req, res) => {
             });
         } else {
             res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+// @desc    Get showroom/admin public info
+// @route   GET /api/users/showroom
+// @access  Public
+export const getShowroomInfo = async (req, res) => {
+    try {
+        const admin = await User.findOne({ role: 'admin' }).select('name email phone address location');
+        if (admin) {
+            res.json(admin);
+        } else {
+            res.status(404).json({ message: 'Showroom info not found' });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

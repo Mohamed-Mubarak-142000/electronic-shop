@@ -121,11 +121,8 @@ export default function ShopPage() {
                             Browse our wide selection of professional-grade electrical components, smart home devices, and tools for every project.
                         </p>
                     </div>
-                    <button className="flex items-center gap-2 px-5 h-12 rounded-full bg-surface-highlight text-white font-bold text-sm hover:bg-[#2f553d] transition-colors whitespace-nowrap w-fit">
-                        <span className="material-symbols-outlined">download</span>
-                        Download Catalog
-                    </button>
                 </div>
+
 
                 <div className="flex flex-col lg:flex-row gap-8 items-start">
                     {/* Sidebar Filters */}
@@ -229,9 +226,6 @@ export default function ShopPage() {
                                         <option value="-price">Price: High to Low</option>
                                         <option value="-rating">Top Rated</option>
                                     </select>
-                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#95c6a9] pointer-events-none text-lg">
-                                        expand_more
-                                    </span>
                                 </div>
                                 <div className="flex bg-surface-highlight rounded-full p-1 gap-1">
                                     <button className="size-8 flex items-center justify-center rounded-full bg-primary text-surface-dark">

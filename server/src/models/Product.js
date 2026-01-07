@@ -2,9 +2,11 @@ import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    nameAr: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     sku: { type: String, unique: true },
     description: { type: String, required: true },
+    descriptionAr: { type: String, required: true },
     price: { type: Number, required: true },
     currency: { type: String, default: 'USD' }, // Adjust default currency if needed
     stock: { type: Number, required: true, default: 0 },

@@ -19,5 +19,20 @@ export const userService = {
     async deleteUser(id: string) {
         const response = await api.delete(`/users/${id}`);
         return response.data;
+    },
+
+    async updateProfile(data: any) {
+        const response = await api.put('/users/profile', data);
+        return response.data;
+    },
+
+    async getProfile() {
+        const response = await api.get('/users/profile');
+        return response.data;
+    },
+
+    async getShowroomInfo() {
+        const response = await api.get('/users/showroom');
+        return response.data;
     }
 };

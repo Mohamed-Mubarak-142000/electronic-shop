@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    role: { type: String, enum: ['user', 'admin', 'business'], default: 'user' },
     isActive: { type: Boolean, default: true },
     verified: { type: Boolean, default: false },
     phone: { type: String },
@@ -15,7 +15,28 @@ const userSchema = new mongoose.Schema({
         state: String,
         country: String,
         zip: String
-    }
+    },
+    location: {
+        lat: { type: Number, default: 0 },
+        lng: { type: Number, default: 0 }
+    },
+    otp: String,
+    otpExpire: Date,
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+    bio: String,
+    bioAr: String,
+    jobTitle: String,
+    jobTitleAr: String,
+    companyName: String,
+    skills: [{
+        name: String,
+        nameAr: String,
+        level: { type: String, enum: ['Beginner', 'Advanced', 'Expert', 'Certified'] },
+        icon: String
+    }],
+    experience: Number,
+    isHiring: { type: Boolean, default: false }
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {

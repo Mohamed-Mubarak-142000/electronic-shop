@@ -1,6 +1,11 @@
+"use client";
+
 import Link from 'next/link';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Footer() {
+    const { t } = useTranslation();
+
     return (
         <footer className="bg-[#0b1610] border-t border-surface-highlight pt-16 pb-8 font-display">
             <div className="max-w-[1440px] mx-auto px-4 md:px-10">
@@ -12,7 +17,7 @@ export default function Footer() {
                             <span className="text-xl font-bold">ElectroShop</span>
                         </div>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Your trusted partner for electrical supplies. From home renovations to industrial projects, we power your world with quality and efficiency.
+                            {t('footer.description')}
                         </p>
                         <div className="flex gap-4">
                             <a href="#" className="size-10 rounded-full bg-surface-dark flex items-center justify-center text-gray-400 hover:text-primary hover:bg-surface-highlight transition-all">
@@ -32,54 +37,54 @@ export default function Footer() {
 
                     {/* Links Column 1 */}
                     <div>
-                        <h3 className="text-white font-bold text-lg mb-6">Shop</h3>
+                        <h3 className="text-white font-bold text-lg mb-6">{t('footer.shop')}</h3>
                         <ul className="flex flex-col gap-4 text-gray-400 text-sm">
-                            <li><Link href="/shop" className="hover:text-primary transition-colors">All Products</Link></li>
-                            <li><Link href="/category/lighting" className="hover:text-primary transition-colors">Lighting</Link></li>
-                            <li><Link href="/category/fans" className="hover:text-primary transition-colors">Fans & Cooling</Link></li>
-                            <li><Link href="/category/tools" className="hover:text-primary transition-colors">Tools & Hardware</Link></li>
-                            <li><Link href="/clearance" className="hover:text-primary transition-colors">Clearance</Link></li>
+                            <li><Link href="/shop" className="hover:text-primary transition-colors">{t('footer.allProducts')}</Link></li>
+                            <li><Link href="/shop?category=lighting" className="hover:text-primary transition-colors">{t('footer.lighting')}</Link></li>
+                            <li><Link href="/shop?category=fans" className="hover:text-primary transition-colors">{t('footer.fans')}</Link></li>
+                            <li><Link href="/shop?category=tools" className="hover:text-primary transition-colors">{t('footer.tools')}</Link></li>
+                            <li><Link href="/shop?category=clearance" className="hover:text-primary transition-colors">{t('footer.clearance')}</Link></li>
                         </ul>
                     </div>
 
                     {/* Links Column 2 */}
                     <div>
-                        <h3 className="text-white font-bold text-lg mb-6">Support</h3>
+                        <h3 className="text-white font-bold text-lg mb-6">{t('footer.support')}</h3>
                         <ul className="flex flex-col gap-4 text-gray-400 text-sm">
-                            <li><Link href="/track-order" className="hover:text-primary transition-colors">Track Order</Link></li>
-                            <li><Link href="/returns" className="hover:text-primary transition-colors">Returns & Warranty</Link></li>
-                            <li><Link href="/installation" className="hover:text-primary transition-colors">Installation Guide</Link></li>
-                            <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
-                            <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
+                            <li><Link href="/track-order" className="hover:text-primary transition-colors">{t('footer.trackOrder')}</Link></li>
+                            <li><Link href="/returns" className="hover:text-primary transition-colors">{t('footer.returns')}</Link></li>
+                            <li><Link href="/installation" className="hover:text-primary transition-colors">{t('footer.guide')}</Link></li>
+                            <li><Link href="/faq" className="hover:text-primary transition-colors">{t('footer.faq')}</Link></li>
+                            <li><Link href="/contact" className="hover:text-primary transition-colors">{t('footer.contact')}</Link></li>
                         </ul>
                     </div>
 
                     {/* Newsletter Column */}
                     <div>
-                        <h3 className="text-white font-bold text-lg mb-6">Stay Powered Up</h3>
-                        <p className="text-gray-400 text-sm mb-4">Subscribe for exclusive deals and new product alerts.</p>
+                        <h3 className="text-white font-bold text-lg mb-6">{t('footer.stayPowered')}</h3>
+                        <p className="text-gray-400 text-sm mb-4">{t('footer.subscribeDesc')}</p>
                         <form className="flex flex-col gap-3">
                             <input
                                 className="w-full bg-surface-dark border border-surface-highlight rounded-full px-5 py-3 text-white focus:outline-none focus:border-primary transition-colors text-sm"
-                                placeholder="Enter your email"
+                                placeholder={t('footer.emailPlaceholder')}
                                 type="email"
                             />
                             <button
                                 className="w-full bg-primary text-[#122118] font-bold rounded-full px-5 py-3 hover:brightness-110 transition-all text-sm"
                                 type="button"
                             >
-                                Subscribe
+                                {t('footer.subscribe')}
                             </button>
                         </form>
                     </div>
                 </div>
 
                 <div className="border-t border-surface-highlight pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-gray-500 text-xs">© 2023 ElectroShop Inc. All rights reserved.</p>
+                    <p className="text-gray-500 text-xs">© {new Date().getFullYear()} ElectroShop Inc. {t('footer.rights')}</p>
                     <div className="flex gap-6">
-                        <Link href="/privacy" className="text-gray-500 hover:text-white text-xs">Privacy Policy</Link>
-                        <Link href="/terms" className="text-gray-500 hover:text-white text-xs">Terms of Service</Link>
-                        <Link href="/sitemap" className="text-gray-500 hover:text-white text-xs">Sitemap</Link>
+                        <Link href="/privacy" className="text-gray-500 hover:text-white text-xs">{t('footer.privacy')}</Link>
+                        <Link href="/terms" className="text-gray-500 hover:text-white text-xs">{t('footer.terms')}</Link>
+                        <Link href="/sitemap" className="text-gray-500 hover:text-white text-xs">{t('footer.sitemap')}</Link>
                     </div>
                 </div>
             </div>

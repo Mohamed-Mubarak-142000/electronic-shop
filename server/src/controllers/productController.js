@@ -128,6 +128,13 @@ export const createProduct = async (req, res) => {
         });
 
         const createdProduct = await Product.create(product);
+
+        // Emit socket event for real-time notification
+        const io = req.app.get('io');
+        if (io) {
+            io.emit('new_product', createdProduct);
+        }
+
         res.status(201).json(createdProduct);
     } catch (error) {
         res.status(500).json({ message: error.message });

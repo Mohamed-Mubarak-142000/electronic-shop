@@ -5,13 +5,18 @@ import { useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useLanguageStore } from "@/store/useLanguageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "react-hot-toast";
+import { Globe, User as UserIcon } from "lucide-react";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const cartItems = useCartStore((state) => state.cartItems);
     const wishlistItems = useWishlistStore((state) => state.wishlistItems);
     const user = useAuthStore((state) => state.user);
+    const { language, setLanguage } = useLanguageStore();
+    const { t } = useTranslation();
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const wishlistCount = wishlistItems.length;
 
@@ -37,12 +42,12 @@ export default function Navbar() {
                     {/* Search Bar (Desktop) */}
                     <div className="hidden md:flex items-center">
                         <label className="relative flex items-center min-w-[320px]">
-                            <span className="absolute left-4 text-[#95c6a9]">
+                            <span className={language === 'ar' ? 'absolute right-4 text-[#95c6a9]' : 'absolute left-4 text-[#95c6a9]'}>
                                 <span className="material-symbols-outlined">search</span>
                             </span>
                             <input
-                                className="w-full bg-surface-highlight text-white placeholder:text-[#95c6a9] rounded-full py-2.5 pl-12 pr-4 focus:ring-2 focus:ring-primary focus:outline-none border-none text-sm transition-all hover:bg-[#2d543c]"
-                                placeholder="Search bulbs, switches, tools..."
+                                className={`w-full bg-surface-highlight text-white placeholder:text-[#95c6a9] rounded-full py-2.5 ${language === 'ar' ? 'pr-12 pl-4' : 'pl-12 pr-4'} focus:ring-2 focus:ring-primary focus:outline-none border-none text-sm transition-all hover:bg-[#2d543c]`}
+                                placeholder={language === 'ar' ? 'بحث عن مصابيح، مفاتيح، أدوات...' : 'Search bulbs, switches, tools...'}
                                 type="text"
                             />
                         </label>
@@ -57,20 +62,30 @@ export default function Navbar() {
                             href="/shop"
                             className="text-sm font-medium text-white hover:text-primary transition-colors"
                         >
-                            Categories
+                            {t('nav.shop')}
                         </Link>
                         <Link
-                            href="/deals"
+                            href="/portfolio"
                             className="text-sm font-medium text-white hover:text-primary transition-colors"
                         >
-                            Deals
+                            {t('nav.portfolio')}
                         </Link>
-                        <Link
-                            href="/b2b"
-                            className="text-sm font-medium text-white hover:text-primary transition-colors"
+                        {/* Desktop Language Switcher */}
+                        <button
+                            onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
+                            className="text-sm font-medium text-white hover:text-primary transition-colors flex items-center gap-2"
                         >
-                            B2B
-                        </Link>
+                            <span className="material-symbols-outlined text-[18px]">language</span>
+                            <span>{language === 'en' ? 'العربية' : 'English'}</span>
+                        </button>
+                        {user?.role === 'admin' && (
+                            <Link
+                                href="/admin"
+                                className="text-sm font-medium text-primary hover:text-white transition-colors"
+                            >
+                                {t('nav.admin')}
+                            </Link>
+                        )}
                     </div>
 
                     {/* Action Buttons */}
@@ -100,27 +115,66 @@ export default function Navbar() {
                             </button>
                         </Link>
                         {user ? (
-                            <div className="flex items-center gap-3">
-                                <span className="hidden md:block text-white text-sm font-medium">
-                                    Hello, {user.name.split(' ')[0]}
-                                </span>
+                            <div className="relative group">
                                 <button
-                                    onClick={() => {
-                                        const { logout } = useAuthStore.getState();
-                                        const { clearCart } = useCartStore.getState();
-                                        logout();
-                                        clearCart();
-                                        toast.success("Logged out successfully");
-                                    }}
-                                    className="hidden sm:flex h-10 px-5 items-center justify-center rounded-full bg-surface-highlight text-white text-sm font-bold hover:bg-red-500/20 hover:text-red-500 transition-all border border-transparent hover:border-red-500/50"
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-highlight hover:bg-white/10 text-white transition-all"
                                 >
-                                    Logout
+                                    <UserIcon size={16} />
+                                    <span className="hidden md:block text-sm font-medium">
+                                        {user.name.split(' ')[0]}
+                                    </span>
+                                    <span className="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">expand_more</span>
                                 </button>
+
+                                {/* Dropdown Menu */}
+                                <div className="absolute right-0 top-full mt-2 w-48 bg-background-dark border border-surface-highlight rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-50 overflow-hidden">
+                                    <div className="p-2 space-y-1">
+                                        <Link
+                                            href="/profile"
+                                            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 text-sm text-white transition-colors"
+                                        >
+                                            <span className="material-symbols-outlined text-lg">person</span>
+                                            {t('nav.profile')}
+                                        </Link>
+
+                                        <button
+                                            onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 text-sm text-white transition-colors"
+                                        >
+                                            <span className="material-symbols-outlined text-lg">language</span>
+                                            {language === 'ar' ? 'English' : 'العربية'}
+                                        </button>
+
+                                        {user.role === 'admin' && (
+                                            <Link
+                                                href="/admin"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 text-sm text-primary transition-colors font-bold"
+                                            >
+                                                <span className="material-symbols-outlined text-lg">dashboard</span>
+                                                {t('nav.admin')}
+                                            </Link>
+                                        )}
+
+                                        <div className="h-px bg-surface-highlight mx-2 my-1"></div>
+
+                                        <button
+                                            onClick={() => {
+                                                const { logout } = useAuthStore.getState();
+                                                logout();
+                                                toast.success(language === 'ar' ? 'تم تسجيل الخروج' : "Logged out successfully");
+                                            }}
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-500/10 text-sm text-red-500 transition-colors"
+                                        >
+                                            <span className="material-symbols-outlined text-lg">logout</span>
+                                            {t('nav.logout')}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         ) : (
                             <Link href="/login">
-                                <button className="hidden sm:flex h-10 px-5 items-center justify-center rounded-full bg-primary text-[#122118] text-sm font-bold hover:brightness-110 transition-all">
-                                    Sign In
+                                <button className="hidden sm:flex h-10 px-6 items-center justify-center rounded-full bg-primary text-[#122118] text-sm font-bold hover:brightness-110 transition-all">
+                                    {t('auth.login')}
                                 </button>
                             </Link>
                         )}
@@ -135,33 +189,43 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Menu (Simple/Basic implementation for now as per design direction) */}
+            {/* Mobile Menu */}
             {isMenuOpen && (
                 <div className="lg:hidden bg-background-dark border-t border-surface-highlight px-4 py-4 space-y-4">
                     <Link
                         href="/shop"
                         className="block text-sm font-medium text-white hover:text-primary transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
                     >
-                        Categories
+                        {t('nav.shop')}
                     </Link>
                     <Link
-                        href="/deals"
+                        href="/portfolio"
                         className="block text-sm font-medium text-white hover:text-primary transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
                     >
-                        Deals
+                        {t('nav.portfolio')}
                     </Link>
-                    <Link
-                        href="/b2b"
-                        className="block text-sm font-medium text-white hover:text-primary transition-colors"
+                    {/* Mobile Language Switcher */}
+                    <button
+                        onClick={() => {
+                            setLanguage(language === 'en' ? 'ar' : 'en');
+                            setIsMenuOpen(false);
+                        }}
+                        className="w-full text-left flex items-center gap-3 text-sm font-medium text-white hover:text-primary transition-colors"
                     >
-                        B2B
-                    </Link>
-                    <Link
-                        href="/login"
-                        className="block text-sm font-medium text-primary hover:text-primary transition-colors"
-                    >
-                        Sign In
-                    </Link>
+                        <span className="material-symbols-outlined text-lg">language</span>
+                        <span>{language === 'ar' ? 'English' : 'العربية'}</span>
+                    </button>
+                    {!user && (
+                        <Link
+                            href="/login"
+                            className="block text-sm font-medium text-primary hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            {t('auth.login')}
+                        </Link>
+                    )}
                 </div>
             )}
         </div>

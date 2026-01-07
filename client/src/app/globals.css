@@ -47,3 +47,14 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Custom animations */
+@keyframes slide {
+  from { background-position: 0 0; }
+  to { background-position: 40px 0; }
+}
+
+/* Slick Slider Customization */
+.slick-track { display: flex !important; }
+.slick-slide { height: inherit !important; }
+.slick-list { margin: 0 -12px; }

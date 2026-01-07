@@ -192,6 +192,48 @@ export default function Sidebar() {
                         </span>
                     </Link>
 
+                    <Link
+                        href="/admin/jobs"
+                        className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/jobs')
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
+                            } group`}
+                    >
+                        <span
+                            className={`material-symbols-outlined group-hover:text-white ${isActive('/admin/jobs') ? 'text-primary' : 'text-gray-400'
+                                }`}
+                        >
+                            schedule
+                        </span>
+                        <span
+                            className={`font-medium text-sm group-hover:text-white ${isActive('/admin/jobs') ? 'text-white' : 'text-gray-300'
+                                }`}
+                        >
+                            Jobs
+                        </span>
+                    </Link>
+
+                    <Link
+                        href="/admin/portfolio"
+                        className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/portfolio')
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
+                            } group`}
+                    >
+                        <span
+                            className={`material-symbols-outlined group-hover:text-white ${isActive('/admin/portfolio') ? 'text-primary' : 'text-gray-400'
+                                }`}
+                        >
+                            work
+                        </span>
+                        <span
+                            className={`font-medium text-sm group-hover:text-white ${isActive('/admin/portfolio') ? 'text-white' : 'text-gray-300'
+                                }`}
+                        >
+                            Portfolio
+                        </span>
+                    </Link>
+
                     <div className="my-4 border-t border-white/10"></div>
 
                     <Link

@@ -5,29 +5,68 @@ import Link from "next/link";
 import ProductCard from "@/components/shared/ProductCard";
 import { productService } from "@/services/productService";
 import { categoryService, brandService } from "@/services/metadataService";
+import { useTranslation } from "@/hooks/useTranslation";
+import { userService } from "@/services/userService";
+import dynamic from 'next/dynamic';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+const ShowroomMap = dynamic<{ location: { lat: number; lng: number }; name: string }>(
+  () => import('../../components/shared/ShowroomMap'),
+  { ssr: false }
+);
+
+function SampleNextArrow(props: any) {
+  const { className, style, onClick } = props;
+  return (
+    <button
+      className="absolute right-0 top-1/2 -translate-y-1/2 z-10 size-12 rounded-full bg-[#112117]/80 backdrop-blur-sm border border-[#254632] flex items-center justify-center text-white hover:bg-primary hover:text-[#112117] transition-all shadow-xl -mr-6"
+      onClick={onClick}
+    >
+      <span className="material-symbols-outlined">chevron_right</span>
+    </button>
+  );
+}
+
+function SamplePrevArrow(props: any) {
+  const { className, style, onClick } = props;
+  return (
+    <button
+      className="absolute left-0 top-1/2 -translate-y-1/2 z-10 size-12 rounded-full bg-[#112117]/80 backdrop-blur-sm border border-[#254632] flex items-center justify-center text-white hover:bg-primary hover:text-[#112117] transition-all shadow-xl -ml-6"
+      onClick={onClick}
+    >
+      <span className="material-symbols-outlined">chevron_left</span>
+    </button>
+  );
+}
 
 export default function Home() {
   const [bestSellers, setBestSellers] = useState<any[]>([]);
   const [homeCategories, setHomeCategories] = useState<any[]>([]);
   const [newArrivals, setNewArrivals] = useState<any[]>([]);
   const [brands, setBrands] = useState<any[]>([]);
+  const [showroomInfo, setShowroomInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { t, language } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [productsData, categoriesData, arrivalsData, brandsData] = await Promise.all([
-          productService.getProducts({ limit: 4 }),
+        const [productsData, categoriesData, arrivalsData, brandsData, showroomData] = await Promise.all([
+          productService.getProducts({ limit: 40 }), // Fetch more to support pagination locally
           categoryService.getCategories(),
           productService.getProducts({ limit: 5, sort: "-createdAt" }),
           brandService.getBrands(),
+          userService.getShowroomInfo().catch(() => null)
         ]);
 
         setBestSellers(productsData.products || []);
         setHomeCategories(categoriesData || []);
         setNewArrivals(arrivalsData.products || []);
         setBrands(brandsData || []);
+        setShowroomInfo(showroomData);
       } catch (error) {
         console.error("Error fetching home page data:", error);
       } finally {
@@ -63,25 +102,24 @@ export default function Home() {
             <div className="relative z-10 p-8 md:p-16 max-w-3xl flex flex-col gap-6 items-start">
               <span className="inline-flex items-center gap-2 rounded-full bg-primary/20 px-3 py-1 text-xs font-bold text-primary backdrop-blur-sm border border-primary/20">
                 <span className="material-symbols-outlined text-sm">eco</span>
-                ENERGY EFFICIENT
+                {t('home.hero.eco')}
               </span>
               <h1 className="text-white text-5xl md:text-7xl font-black leading-[0.95] tracking-tight">
-                Power Up <br /> <span className="text-primary">Your World.</span>
+                {t('home.hero.title1')} <br /> <span className="text-primary">{t('home.hero.title2')}</span>
               </h1>
               <p className="text-gray-300 text-lg md:text-xl font-normal leading-relaxed max-w-lg">
-                Discover the latest in smart home switches, professional-grade
-                tools, and energy-saving lighting solutions.
+                {t('home.hero.subtitle')}
               </p>
               <div className="flex flex-wrap gap-4 mt-4">
                 <Link href="/shop">
                   <button className="h-12 px-8 rounded-full bg-primary text-[#122118] text-base font-bold tracking-wide hover:scale-105 transition-transform flex items-center gap-2">
-                    Shop Homeowners
+                    {t('home.hero.shopHome')}
                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </button>
                 </Link>
-                <Link href="/b2b">
+                <Link href="/register-business">
                   <button className="h-12 px-8 rounded-full bg-surface-highlight/80 backdrop-blur-md text-white border border-[#3e6b50] text-base font-bold tracking-wide hover:bg-surface-highlight hover:scale-105 transition-all">
-                    For Professionals
+                    {t('home.hero.forPros')}
                   </button>
                 </Link>
               </div>
@@ -120,17 +158,17 @@ export default function Home() {
           <div className="flex items-end justify-between px-2 mb-8">
             <div>
               <h2 className="text-3xl font-bold text-white tracking-tight">
-                Shop by Category
+                {t('home.categories')}
               </h2>
               <p className="text-gray-400 mt-1">
-                Everything you need for your next project
+                {t('home.categoriesSubtitle')}
               </p>
             </div>
             <Link
               href="/shop"
               className="hidden md:flex items-center gap-1 text-primary text-sm font-bold hover:underline"
             >
-              View All{" "}
+              {t('home.viewAll')}{" "}
               <span className="material-symbols-outlined text-sm">
                 arrow_forward
               </span>
@@ -155,41 +193,89 @@ export default function Home() {
             ) : (
               <div className="col-span-full py-10 flex flex-col items-center justify-center bg-surface-dark/30 rounded-3xl border border-surface-highlight/10">
                 <span className="material-symbols-outlined text-4xl text-gray-600 mb-2">category</span>
-                <p className="text-gray-500 font-medium">No categories found</p>
+                <p className="text-gray-500 font-medium">{t('home.noCategories')}</p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Featured Products Grid */}
-        <div className="py-12">
+        {/* Best Sellers Slider */}
+        <div className="py-12 best-sellers-slider">
           <div className="flex items-center gap-4 mb-8">
             <h2 className="text-3xl font-bold text-white tracking-tight">
-              Best Sellers
+              {t('home.bestSellers')}
             </h2>
             <div className="h-px flex-1 bg-[#254632]"></div>
-            <div className="flex gap-2">
-              <button className="size-10 rounded-full border border-[#254632] flex items-center justify-center text-white hover:bg-[#254632] transition-colors">
-                <span className="material-symbols-outlined">chevron_left</span>
-              </button>
-              <button className="size-10 rounded-full border border-[#254632] flex items-center justify-center text-white hover:bg-[#254632] transition-colors">
-                <span className="material-symbols-outlined">chevron_right</span>
-              </button>
-            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {bestSellers.length > 0 ? (
-              bestSellers.map((product) => (
-                <ProductCard key={product._id} product={product} />
-              ))
-            ) : (
-              <div className="col-span-full py-20 flex flex-col items-center justify-center bg-surface-dark/30 rounded-[3rem] border border-surface-highlight/10">
-                <span className="material-symbols-outlined text-5xl text-gray-600 mb-4 animate-pulse">shopping_cart_off</span>
-                <p className="text-gray-400 text-lg font-medium">No best sellers available yet</p>
-                <p className="text-gray-600 text-sm mt-2">Check back soon for our top picks!</p>
+
+          {bestSellers.length > 0 ? (
+            <Slider
+              dots={false}
+              infinite={bestSellers.length > 4}
+              speed={500}
+              slidesToShow={4}
+              slidesToScroll={1}
+              autoplay={true}
+              autoplaySpeed={3000}
+              pauseOnHover={true}
+              rtl={language === 'ar'}
+              nextArrow={<SampleNextArrow />}
+              prevArrow={<SamplePrevArrow />}
+              responsive={[
+                {
+                  breakpoint: 1280,
+                  settings: {
+                    slidesToShow: 3,
+                  }
+                },
+                {
+                  breakpoint: 1024,
+                  settings: {
+                    slidesToShow: 2,
+                  }
+                },
+                {
+                  breakpoint: 768,
+                  settings: {
+                    slidesToShow: 2,
+                  }
+                },
+                {
+                  breakpoint: 480,
+                  settings: {
+                    slidesToShow: 1,
+                  }
+                }
+              ]}
+            >
+              {bestSellers.map((product) => (
+                <div key={product._id} className="px-3">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+              {/* More Card as a slide */}
+              <div className="px-3">
+                <Link
+                  href="/shop"
+                  className="flex flex-col items-center justify-center bg-surface-dark/50 p-6 rounded-[2rem] border-2 border-dashed border-[#254632] hover:border-primary hover:bg-primary/5 transition-all group aspect-[3/4] h-full"
+                >
+                  <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-4xl">add</span>
+                  </div>
+                  <span className="text-white font-bold text-lg">{t('home.more')}</span>
+                  <p className="text-gray-500 text-sm text-center mt-2 group-hover:text-gray-300">
+                    {t('home.viewAllProducts')}
+                  </p>
+                </Link>
               </div>
-            )}
-          </div>
+            </Slider>
+          ) : (
+            <div className="py-20 flex flex-col items-center justify-center bg-surface-dark/30 rounded-[3rem] border border-surface-highlight/10">
+              <span className="material-symbols-outlined text-5xl text-gray-600 mb-4 animate-pulse">shopping_cart_off</span>
+              <p className="text-gray-400 text-lg font-medium">{t('home.noBestSellers')}</p>
+              <p className="text-gray-600 text-sm mt-2">{t('home.checkBack')}</p>
+            </div>
+          )}
         </div>
 
         {/* CTA Section */}
@@ -203,24 +289,24 @@ export default function Home() {
                   <span className="material-symbols-outlined text-sm">
                     engineering
                   </span>
-                  B2B EXCLUSIVE
+                  {t('home.b2b.badge')}
                 </div>
                 <h2 className="text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
-                  Electrician Special:
+                  {t('home.b2b.title1')}
                   <br />
-                  <span className="text-primary">Bulk Savings</span>
+                  <span className="text-primary">{t('home.b2b.title2')}</span>
                 </h2>
                 <p className="text-gray-300 text-lg md:text-xl">
-                  Register your business today and get{" "}
-                  <span className="text-white font-bold">10% off</span> bulk
-                  orders over $500. We offer net-30 terms for approved accounts.
+                  {t('home.b2b.description')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2">
-                  <button className="h-14 px-8 rounded-full bg-primary text-[#122118] text-lg font-bold hover:brightness-110 shadow-lg shadow-primary/25 transition-all">
-                    Register Business Account
-                  </button>
+                  <Link href="/register-business">
+                    <button className="h-14 px-8 rounded-full bg-primary text-[#122118] text-lg font-bold hover:brightness-110 shadow-lg shadow-primary/25 transition-all w-full sm:w-auto">
+                      {t('home.b2b.register')}
+                    </button>
+                  </Link>
                   <button className="h-14 px-8 rounded-full bg-transparent border-2 border-white/20 text-white text-lg font-bold hover:bg-white/10 transition-all">
-                    View B2B Benefits
+                    {t('home.b2b.benefits')}
                   </button>
                 </div>
               </div>
@@ -238,8 +324,8 @@ export default function Home() {
                       <span className="material-symbols-outlined">verified</span>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-400">Verified Partner</div>
-                      <div className="text-white font-bold">Priority Support</div>
+                      <div className="text-xs text-gray-400">{t('home.b2b.verified')}</div>
+                      <div className="text-white font-bold">{t('home.b2b.priority')}</div>
                     </div>
                   </div>
                 </div>
@@ -251,8 +337,8 @@ export default function Home() {
         {/* Latest Arrivals Section */}
         <div className="py-12">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold text-white">New Arrivals</h2>
-            <Link href="/shop" className="text-primary font-bold text-sm hover:underline">See All</Link>
+            <h2 className="text-2xl font-bold text-white">{t('home.newArrivals')}</h2>
+            <Link href="/shop" className="text-primary font-bold text-sm hover:underline">{t('home.viewAll')}</Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {newArrivals.length > 0 ? (
@@ -272,7 +358,7 @@ export default function Home() {
             ) : (
               <div className="col-span-full py-12 flex flex-col items-center justify-center bg-surface-dark/30 rounded-2xl border border-surface-highlight/10">
                 <span className="material-symbols-outlined text-4xl text-gray-600 mb-2">new_releases</span>
-                <p className="text-gray-500 font-medium">No new arrivals found</p>
+                <p className="text-gray-500 font-medium">{t('home.noBestSellers')}</p>
               </div>
             )}
           </div>
@@ -280,46 +366,59 @@ export default function Home() {
 
         {/* Store Locator Section */}
         <div className="py-12 border-t border-[#254632] mt-8">
-          <div className="grid md:grid-cols-2 gap-8 items-center rounded-3xl bg-surface-dark overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-8 items-center rounded-3xl bg-surface-dark overflow-hidden min-h-[500px]">
             <div className="p-8 md:p-12">
-              <h2 className="text-3xl font-bold text-white mb-4">Visit Our Showroom</h2>
-              <p className="text-gray-400 mb-8">Come see our lighting fixtures in person and speak with our certified electrical consultants.</p>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                {t('home.visitShowroom')}
+              </h2>
+              <p className="text-gray-400 mb-8">
+                {t('home.showroomSubtitle')}
+              </p>
               <div className="space-y-6">
                 <div className="flex gap-4">
                   <div className="size-12 rounded-full bg-[#254632] flex items-center justify-center text-primary shrink-0">
                     <span className="material-symbols-outlined">location_on</span>
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-lg">Main Headquarters</h4>
-                    <p className="text-gray-400">1234 Voltage Ave, Circuit City, CA 90210</p>
+                    <h4 className="text-white font-bold text-lg">{t('home.headquarters')}</h4>
+                    <p className="text-gray-400">
+                      {showroomInfo?.address ?
+                        `${showroomInfo.address.street}, ${showroomInfo.address.city}, ${showroomInfo.address.country}` :
+                        '1234 Voltage Ave, Circuit City, CA 90210'}
+                    </p>
                   </div>
                 </div>
+                {showroomInfo?.phone && (
+                  <div className="flex gap-4">
+                    <div className="size-12 rounded-full bg-[#254632] flex items-center justify-center text-primary shrink-0">
+                      <span className="material-symbols-outlined">phone</span>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-bold text-lg">{t('home.callUs')}</h4>
+                      <p className="text-gray-400">{showroomInfo.phone}</p>
+                    </div>
+                  </div>
+                )}
                 <div className="flex gap-4">
                   <div className="size-12 rounded-full bg-[#254632] flex items-center justify-center text-primary shrink-0">
                     <span className="material-symbols-outlined">schedule</span>
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-lg">Opening Hours</h4>
-                    <p className="text-gray-400">Mon - Fri: 8am - 6pm<br />Sat: 9am - 4pm</p>
+                    <h4 className="text-white font-bold text-lg">{t('home.openingHours')}</h4>
+                    <p className="text-gray-400">
+                      {t('home.hoursWeekday')}
+                      <br />
+                      {t('home.hoursFriday')}
+                    </p>
                   </div>
                 </div>
               </div>
               <button className="mt-8 px-6 py-3 rounded-full border border-gray-600 text-white hover:bg-white hover:text-black transition-colors font-bold text-sm">
-                Get Directions
+                {t('home.getDirections')}
               </button>
             </div>
-            <div className="h-full min-h-[300px] w-full bg-slate-800 relative">
-              <img
-                alt="Map of city showing location"
-                className="w-full h-full object-cover opacity-60"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkOKAVEkh3ODely2HGRAp910-FLwvTeC_xIt75RIXIT3-G0N5R6YrN_Dvc2bLU2_tkve7n0m9JnyLohyrQQcEfbVakcDyZbvM2kp5B3MTXdAlRm9XAJfZTZW1Q3_osNuJzte77sm-T_m7E1ql12JZrB2cbYpneMjHLqDTXmBiHkfUc8BbMnOjvcbLVccX-h1UDChsUluK-hjfdFGARp2wcF7_ttV6XGESnkG38_qrxEdhBiymxaTVexw2bBtu2M4nR9VyMjOdTzjY"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-primary text-[#122118] px-4 py-2 rounded-lg font-bold shadow-xl transform -translate-y-4">
-                  ElectroShop HQ
-                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-primary"></div>
-                </div>
-              </div>
+            <div className="h-full min-h-[400px] w-full relative">
+              <ShowroomMap location={showroomInfo?.location || { lat: 30.0444, lng: 31.2357 }} name={showroomInfo?.name || 'ElectroShop'} />
             </div>
           </div>
         </div>

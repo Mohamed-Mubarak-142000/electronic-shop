@@ -6,10 +6,13 @@ import {
     deleteUser,
     getUserById,
     updateUser,
+    getShowroomInfo
 } from '../controllers/userController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+
+router.get('/showroom', getShowroomInfo);
 
 router.route('/')
     .get(protect, admin, getUsers);

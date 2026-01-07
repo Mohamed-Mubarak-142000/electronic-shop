@@ -13,6 +13,8 @@ dotenv.config();
 // Connect to database
 connectDB();
 
+import { initScheduler } from './utils/scheduler.js';
+
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -41,6 +43,8 @@ import brandRoutes from './routes/brandRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
+import portfolioRoutes from './routes/portfolioRoutes.js';
+import jobRoutes from './routes/jobRoutes.js';
 import Message from './models/Message.js';
 import jwt from 'jsonwebtoken';
 import User from './models/User.js';
@@ -53,6 +57,8 @@ app.use('/api/brands', brandRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/portfolio', portfolioRoutes);
+app.use('/api/jobs', jobRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
@@ -135,14 +141,48 @@ io.on('connection', (socket) => {
 // Make io accessible in routes
 app.set('io', io);
 
-// Error handling middleware (placeholder)
+// Initialize Scheduler
+initScheduler(io);
+
+// Custom Error Handling Middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    console.error(`[Error] ${err.message}`);
+    if (process.env.NODE_ENV !== 'production') {
+        console.error(err.stack);
+    }
+    res.status(statusCode).json({
+        message: err.message,
+        stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+    });
 });
 
 const PORT = process.env.PORT || 5000;
 
-httpServer.listen(PORT, () => {
+const server = httpServer.listen(PORT, () => {
     console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err, promise) => {
+    console.error(`Unhandled Rejection: ${err.message}`);
+    // Optional: Gracefully shutdown server if critical
+    // server.close(() => process.exit(1));
+});
+
+// Graceful shutdown handling
+const gracefulShutdown = () => {
+    console.log('Received signal to terminate. Shutting down gracefully...');
+    server.close(() => {
+        console.log('HTTP server closed.');
+        // Close database connection
+        // mongoose.connection.close(false, () => {
+        //     console.log('MongoDb connection closed.');
+        //     process.exit(0);
+        // });
+        process.exit(0);
+    });
+};
+
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);

@@ -15,6 +15,29 @@ export const authService = {
         return response.data;
     },
 
+    async registerBusiness(data: any) {
+        const response = await api.post('/auth/register-business', data);
+        return response.data;
+    },
+
+    async verifyOTP(data: { email: string, otp: string }) {
+        const response = await api.post('/auth/verify-otp', data);
+        if (response.data.token) {
+            useAuthStore.getState().login(response.data);
+        }
+        return response.data;
+    },
+
+    async forgotPassword(email: string) {
+        const response = await api.post('/auth/forgot-password', { email });
+        return response.data;
+    },
+
+    async resetPassword(token: string, data: any) {
+        const response = await api.put(`/auth/reset-password/${token}`, data);
+        return response.data;
+    },
+
     logout() {
         useAuthStore.getState().logout();
     }
