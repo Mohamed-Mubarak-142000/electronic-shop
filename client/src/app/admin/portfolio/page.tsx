@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { portfolioService } from '@/services/portfolioService';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Project {
     _id: string;
@@ -14,6 +15,7 @@ interface Project {
 }
 
 export default function AdminPortfolioPage() {
+    const { t } = useTranslation();
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -64,7 +66,7 @@ export default function AdminPortfolioPage() {
                 const data = await response.json();
                 setFormData((prev) => ({
                     ...prev,
-                    images: [...prev.images, ...data.map((path: string) => `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${path}`)]
+                    images: [...prev.images, ...data]
                 }));
                 setUploading(false);
             } catch (error) {
@@ -143,13 +145,13 @@ export default function AdminPortfolioPage() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-white">Portfolio Management</h1>
+                <h1 className="text-2xl font-bold text-white">{t('admin.portfolio.title')}</h1>
                 <button
                     onClick={() => { resetForm(); setShowModal(true); }}
                     className="flex items-center gap-2 bg-primary px-4 py-2 rounded-lg text-white font-medium hover:bg-primary/90 transition-colors"
                 >
                     <span className="material-symbols-outlined">add</span>
-                    Add New Project
+                    {t('admin.portfolio.add')}
                 </button>
             </div>
 
@@ -157,11 +159,11 @@ export default function AdminPortfolioPage() {
                 <table className="w-full text-left">
                     <thead className="bg-white/5 text-gray-400 text-xs font-medium uppercase tracking-wider">
                         <tr>
-                            <th className="px-6 py-4">Project Title</th>
-                            <th className="px-6 py-4">Client</th>
-                            <th className="px-6 py-4">Status</th>
-                            <th className="px-6 py-4">Date</th>
-                            <th className="px-6 py-4">Actions</th>
+                            <th className="px-6 py-4">{t('admin.portfolio.project_title')}</th>
+                            <th className="px-6 py-4">{t('admin.portfolio.client')}</th>
+                            <th className="px-6 py-4">{t('admin.portfolio.status')}</th>
+                            <th className="px-6 py-4">{t('admin.portfolio.date')}</th>
+                            <th className="px-6 py-4">{t('admin.portfolio.actions')}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
@@ -175,7 +177,7 @@ export default function AdminPortfolioPage() {
                                 <td className="px-6 py-4">
                                     <span className={`px-2 py-1 rounded-md text-xs ${project.isPublished ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-500'
                                         }`}>
-                                        {project.isPublished ? 'Published' : 'Draft'}
+                                        {project.isPublished ? t('admin.portfolio.published') : t('admin.portfolio.draft')}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 text-sm">
@@ -202,11 +204,11 @@ export default function AdminPortfolioPage() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
                     <div className="bg-background-dark w-full max-w-2xl rounded-2xl border border-white/10 p-6 max-h-[90vh] overflow-y-auto">
                         <h2 className="text-xl font-bold text-white mb-6">
-                            {editingId ? 'Edit Project' : 'New Project'}
+                            {editingId ? t('admin.portfolio.edit') : t('admin.portfolio.add')}
                         </h2>
                         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
                             <div className="col-span-1">
-                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">Title (EN)</label>
+                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">{t('admin.portfolio.form.title_en')}</label>
                                 <input
                                     type="text" required
                                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white"
@@ -215,7 +217,7 @@ export default function AdminPortfolioPage() {
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">Title (AR)</label>
+                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">{t('admin.portfolio.form.title_ar')}</label>
                                 <input
                                     type="text" required
                                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white"
@@ -224,7 +226,7 @@ export default function AdminPortfolioPage() {
                                 />
                             </div>
                             <div className="col-span-2">
-                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">Description (EN)</label>
+                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">{t('admin.portfolio.form.desc_en')}</label>
                                 <textarea
                                     required
                                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white h-24"
@@ -233,7 +235,7 @@ export default function AdminPortfolioPage() {
                                 />
                             </div>
                             <div className="col-span-2">
-                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">Description (AR)</label>
+                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">{t('admin.portfolio.form.desc_ar')}</label>
                                 <textarea
                                     required
                                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white h-24"
@@ -242,7 +244,7 @@ export default function AdminPortfolioPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">Client (EN)</label>
+                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">{t('admin.portfolio.form.client_en')}</label>
                                 <input
                                     type="text"
                                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white"
@@ -251,7 +253,7 @@ export default function AdminPortfolioPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">Client (AR)</label>
+                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">{t('admin.portfolio.form.client_ar')}</label>
                                 <input
                                     type="text"
                                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white"
@@ -260,7 +262,7 @@ export default function AdminPortfolioPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">Completion Date</label>
+                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">{t('admin.portfolio.form.date')}</label>
                                 <input
                                     type="date"
                                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white"
@@ -275,11 +277,11 @@ export default function AdminPortfolioPage() {
                                     onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
                                     className="rounded border-white/10 bg-white/5"
                                 />
-                                <label className="text-sm text-gray-300">Published</label>
+                                <label className="text-sm text-gray-300">{t('admin.portfolio.form.published')}</label>
                             </div>
 
                             <div className="col-span-2">
-                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">Project Images</label>
+                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">{t('admin.portfolio.project_images')}</label>
                                 <input
                                     type="file"
                                     multiple
@@ -292,7 +294,7 @@ export default function AdminPortfolioPage() {
                                       hover:file:bg-green-400
                                       cursor-pointer"
                                 />
-                                {uploading && <p className="text-sm text-yellow-400 mt-2">Uploading...</p>}
+                                {uploading && <p className="text-sm text-yellow-400 mt-2">{t('admin.portfolio.uploading')}</p>}
                                 <div className="flex flex-wrap gap-4 mt-4">
                                     {formData.images.map((img, index) => (
                                         <div key={index} className="relative group">
@@ -315,13 +317,13 @@ export default function AdminPortfolioPage() {
                                     onClick={() => setShowModal(false)}
                                     className="flex-1 px-4 py-2 border border-white/10 rounded-lg text-white font-medium hover:bg-white/5"
                                 >
-                                    Cancel
+                                    {t('admin.portfolio.cancel')}
                                 </button>
                                 <button
                                     type="submit"
                                     className="flex-1 px-4 py-2 bg-primary rounded-lg text-white font-medium hover:bg-primary/90"
                                 >
-                                    {editingId ? 'Update Project' : 'Create Project'}
+                                    {editingId ? t('admin.portfolio.update') : t('admin.portfolio.create')}
                                 </button>
                             </div>
                         </form>

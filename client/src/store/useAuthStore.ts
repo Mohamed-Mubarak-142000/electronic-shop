@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useCartStore } from './useCartStore';
+import { useWishlistStore } from './useWishlistStore';
 
 interface User {
     _id: string;
@@ -23,8 +25,8 @@ export const useAuthStore = create<AuthState>()(
             logout: () => {
                 set({ user: null });
                 // Clear other stores
-                import('./useCartStore').then(({ useCartStore }) => useCartStore.getState().clearCart());
-                import('./useWishlistStore').then(({ useWishlistStore }) => useWishlistStore.getState().clearWishlist());
+                useCartStore.getState().clearCart();
+                useWishlistStore.getState().clearWishlist();
             },
         }),
         {

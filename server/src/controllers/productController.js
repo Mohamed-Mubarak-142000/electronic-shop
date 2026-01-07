@@ -98,31 +98,35 @@ export const createProduct = async (req, res) => {
     try {
         const {
             name,
+            nameAr,
             price,
             description,
+            descriptionAr,
             images,
             brand,
             category,
-            countInStock, // Keeping for backward compatibility if needed, but we use 'stock' in model
+            countInStock,
             stock,
             sku,
             tags,
             isPublished
         } = req.body;
 
-        const productSlug = createSlug(name) + '-' + Date.now(); // Ensure uniqueness
+        const productSlug = createSlug(name) + '-' + Date.now();
 
         const product = new Product({
             name,
+            nameAr,
             slug: productSlug,
             price,
             description,
+            descriptionAr,
             images: images || [],
             brand: brand || undefined,
             category: category || undefined,
             stock: stock || countInStock || 0,
             sku: sku || `SKU-${Date.now()}`,
-            user: req.user._id, // If user field exists in schema? Schema didn't show it but good to track creator
+            user: req.user._id,
             tags: tags || [],
             isPublished: isPublished !== undefined ? isPublished : true
         });
@@ -148,8 +152,10 @@ export const updateProduct = async (req, res) => {
     try {
         const {
             name,
+            nameAr,
             price,
             description,
+            descriptionAr,
             images,
             brand,
             category,
@@ -163,8 +169,10 @@ export const updateProduct = async (req, res) => {
 
         if (product) {
             product.name = name || product.name;
+            product.nameAr = nameAr || product.nameAr;
             product.price = price !== undefined ? price : product.price;
             product.description = description || product.description;
+            product.descriptionAr = descriptionAr || product.descriptionAr;
             product.images = images || product.images;
             product.brand = brand || product.brand;
             product.category = category || product.category;
@@ -173,7 +181,6 @@ export const updateProduct = async (req, res) => {
             product.tags = tags || product.tags;
             product.isPublished = isPublished !== undefined ? isPublished : product.isPublished;
 
-            // If name changes, maybe update slug? Let's keep slug stable for SEO usually, or update it
             if (name && name !== product.name) {
                 product.slug = createSlug(name) + '-' + Date.now();
             }

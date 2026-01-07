@@ -42,7 +42,7 @@ export const getCategoryById = async (req, res) => {
 // @access  Private/Admin
 export const createCategory = async (req, res) => {
     try {
-        const { name, imageUrl, description, brand } = req.body;
+        const { name, nameAr, imageUrl, description, descriptionAr, brand } = req.body;
 
         const categoryExists = await Category.findOne({ name });
         if (categoryExists) {
@@ -51,9 +51,11 @@ export const createCategory = async (req, res) => {
 
         const category = await Category.create({
             name,
+            nameAr,
             slug: createSlug(name),
             imageUrl,
             description,
+            descriptionAr,
             brand: brand || undefined
         });
 
@@ -68,13 +70,15 @@ export const createCategory = async (req, res) => {
 // @access  Private/Admin
 export const updateCategory = async (req, res) => {
     try {
-        const { name, imageUrl, description, brand } = req.body;
+        const { name, nameAr, imageUrl, description, descriptionAr, brand } = req.body;
         const category = await Category.findById(req.params.id);
 
         if (category) {
             category.name = name || category.name;
+            category.nameAr = nameAr || category.nameAr;
             category.imageUrl = imageUrl || category.imageUrl;
             category.description = description || category.description;
+            category.descriptionAr = descriptionAr || category.descriptionAr;
             category.brand = brand || category.brand;
 
             if (name && name !== category.name) {

@@ -11,8 +11,10 @@ import { categoryService, brandService } from '@/services/metadataService';
 
 const categorySchema = z.object({
     name: z.string().min(1, 'Name is required'),
+    nameAr: z.string().min(1, 'Arabic Name is required'),
     description: z.string().min(1, 'Description is required'),
-    imageUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+    descriptionAr: z.string().min(1, 'Arabic Description is required'),
+    imageUrl: z.string().optional().or(z.literal('')),
     isPublished: z.boolean().default(true),
     brand: z.string().optional().or(z.literal('')),
 });
@@ -28,12 +30,15 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
     const queryClient = useQueryClient();
     const { data: brandsData } = useQuery({ queryKey: ['brands'], queryFn: brandService.getBrands });
     const brandsList = Array.isArray(brandsData) ? brandsData : [];
+    const [uploading, setUploading] = React.useState(false);
 
     const form = useForm<CategoryFormValues>({
         resolver: zodResolver(categorySchema) as any,
         defaultValues: {
             name: initialData?.name || '',
+            nameAr: initialData?.nameAr || '',
             description: initialData?.description || '',
+            descriptionAr: initialData?.descriptionAr || '',
             imageUrl: initialData?.imageUrl || '',
             isPublished: initialData?.isPublished ?? true,
             brand: typeof initialData?.brand === 'string' ? initialData.brand : initialData?.brand?._id || '',
@@ -45,13 +50,42 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
         if (initialData) {
             form.reset({
                 name: initialData.name,
+                nameAr: initialData.nameAr,
                 description: initialData.description,
+                descriptionAr: initialData.descriptionAr,
                 imageUrl: initialData.imageUrl,
                 isPublished: initialData.isPublished ?? true,
                 brand: typeof initialData.brand === 'string' ? initialData.brand : initialData.brand?._id || '',
             });
         }
     }, [initialData, form]);
+
+    const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            setUploading(true);
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/upload/cloudinary`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+                if (data.url) {
+                    form.setValue('imageUrl', data.url);
+                    toast.success('Image uploaded successfully');
+                } else {
+                    throw new Error('Invalid response from server');
+                }
+                setUploading(false);
+            } catch (error) {
+                console.error(error);
+                setUploading(false);
+                toast.error('Image upload failed');
+            }
+        }
+    };
 
     const createMutation = useMutation({
         mutationFn: categoryService.createCategory,
@@ -95,29 +129,52 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                 <div className="bg-surface-dark rounded-xl p-6 shadow-sm border border-white/10">
                     <h2 className="text-lg font-bold text-white mb-6">General Information</h2>
                     <div className="flex flex-col gap-6">
-                        {/* Category Name Input */}
-                        <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Category Name</span>
-                            <input
-                                {...form.register('name')}
-                                className={inputClass(form.formState.errors.name)}
-                                placeholder="e.g. Circuit Breakers"
-                                type="text"
-                            />
-                            {form.formState.errors.name && <span className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</span>}
-                        </label>
-                        {/* Description */}
-                        <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Description</span>
-                            <div className="flex flex-col rounded-lg border border-white/10 bg-background-dark overflow-hidden">
-                                <textarea
-                                    {...form.register('description')}
-                                    className="form-textarea w-full border-none bg-transparent focus:ring-0 p-4 min-h-[160px] text-white resize-y placeholder:text-gray-400"
-                                    placeholder="Enter detailed category description..."
-                                ></textarea>
-                            </div>
-                            {form.formState.errors.description && <span className="text-red-500 text-sm mt-1">{form.formState.errors.description.message}</span>}
-                        </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <label className="flex flex-col w-full">
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Category Name (EN)</span>
+                                <input
+                                    {...form.register('name')}
+                                    className={inputClass(form.formState.errors.name)}
+                                    placeholder="e.g. Circuit Breakers"
+                                    type="text"
+                                />
+                                {form.formState.errors.name && <span className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</span>}
+                            </label>
+                            <label className="flex flex-col w-full">
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Category Name (AR)</span>
+                                <input
+                                    {...form.register('nameAr')}
+                                    className={inputClass(form.formState.errors.nameAr)}
+                                    placeholder="اسم الفئة بالعربية"
+                                    type="text"
+                                />
+                                {form.formState.errors.nameAr && <span className="text-red-500 text-sm mt-1">{form.formState.errors.nameAr.message}</span>}
+                            </label>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <label className="flex flex-col w-full">
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Description (EN)</span>
+                                <div className="flex flex-col rounded-lg border border-white/10 bg-background-dark overflow-hidden">
+                                    <textarea
+                                        {...form.register('description')}
+                                        className="form-textarea w-full border-none bg-transparent focus:ring-0 p-4 min-h-[160px] text-white resize-y placeholder:text-gray-400"
+                                        placeholder="Enter detailed category description..."
+                                    ></textarea>
+                                </div>
+                                {form.formState.errors.description && <span className="text-red-500 text-sm mt-1">{form.formState.errors.description.message}</span>}
+                            </label>
+                            <label className="flex flex-col w-full">
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Description (AR)</span>
+                                <div className="flex flex-col rounded-lg border border-white/10 bg-background-dark overflow-hidden">
+                                    <textarea
+                                        {...form.register('descriptionAr')}
+                                        className="form-textarea w-full border-none bg-transparent focus:ring-0 p-4 min-h-[160px] text-white resize-y placeholder:text-gray-400"
+                                        placeholder="وصف الفئة بالعربية..."
+                                    ></textarea>
+                                </div>
+                                {form.formState.errors.descriptionAr && <span className="text-red-500 text-sm mt-1">{form.formState.errors.descriptionAr.message}</span>}
+                            </label>
+                        </div>
                     </div>
                 </div>
                 {/* Media Card */}
@@ -125,13 +182,35 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                     <h2 className="text-lg font-bold text-white mb-6">Category Media</h2>
                     <div className="flex flex-col gap-6">
                         <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Image URL</span>
-                            <input
-                                {...form.register('imageUrl')}
-                                className={inputClass(form.formState.errors.imageUrl)}
-                                placeholder="https://example.com/category-image.jpg"
-                                type="text"
-                            />
+                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Category Image</span>
+                            <label className="relative cursor-pointer">
+                                <input
+                                    type="file"
+                                    onChange={uploadFileHandler}
+                                    className="hidden"
+                                    id="category-image-upload"
+                                />
+                                <div className="flex items-center justify-center gap-3 w-full h-32 rounded-lg border-2 border-dashed border-white/20 bg-background-dark hover:border-primary hover:bg-white/5 transition-all">
+                                    <span className="material-symbols-outlined text-4xl text-primary">add_photo_alternate</span>
+                                    <div className="flex flex-col">
+                                        <span className="text-white font-semibold">Choose Image</span>
+                                        <span className="text-gray-400 text-sm">or drag and drop</span>
+                                    </div>
+                                </div>
+                            </label>
+                            {uploading && <p className="text-sm text-yellow-400">Uploading to Cloudinary...</p>}
+                            {form.watch('imageUrl') && (
+                                <div className="mt-4 relative group w-fit">
+                                    <img src={form.watch('imageUrl')} alt="Category" className="h-32 w-32 object-cover rounded-lg border border-white/10" />
+                                    <button
+                                        type="button"
+                                        onClick={() => form.setValue('imageUrl', '')}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <span className="material-symbols-outlined text-sm">close</span>
+                                    </button>
+                                </div>
+                            )}
                             {form.formState.errors.imageUrl && <span className="text-red-500 text-sm mt-1">{form.formState.errors.imageUrl.message}</span>}
                         </label>
                     </div>

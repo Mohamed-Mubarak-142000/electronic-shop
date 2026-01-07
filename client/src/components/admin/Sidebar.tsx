@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const { t } = useTranslation();
 
     const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
 
@@ -17,8 +19,8 @@ export default function Sidebar() {
                         <span className="material-symbols-outlined text-3xl">bolt</span>
                     </div>
                     <div className="flex flex-col">
-                        <h1 className="text-white text-lg font-bold leading-none tracking-tight">ElectroAdmin</h1>
-                        <p className="text-gray-400 text-xs font-medium mt-1">Powering Commerce</p>
+                        <h1 className="text-white text-lg font-bold leading-none tracking-tight">{t('admin.sidebar.brand.title')}</h1>
+                        <p className="text-gray-400 text-xs font-medium mt-1">{t('admin.sidebar.brand.subtitle')}</p>
                     </div>
                 </div>
 
@@ -41,7 +43,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin') && pathname === '/admin' ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Dashboard
+                            {t('admin.sidebar.dashboard')}
                         </span>
                     </Link>
 
@@ -62,7 +64,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin/products') ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Products
+                            {t('admin.sidebar.products')}
                         </span>
                     </Link>
 
@@ -83,7 +85,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin/categories') ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Categories
+                            {t('admin.sidebar.categories')}
                         </span>
                     </Link>
 
@@ -104,7 +106,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin/brands') ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Brands
+                            {t('admin.sidebar.brands')}
                         </span>
                     </Link>
 
@@ -125,7 +127,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin/orders') ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Orders
+                            {t('admin.sidebar.orders')}
                         </span>
                     </Link>
 
@@ -146,7 +148,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin/customers') ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Customers
+                            {t('admin.sidebar.customers')}
                         </span>
                     </Link>
 
@@ -167,7 +169,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin/messages') ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Messages
+                            {t('admin.sidebar.messages')}
                         </span>
                     </Link>
 
@@ -190,7 +192,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin/jobs') ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Jobs
+                            {t('admin.sidebar.jobs')}
                         </span>
                     </Link>
 
@@ -211,7 +213,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin/portfolio') ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Portfolio
+                            {t('admin.sidebar.portfolio')}
                         </span>
                     </Link>
 
@@ -234,7 +236,7 @@ export default function Sidebar() {
                             className={`font-medium text-sm group-hover:text-white ${isActive('/admin/settings') ? 'text-white' : 'text-gray-300'
                                 }`}
                         >
-                            Settings
+                            {t('admin.sidebar.settings')}
                         </span>
                     </Link>
                 </nav>

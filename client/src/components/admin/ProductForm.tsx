@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -12,15 +12,16 @@ import { categoryService, brandService } from '@/services/metadataService';
 
 const productSchema = z.object({
     name: z.string().min(1, 'Name is required'),
+    nameAr: z.string().min(1, 'Arabic Name is required'),
     sku: z.string().optional(),
     description: z.string().min(1, 'Description is required'),
+    descriptionAr: z.string().min(1, 'Arabic Description is required'),
     price: z.coerce.number().min(0, 'Price must be positive'),
-    // discountPrice: z.coerce.number().optional(), // Not in backend model yet
     stock: z.coerce.number().min(0, 'Stock must be non-negative'),
     category: z.string().min(1, 'Category is required'),
     brand: z.string().optional(),
-    images: z.array(z.string().url('Must be a valid URL')).min(1, 'At least one image URL is required'),
-    tags: z.string().optional(), // We'll handle comma separation
+    images: z.array(z.string()).min(1, 'At least one image is required'),
+    tags: z.string().optional(),
     isPublished: z.boolean().default(true),
 });
 
@@ -33,6 +34,7 @@ interface ProductFormProps {
 export default function ProductForm({ initialData }: ProductFormProps) {
     const router = useRouter();
     const queryClient = useQueryClient();
+    const [uploading, setUploading] = React.useState(false);
 
     const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: categoryService.getCategories });
     const { data: brands } = useQuery({ queryKey: ['brands'], queryFn: brandService.getBrands });
@@ -41,26 +43,29 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         resolver: zodResolver(productSchema) as any,
         defaultValues: {
             name: initialData?.name || '',
+            nameAr: initialData?.nameAr || '',
             sku: initialData?.sku || '',
             description: initialData?.description || '',
+            descriptionAr: initialData?.descriptionAr || '',
             price: initialData?.price || 0,
             stock: initialData?.stock || 0,
             category: initialData?.category?._id || '',
             brand: initialData?.brand?._id || '',
-            images: initialData?.images && initialData.images.length > 0 ? initialData.images : [''],
+            images: initialData?.images && initialData.images.length > 0 ? initialData.images : [],
             tags: initialData?.tags ? initialData.tags.join(', ') : '',
             isPublished: initialData?.isPublished ?? true,
         },
         mode: 'onChange'
     });
 
-    // Reset form when initialData loads (if fetching happens after mount)
     useEffect(() => {
         if (initialData) {
             form.reset({
                 name: initialData.name,
+                nameAr: initialData.nameAr,
                 sku: initialData.sku,
                 description: initialData.description,
+                descriptionAr: initialData.descriptionAr,
                 price: initialData.price,
                 stock: initialData.stock,
                 category: initialData.category?._id,
@@ -72,10 +77,40 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         }
     }, [initialData, form]);
 
-    const { fields: imageFields, append: appendImage, remove: removeImage } = useFieldArray({
-        control: form.control as any,
-        name: "images"
-    });
+    const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('images', files[i]);
+            }
+            setUploading(true);
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/upload/cloudinary/multiple`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+                if (data.urls && Array.isArray(data.urls)) {
+                    const currentImages = form.getValues('images') || [];
+                    form.setValue('images', [...currentImages, ...data.urls]);
+                    toast.success('Images uploaded successfully');
+                } else {
+                    throw new Error('Invalid response from server');
+                }
+                setUploading(false);
+            } catch (error) {
+                console.error(error);
+                setUploading(false);
+                toast.error('Image upload failed');
+            }
+        }
+    };
+
+    const removeImage = (indexToRemove: number) => {
+        const currentImages = form.getValues('images');
+        form.setValue('images', currentImages.filter((_, index) => index !== indexToRemove));
+    };
 
     const createMutation = useMutation({
         mutationFn: productService.createProduct,
@@ -112,29 +147,36 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         }
     };
 
-    // Helper to add error class
     const inputClass = (error?: any) => `form-input flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4 placeholder:text-gray-400 ${error ? 'border-red-500 focus:border-red-500' : ''}`;
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit as any)} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column: Main Form Data (2/3 width) */}
             <div className="lg:col-span-2 flex flex-col gap-8">
-                {/* General Information Card */}
                 <div className="bg-surface-dark rounded-xl p-6 shadow-sm border border-white/10">
                     <h2 className="text-lg font-bold text-white mb-6">General Information</h2>
                     <div className="flex flex-col gap-6">
-                        {/* Product Name Input */}
-                        <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Product Name</span>
-                            <input
-                                {...form.register('name')}
-                                className={inputClass(form.formState.errors.name)}
-                                placeholder="e.g. Industrial Circuit Breaker 50A"
-                                type="text"
-                            />
-                            {form.formState.errors.name && <span className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</span>}
-                        </label>
-                        {/* SKU Row */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <label className="flex flex-col w-full">
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Product Name (EN)</span>
+                                <input
+                                    {...form.register('name')}
+                                    className={inputClass(form.formState.errors.name)}
+                                    placeholder="e.g. Industrial Circuit Breaker 50A"
+                                    type="text"
+                                />
+                                {form.formState.errors.name && <span className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</span>}
+                            </label>
+                            <label className="flex flex-col w-full">
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Product Name (AR)</span>
+                                <input
+                                    {...form.register('nameAr')}
+                                    className={inputClass(form.formState.errors.nameAr)}
+                                    placeholder="اسم المنتج بالعربية"
+                                    type="text"
+                                />
+                                {form.formState.errors.nameAr && <span className="text-red-500 text-sm mt-1">{form.formState.errors.nameAr.message}</span>}
+                            </label>
+                        </div>
                         <div className="grid grid-cols-1 sm:grid-cols-1 gap-6">
                             <label className="flex flex-col w-full">
                                 <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">SKU</span>
@@ -146,40 +188,70 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                                 />
                             </label>
                         </div>
-                        {/* Description */}
-                        <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Description</span>
-                            <div className="flex flex-col rounded-lg border border-white/10 bg-background-dark overflow-hidden">
-                                <textarea
-                                    {...form.register('description')}
-                                    className="form-textarea w-full border-none bg-transparent focus:ring-0 p-4 min-h-[160px] text-white resize-y placeholder:text-gray-400"
-                                    placeholder="Enter detailed product description..."
-                                ></textarea>
-                            </div>
-                            {form.formState.errors.description && <span className="text-red-500 text-sm mt-1">{form.formState.errors.description.message}</span>}
-                        </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <label className="flex flex-col w-full">
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Description (EN)</span>
+                                <div className="flex flex-col rounded-lg border border-white/10 bg-background-dark overflow-hidden">
+                                    <textarea
+                                        {...form.register('description')}
+                                        className="form-textarea w-full border-none bg-transparent focus:ring-0 p-4 min-h-[160px] text-white resize-y placeholder:text-gray-400"
+                                        placeholder="Enter detailed product description..."
+                                    ></textarea>
+                                </div>
+                                {form.formState.errors.description && <span className="text-red-500 text-sm mt-1">{form.formState.errors.description.message}</span>}
+                            </label>
+                            <label className="flex flex-col w-full">
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Description (AR)</span>
+                                <div className="flex flex-col rounded-lg border border-white/10 bg-background-dark overflow-hidden">
+                                    <textarea
+                                        {...form.register('descriptionAr')}
+                                        className="form-textarea w-full border-none bg-transparent focus:ring-0 p-4 min-h-[160px] text-white resize-y placeholder:text-gray-400"
+                                        placeholder="وصف المنتج بالعربية..."
+                                    ></textarea>
+                                </div>
+                                {form.formState.errors.descriptionAr && <span className="text-red-500 text-sm mt-1">{form.formState.errors.descriptionAr.message}</span>}
+                            </label>
+                        </div>
                     </div>
                 </div>
-                {/* Media Gallery Card (URL Inputs) */}
+                {/* Media Gallery Card */}
                 <div className="bg-surface-dark rounded-xl p-6 shadow-sm border border-white/10">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-bold text-white">Product Images (URLs)</h2>
-                        <button type="button" onClick={() => appendImage('')} className="text-primary text-sm font-bold hover:underline">+ Add Image URL</button>
+                        <h2 className="text-lg font-bold text-white">Product Images</h2>
                     </div>
                     <div className="flex flex-col gap-4">
-                        {imageFields.map((field, index) => (
-                            <div key={field.id} className="flex gap-2">
-                                <input
-                                    {...form.register(`images.${index}` as const)} // Type assertion
-                                    className={inputClass()}
-                                    placeholder="https://example.com/image.jpg"
-                                />
-                                <button type="button" onClick={() => removeImage(index)} className="p-2 text-red-500 hover:bg-white/5 rounded">
-                                    <span className="material-symbols-outlined">delete</span>
-                                </button>
+                        <label className="relative cursor-pointer">
+                            <input
+                                type="file"
+                                multiple
+                                onChange={uploadFileHandler}
+                                className="hidden"
+                                id="product-images-upload"
+                            />
+                            <div className="flex items-center justify-center gap-3 w-full h-32 rounded-lg border-2 border-dashed border-white/20 bg-background-dark hover:border-primary hover:bg-white/5 transition-all">
+                                <span className="material-symbols-outlined text-4xl text-primary">add_photo_alternate</span>
+                                <div className="flex flex-col">
+                                    <span className="text-white font-semibold">Choose Images</span>
+                                    <span className="text-gray-400 text-sm">or drag and drop</span>
+                                </div>
                             </div>
-                        ))}
-                        {form.formState.errors.images && <span className="text-red-500 text-sm">{form.formState.errors.images.message || form.formState.errors.images.root?.message}</span>}
+                        </label>
+                        {uploading && <p className="text-sm text-yellow-400">Uploading to Cloudinary...</p>}
+                        <div className="flex flex-wrap gap-4 mt-4">
+                            {form.watch('images')?.map((img, index) => (
+                                <div key={index} className="relative group">
+                                    <img src={img} alt={`Product ${index}`} className="h-24 w-24 object-cover rounded-lg border border-white/10" />
+                                    <button
+                                        type="button"
+                                        onClick={() => removeImage(index)}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <span className="material-symbols-outlined text-sm">close</span>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        {form.formState.errors.images && <span className="text-red-500 text-sm">{form.formState.errors.images.message}</span>}
                     </div>
                 </div>
             </div>

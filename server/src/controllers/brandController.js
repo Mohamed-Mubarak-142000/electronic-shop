@@ -42,7 +42,7 @@ export const getBrandById = async (req, res) => {
 // @access  Private/Admin
 export const createBrand = async (req, res) => {
     try {
-        const { name, logoUrl, description, category } = req.body;
+        const { name, nameAr, logoUrl, description, descriptionAr, category } = req.body;
 
         const brandExists = await Brand.findOne({ name });
         if (brandExists) {
@@ -51,9 +51,11 @@ export const createBrand = async (req, res) => {
 
         const brand = await Brand.create({
             name,
+            nameAr,
             slug: createSlug(name),
             logoUrl,
             description,
+            descriptionAr,
             category: category || undefined
         });
 
@@ -68,13 +70,15 @@ export const createBrand = async (req, res) => {
 // @access  Private/Admin
 export const updateBrand = async (req, res) => {
     try {
-        const { name, logoUrl, description, category } = req.body;
+        const { name, nameAr, logoUrl, description, descriptionAr, category } = req.body;
         const brand = await Brand.findById(req.params.id);
 
         if (brand) {
             brand.name = name || brand.name;
+            brand.nameAr = nameAr || brand.nameAr;
             brand.logoUrl = logoUrl || brand.logoUrl;
             brand.description = description || brand.description;
+            brand.descriptionAr = descriptionAr || brand.descriptionAr;
             brand.category = category || brand.category;
 
             if (name && name !== brand.name) {
