@@ -4,40 +4,20 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import dashboardService, { DashboardStats as StatsType } from '@/services/dashboardService';
 
-export default function DashboardStats() {
-    const [stats, setStats] = useState<StatsType | null>(null);
-    const [loading, setLoading] = useState(true);
+import { useTranslation } from '@/hooks/useTranslation';
 
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                const data = await dashboardService.getDashboardStats();
-                setStats(data);
-            } catch (error) {
-                console.error('Failed to fetch dashboard stats:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+interface DashboardStatsProps {
+    stats: StatsType | null;
+}
 
-        fetchStats();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[...Array(6)].map((_, i) => (
-                    <div key={i} className="bg-card-dark p-5 rounded-xl border border-white/5 shadow-sm animate-pulse h-32"></div>
-                ))}
-            </div>
-        );
-    }
+export default function DashboardStats({ stats }: DashboardStatsProps) {
+    const { t } = useTranslation();
 
     if (!stats) return null;
 
     const cards = [
         {
-            title: 'Total Revenue',
+            title: t('admin.stats.revenue'),
             value: `$${stats.totalRevenue.toLocaleString()}`,
             icon: 'payments',
             trend: `+${stats.trends.revenue}%`,
@@ -45,7 +25,7 @@ export default function DashboardStats() {
             href: '/admin/orders'
         },
         {
-            title: 'Total Orders',
+            title: t('admin.stats.orders'),
             value: stats.totalOrders.toLocaleString(),
             icon: 'shopping_bag',
             trend: `+${stats.trends.orders}%`,
@@ -53,7 +33,7 @@ export default function DashboardStats() {
             href: '/admin/orders'
         },
         {
-            title: 'Products',
+            title: t('admin.stats.products'),
             value: stats.totalProducts.toLocaleString(),
             icon: 'inventory_2',
             trend: stats.lowStockCount > 0 ? `${stats.lowStockCount} low stock` : 'Healthy stock',
@@ -61,7 +41,7 @@ export default function DashboardStats() {
             href: '/admin/products'
         },
         {
-            title: 'Categories',
+            title: t('admin.stats.categories'),
             value: stats.totalCategories.toLocaleString(),
             icon: 'category',
             trend: 'Direct browse',
@@ -69,7 +49,7 @@ export default function DashboardStats() {
             href: '/admin/categories'
         },
         {
-            title: 'Brands',
+            title: t('admin.stats.brands'),
             value: stats.totalBrands.toLocaleString(),
             icon: 'verified_user',
             trend: 'Partner brands',
@@ -77,7 +57,7 @@ export default function DashboardStats() {
             href: '/admin/brands'
         },
         {
-            title: 'Customers',
+            title: t('admin.stats.customers'),
             value: stats.totalUsers.toLocaleString(),
             icon: 'group',
             trend: `+${stats.trends.users}%`,

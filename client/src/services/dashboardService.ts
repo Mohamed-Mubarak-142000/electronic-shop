@@ -13,6 +13,9 @@ export interface DashboardStats {
         orders: number;
         users: number;
     };
+    revenueGraphData: number[];
+    recentOrders: any[];
+    lowStockProducts: any[];
 }
 
 export const getDashboardStats = async (): Promise<DashboardStats> => {

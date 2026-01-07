@@ -1,16 +1,36 @@
 'use client';
 
-export default function RevenueChart() {
+import { useTranslation } from '@/hooks/useTranslation';
+
+export default function RevenueChart({ data }: { data: number[] }) {
+    const { t } = useTranslation();
+
+    // Basic scaling for SVG path if data exists. Assumes max value for Y scaling.
+    const maxVal = data && data.length > 0 ? Math.max(...data) : 100;
+    const height = 150; // max chart height (excluding padding) inside 200 viewbox
+    const width = 800;
+    const stepX = width / 11; // 12 points
+
+    const points = (data || Array(12).fill(0)).map((val, index) => {
+        const x = index * stepX;
+        const y = 200 - (val / (maxVal || 1)) * height; // Invert Y
+        return `${x},${y}`;
+    }).join(' ');
+
+    // Simple polyline/path construction. For better curves, we'd use a library or bezier algo, but polyline is fine for now.
+    // L commands
+    const pathD = points ? `M${points.replace(/ /g, ' L')}` : '';
+
     return (
         <div className="lg:col-span-2 bg-card-dark rounded-xl border border-white/5 p-6">
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h3 className="text-lg font-bold text-white">Revenue Analytics</h3>
-                    <p className="text-sm text-gray-400">Year to Date Performance</p>
+                    <h3 className="text-lg font-bold text-white">{t('admin.chart.revenue')}</h3>
+                    <p className="text-sm text-gray-400">{t('admin.chart.ytd')}</p>
                 </div>
                 <select className="bg-background-dark border border-white/10 text-white text-sm rounded-lg p-2 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none">
-                    <option>This Year</option>
-                    <option>Last Year</option>
+                    <option>{t('admin.chart.this_year')}</option>
+                    <option>{t('admin.chart.last_year')}</option>
                 </select>
             </div>
             {/* Line Chart Simulation */}
@@ -28,13 +48,8 @@ export default function RevenueChart() {
                     <line stroke="rgba(255,255,255,0.05)" strokeWidth="1" x1="0" x2="800" y1="100" y2="100"></line>
                     <line stroke="rgba(255,255,255,0.05)" strokeWidth="1" x1="0" x2="800" y1="150" y2="150"></line>
                     <line stroke="rgba(255,255,255,0.05)" strokeWidth="1" x1="0" x2="800" y1="200" y2="200"></line>
-                    {/* The Chart Line */}
-                    <path d="M0,150 Q100,100 200,130 T400,80 T600,100 T800,20" fill="url(#gradient)" stroke="#36e27b" strokeWidth="3"></path>
-                    {/* Data Points */}
-                    <circle cx="200" cy="130" fill="#112117" r="4" stroke="#36e27b" strokeWidth="2"></circle>
-                    <circle cx="400" cy="80" fill="#112117" r="4" stroke="#36e27b" strokeWidth="2"></circle>
-                    <circle cx="600" cy="100" fill="#112117" r="4" stroke="#36e27b" strokeWidth="2"></circle>
-                    <circle cx="800" cy="20" fill="#112117" r="4" stroke="#36e27b" strokeWidth="2"></circle>
+                    {/* The Chart Line using passed data */}
+                    {data && <path d={pathD} fill="none" stroke="#36e27b" strokeWidth="3"></path>}
                 </svg>
             </div>
             <div className="flex justify-between text-xs text-gray-500 mt-4 px-2">

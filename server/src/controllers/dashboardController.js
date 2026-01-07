@@ -19,8 +19,43 @@ export const getDashboardStats = async (req, res) => {
         const orders = await Order.find({});
         const totalRevenue = orders.reduce((acc, order) => acc + (order.total || 0), 0);
 
-        // Previous stats (for trending, mock for now as we don't have historical data easily accessible without more complex queries)
-        // In a real app, we'd compare with last month's stats.
+        // Revenue Graph Data (Monthly)
+        const currentYear = new Date().getFullYear();
+        const startOfYear = new Date(currentYear, 0, 1);
+        const endOfYear = new Date(currentYear, 11, 31);
+
+        const monthlyRevenue = await Order.aggregate([
+            {
+                $match: {
+                    createdAt: { $gte: startOfYear, $lte: endOfYear },
+                    isPaid: true
+                }
+            },
+            {
+                $group: {
+                    _id: { $month: "$createdAt" }, // 1-12
+                    total: { $sum: "$total" }
+                }
+            }
+        ]);
+
+        const revenueGraphData = Array(12).fill(0);
+        monthlyRevenue.forEach(item => {
+            revenueGraphData[item._id - 1] = item.total;
+        });
+
+        // Recent Orders
+        const recentOrders = await Order.find({})
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .populate('user', 'name email')
+            .populate('items.product', 'name images');
+
+        // Low Stock Products
+        const lowStockProducts = await Product.find({ stock: { $lt: 10 } })
+            .limit(3)
+            .select('name stock images price')
+            .sort({ stock: 1 });
 
         res.json({
             totalProducts,
@@ -31,10 +66,13 @@ export const getDashboardStats = async (req, res) => {
             totalRevenue,
             lowStockCount,
             trends: {
-                revenue: 12.5, // Mock trends for visual consistency if needed, or leave at 0
+                revenue: 12.5,
                 orders: 5.2,
                 users: 8.1
-            }
+            },
+            revenueGraphData,
+            recentOrders,
+            lowStockProducts
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

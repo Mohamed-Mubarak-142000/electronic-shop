@@ -16,9 +16,10 @@ import {
     Edit3,
     Share2,
     ChevronRight,
-    Zap,
     Shield,
-    Lightbulb
+    Lightbulb,
+    ChevronLeft,
+    Zap
 } from 'lucide-react';
 
 interface Skill {
@@ -56,6 +57,91 @@ interface Owner {
     location?: { lat: number; lng: number };
     address?: { city: string; state: string };
 }
+
+const ProjectCard = ({ project, index, language }: { project: Project; index: number; language: string }) => {
+    const [currentImage, setCurrentImage] = useState(0);
+
+    const nextImage = (e: any) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (project.images && project.images.length > 0) {
+            setCurrentImage((prev) => (prev + 1) % project.images.length);
+        }
+    };
+
+    const prevImage = (e: any) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (project.images && project.images.length > 0) {
+            setCurrentImage((prev) => (prev - 1 + project.images.length) % project.images.length);
+        }
+    };
+
+    const displayImage = (project.images && project.images.length > 0) ? project.images[currentImage] : 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=800';
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="group bg-[#112117] rounded-3xl overflow-hidden border border-[#1a3324] hover:border-primary/30 transition-all shadow-lg"
+        >
+            <div className="aspect-[4/3] bg-surface-highlight overflow-hidden relative">
+                <AnimatePresence mode="wait">
+                    <motion.img
+                        key={currentImage}
+                        src={displayImage}
+                        alt={project.title}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                </AnimatePresence>
+
+                <div className="absolute top-4 left-4 bg-primary/90 text-[#0a140e] px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest z-10">
+                    {project.category || (language === 'ar' ? 'تجاري' : 'Commercial')}
+                </div>
+
+                {project.images && project.images.length > 1 && (
+                    <>
+                        <button
+                            onClick={prevImage}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+                        <button
+                            onClick={nextImage}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                            {project.images.map((_, i) => (
+                                <div
+                                    key={i}
+                                    className={`h-1.5 rounded-full transition-all ${i === currentImage ? 'w-4 bg-primary' : 'w-1.5 bg-white/50'}`}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
+            </div>
+            <div className="p-6 space-y-4">
+                <div>
+                    <h4 className="text-xl font-bold line-clamp-1">{language === 'ar' ? project.titleAr : project.title}</h4>
+                    <p className="text-sm text-gray-400 mt-1 line-clamp-2">{language === 'ar' ? project.descriptionAr : project.description}</p>
+                </div>
+                <button className="w-full py-3 rounded-xl bg-surface-highlight border border-white/5 text-white text-sm font-bold group-hover:bg-primary group-hover:text-[#0a140e] transition-all flex items-center justify-center gap-2">
+                    {language === 'ar' ? 'عرض دراسة الحالة' : 'View Case Study'}
+                    <ChevronRight size={16} />
+                </button>
+            </div>
+        </motion.div>
+    );
+};
 
 export default function PortfolioDashboard() {
     const [data, setData] = useState<{ owner: Owner; portfolios: Project[] } | null>(null);
@@ -204,34 +290,7 @@ export default function PortfolioDashboard() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {portfolios.map((project, idx) => (
-                                <motion.div
-                                    key={project._id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: idx * 0.1 }}
-                                    className="group bg-[#112117] rounded-3xl overflow-hidden border border-[#1a3324] hover:border-primary/30 transition-all shadow-lg"
-                                >
-                                    <div className="aspect-[4/3] bg-surface-highlight overflow-hidden relative">
-                                        <img
-                                            src={project.images[0] || 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=800'}
-                                            alt={project.title}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                        />
-                                        <div className="absolute top-4 left-4 bg-primary/90 text-[#0a140e] px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest">
-                                            {project.category || (language === 'ar' ? 'تجاري' : 'Commercial')}
-                                        </div>
-                                    </div>
-                                    <div className="p-6 space-y-4">
-                                        <div>
-                                            <h4 className="text-xl font-bold line-clamp-1">{language === 'ar' ? project.titleAr : project.title}</h4>
-                                            <p className="text-sm text-gray-400 mt-1 line-clamp-2">{language === 'ar' ? project.descriptionAr : project.description}</p>
-                                        </div>
-                                        <button className="w-full py-3 rounded-xl bg-surface-highlight border border-white/5 text-white text-sm font-bold group-hover:bg-primary group-hover:text-[#0a140e] transition-all flex items-center justify-center gap-2">
-                                            {language === 'ar' ? 'عرض دراسة الحالة' : 'View Case Study'}
-                                            <ChevronRight size={16} />
-                                        </button>
-                                    </div>
-                                </motion.div>
+                                <ProjectCard key={project._id} project={project} index={idx} language={language} />
                             ))}
                             {portfolios.length === 0 && (
                                 <div className="col-span-full py-20 bg-surface-dark/30 rounded-3xl border-2 border-dashed border-white/5 flex flex-col items-center justify-center text-gray-500">

@@ -45,6 +45,36 @@ export default function AdminPortfolioPage() {
         fetchProjects();
     }, []);
 
+    const [uploading, setUploading] = useState(false);
+
+    const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('images', files[i]);
+            }
+            setUploading(true);
+            try {
+                // Determine API URL relative to backend
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/upload/multiple`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+                setFormData((prev) => ({
+                    ...prev,
+                    images: [...prev.images, ...data.map((path: string) => `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${path}`)]
+                }));
+                setUploading(false);
+            } catch (error) {
+                console.error(error);
+                setUploading(false);
+                toast.error('Image upload failed');
+            }
+        }
+    };
+
     const resetForm = () => {
         setFormData({
             title: '',
@@ -246,6 +276,37 @@ export default function AdminPortfolioPage() {
                                     className="rounded border-white/10 bg-white/5"
                                 />
                                 <label className="text-sm text-gray-300">Published</label>
+                            </div>
+
+                            <div className="col-span-2">
+                                <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">Project Images</label>
+                                <input
+                                    type="file"
+                                    multiple
+                                    onChange={uploadFileHandler}
+                                    className="block w-full text-sm text-gray-400
+                                      file:mr-4 file:py-2 file:px-4
+                                      file:rounded-full file:border-0
+                                      file:text-sm file:font-semibold
+                                      file:bg-primary file:text-background-dark
+                                      hover:file:bg-green-400
+                                      cursor-pointer"
+                                />
+                                {uploading && <p className="text-sm text-yellow-400 mt-2">Uploading...</p>}
+                                <div className="flex flex-wrap gap-4 mt-4">
+                                    {formData.images.map((img, index) => (
+                                        <div key={index} className="relative group">
+                                            <img src={img} alt="Project" className="h-24 w-24 object-cover rounded-lg border border-white/10" />
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, images: prev.images.filter((_, i) => i !== index) }))}
+                                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">close</span>
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
 
                             <div className="col-span-2 flex gap-4 pt-6">

@@ -20,7 +20,12 @@ export const useAuthStore = create<AuthState>()(
         (set) => ({
             user: null,
             login: (user) => set({ user }),
-            logout: () => set({ user: null }),
+            logout: () => {
+                set({ user: null });
+                // Clear other stores
+                import('./useCartStore').then(({ useCartStore }) => useCartStore.getState().clearCart());
+                import('./useWishlistStore').then(({ useWishlistStore }) => useWishlistStore.getState().clearWishlist());
+            },
         }),
         {
             name: 'userInfo',

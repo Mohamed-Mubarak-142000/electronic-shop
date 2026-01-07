@@ -171,26 +171,7 @@ export default function Sidebar() {
                         </span>
                     </Link>
 
-                    <Link
-                        href="/admin/analytics"
-                        className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/analytics')
-                            ? 'bg-primary/10 border-primary'
-                            : 'hover:bg-white/5 border-transparent'
-                            } group`}
-                    >
-                        <span
-                            className={`material-symbols-outlined group-hover:text-white ${isActive('/admin/analytics') ? 'text-primary' : 'text-gray-400'
-                                }`}
-                        >
-                            bar_chart
-                        </span>
-                        <span
-                            className={`font-medium text-sm group-hover:text-white ${isActive('/admin/analytics') ? 'text-white' : 'text-gray-300'
-                                }`}
-                        >
-                            Analytics
-                        </span>
-                    </Link>
+
 
                     <Link
                         href="/admin/jobs"
