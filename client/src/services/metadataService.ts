@@ -11,12 +11,12 @@ export const categoryService = {
         return response.data;
     },
 
-    async createCategory(data: any) {
+    async createCategory(data: Record<string, unknown>) {
         const response = await api.post('/categories', data);
         return response.data;
     },
 
-    async updateCategory(id: string, data: any) {
+    async updateCategory(id: string, data: Record<string, unknown>) {
         const response = await api.put(`/categories/${id}`, data);
         return response.data;
     },
@@ -43,12 +43,12 @@ export const brandService = {
         return response.data;
     },
 
-    async createBrand(data: any) {
+    async createBrand(data: Record<string, unknown>) {
         const response = await api.post('/brands', data);
         return response.data;
     },
 
-    async updateBrand(id: string, data: any) {
+    async updateBrand(id: string, data: Record<string, unknown>) {
         const response = await api.put(`/brands/${id}`, data);
         return response.data;
     },

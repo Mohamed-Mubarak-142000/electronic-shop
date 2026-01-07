@@ -6,15 +6,18 @@ import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import CheckoutDialog from '@/components/checkout/CheckoutDialog';
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function CartPage() {
     const router = useRouter();
     const { cartItems, updateQuantity, removeItem } = useCartStore();
     const { user } = useAuthStore();
+    const { t, dir } = useTranslation();
     const [activeTab, setActiveTab] = useState("cart");
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-    // This is to avoid hydration mismatch with localstorage persistence
     useEffect(() => {
         setIsLoaded(true);
     }, []);
@@ -29,12 +32,11 @@ export default function CartPage() {
 
     const handleCheckout = () => {
         if (!user) {
-            toast.error("Please login to proceed to checkout");
+            toast.error(t('login_req'));
             router.push('/login');
             return;
         }
-        toast.success("Proceeding to checkout...");
-        // In a real app, redirect to checkout page
+        setIsCheckoutOpen(true);
     };
 
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -53,19 +55,19 @@ export default function CartPage() {
 
     if (cartItems.length === 0) {
         return (
-            <div className="flex flex-col items-center w-full bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen">
+            <div className="flex flex-col items-center w-full bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen" dir={dir}>
                 <div className="w-full max-w-[1440px] px-4 md:px-10 py-10">
                     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
                         <div className="size-24 rounded-full bg-slate-100 dark:bg-surface-dark flex items-center justify-center text-slate-400 mb-6">
                             <span className="material-symbols-outlined text-5xl">shopping_cart</span>
                         </div>
-                        <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-4">Your cart is empty</h1>
+                        <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-4">{t('cart_empty')}</h1>
                         <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-md mx-auto">
-                            Looks like you haven't added anything to your cart yet. Explore our categories and find something you love!
+                            {t('cart_empty_desc')}
                         </p>
                         <Link href="/shop">
                             <button className="bg-primary hover:bg-green-400 text-surface-dark font-black px-8 py-4 rounded-full shadow-lg transition-all transform hover:-translate-y-1">
-                                Go Shopping
+                                {t('go_shopping')}
                             </button>
                         </Link>
                     </div>
@@ -75,14 +77,14 @@ export default function CartPage() {
     }
 
     return (
-        <div className="flex flex-col items-center w-full bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen">
+        <div className="flex flex-col items-center w-full bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen" dir={dir}>
             <div className="w-full max-w-[1440px] px-4 md:px-10 py-8 lg:py-12">
                 {/* Page Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-2">Shopping Cart</h1>
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-2">{t('your_cart')}</h1>
                         <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base">
-                            You have {cartItems.length} items in your cart ready for checkout.
+                            {t('items_in_cart', { count: cartItems.length })}
                         </p>
                     </div>
                     {/* Tabs */}
@@ -94,7 +96,7 @@ export default function CartPage() {
                                 : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                                 }`}
                         >
-                            My Cart ({cartItems.length})
+                            {t('cart')} ({cartItems.length})
                         </button>
                         <button
                             onClick={() => setActiveTab("wishlist")}
@@ -103,7 +105,7 @@ export default function CartPage() {
                                 : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                                 }`}
                         >
-                            Wishlist (0)
+                            {t('wishlist')} (0)
                         </button>
                     </div>
                 </div>
@@ -113,10 +115,10 @@ export default function CartPage() {
                     <div className="flex-1 w-full space-y-4">
                         {/* Table Header (Hidden on Mobile) */}
                         <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-gray-200 dark:border-surface-highlight">
-                            <div className="col-span-6">Product Details</div>
-                            <div className="col-span-2 text-center">Price</div>
-                            <div className="col-span-2 text-center">Quantity</div>
-                            <div className="col-span-2 text-right">Total</div>
+                            <div className="col-span-6">{t('product')}</div>
+                            <div className="col-span-2 text-center">{t('price')}</div>
+                            <div className="col-span-2 text-center">{t('quantity')}</div>
+                            <div className="col-span-2 text-right">{t('total')}</div>
                         </div>
 
                         {cartItems.map((item) => (
@@ -200,51 +202,29 @@ export default function CartPage() {
                                 </div>
                             </div>
                         ))}
-
-                        {/* Saved for Later (Mini) - Placeholder for now */}
-                        <div className="pt-8">
-                            <button className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors mb-4 group">
-                                <span>Saved for Later (0 Items)</span>
-                                <span className="material-symbols-outlined text-[18px] transform group-hover:translate-x-1 transition-transform">
-                                    arrow_forward
-                                </span>
-                            </button>
-                            {/* Small Hint/Upsell */}
-                            <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-xl p-4 flex gap-4 items-center">
-                                <div className="size-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0 text-blue-600 dark:text-blue-400">
-                                    <span className="material-symbols-outlined">bolt</span>
-                                </div>
-                                <div className="flex-1">
-                                    <p className="text-sm text-slate-700 dark:text-slate-300">
-                                        <span className="font-bold">Shipping Tip:</span> Get free priority shipping on orders over $150.
-                                    </p>
-                                </div>
-                                <button className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline">Details</button>
-                            </div>
-                        </div>
                     </div>
 
                     {/* Order Summary Sidebar */}
                     <div className="w-full lg:w-[380px] shrink-0 sticky top-24">
                         <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-lg border border-gray-100 dark:border-surface-highlight p-6 md:p-8 flex flex-col gap-6">
-                            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Order Summary</h2>
+                            <h2 className="text-xl font-bold text-slate-900 dark:text-white">{t('order_summary')}</h2>
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">
-                                    <span className="text-sm">Subtotal</span>
+                                    <span className="text-sm">{t('subtotal')}</span>
                                     <span className="font-bold text-slate-900 dark:text-white">${subtotal.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">
-                                    <span className="text-sm">Estimated Tax (8%)</span>
+                                    <span className="text-sm">{t('tax')}</span>
                                     <span className="font-bold text-slate-900 dark:text-white">${tax.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">
-                                    <span className="text-sm">Shipping</span>
-                                    <span className="font-bold text-primary">Free</span>
+                                    <span className="text-sm">{t('shipping')}</span>
+                                    <span className="font-bold text-primary">{t('free')}</span>
                                 </div>
                             </div>
                             <div className="border-t border-dashed border-slate-200 dark:border-surface-highlight my-2"></div>
                             <div className="flex justify-between items-end">
-                                <span className="text-base font-bold text-slate-900 dark:text-white">Total</span>
+                                <span className="text-base font-bold text-slate-900 dark:text-white">{t('total')}</span>
                                 <div className="text-right">
                                     <span className="text-sm text-slate-500 dark:text-slate-400 font-normal">USD</span>
                                     <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -252,30 +232,15 @@ export default function CartPage() {
                                     </span>
                                 </div>
                             </div>
-                            {/* Promo Code */}
-                            <div className="mt-2">
-                                <label className="sr-only" htmlFor="promo">
-                                    Promo Code
-                                </label>
-                                <div className="flex rounded-full bg-slate-100 dark:bg-black/20 border border-transparent focus-within:border-primary/50 transition-colors p-1 pl-4">
-                                    <input
-                                        className="bg-transparent border-none text-sm w-full text-slate-900 dark:text-white placeholder-slate-500 focus:ring-0 px-0"
-                                        id="promo"
-                                        placeholder="Enter promo code"
-                                        type="text"
-                                    />
-                                    <button className="bg-slate-200 dark:bg-surface-highlight hover:bg-slate-300 dark:hover:bg-primary dark:hover:text-surface-dark text-slate-600 dark:text-white px-4 py-2 rounded-full text-xs font-bold transition-all">
-                                        Apply
-                                    </button>
-                                </div>
-                            </div>
+
                             <button
                                 onClick={handleCheckout}
                                 className="w-full bg-primary hover:bg-green-400 text-surface-dark font-black text-lg py-4 rounded-full shadow-[0_0_20px_rgba(54,226,123,0.3)] hover:shadow-[0_0_30px_rgba(54,226,123,0.5)] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-4"
                             >
-                                <span>Checkout</span>
-                                <span className="material-symbols-outlined">arrow_forward</span>
+                                <span>{t('checkout')}</span>
+                                <span className="material-symbols-outlined rtl:rotate-180">arrow_forward</span>
                             </button>
+
                             {/* Trust Signals */}
                             <div className="flex justify-center gap-6 mt-2 pt-4 border-t border-slate-100 dark:border-surface-highlight">
                                 <div className="flex items-center gap-1.5 text-xs font-medium text-slate-400" title="Secure Payment">
@@ -295,6 +260,8 @@ export default function CartPage() {
                     </div>
                 </div>
             </div>
+
+            <CheckoutDialog isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} />
         </div>
     );
 }

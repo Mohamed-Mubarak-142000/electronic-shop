@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import Map, { Marker, Popup, NavigationControl, FullscreenControl } from 'react-map-gl';
+import Map, { Marker, Popup, NavigationControl, FullscreenControl } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
@@ -34,7 +34,7 @@ export default function ShowroomMap({ location, name }: ShowroomMapProps) {
             <Map
                 initialViewState={initialViewState}
                 style={{ width: '100%', height: '100%' }}
-                mapStyle="mapbox://styles/mapbox/dark-v11" // Sleek dark style to match the theme
+                mapStyle="mapbox://styles/mapbox/streets-v12" // Sleek dark style to match the theme
                 mapboxAccessToken={MAPBOX_TOKEN}
                 scrollZoom={false}
             >

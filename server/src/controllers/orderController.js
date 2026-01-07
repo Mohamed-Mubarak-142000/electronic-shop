@@ -5,32 +5,26 @@ import Order from '../models/Order.js';
 // @access  Private
 export const addOrderItems = async (req, res) => {
     const {
-        orderItems,
-        shippingAddress,
+        items,
+        shipping,
         paymentMethod,
-        itemsPrice,
-        taxPrice,
-        shippingPrice,
-        totalPrice,
+        total,
     } = req.body;
 
-    if (orderItems && orderItems.length === 0) {
+    if (items && items.length === 0) {
         res.status(400);
         throw new Error('No order items');
     } else {
         const order = new Order({
-            orderItems: orderItems.map((x) => ({
+            items: items.map((x) => ({
                 ...x,
                 product: x.product,
                 _id: undefined,
             })),
             user: req.user._id,
-            shippingAddress,
+            shipping,
             paymentMethod,
-            itemsPrice,
-            taxPrice,
-            shippingPrice,
-            totalPrice,
+            total
         });
 
         const createdOrder = await order.save();

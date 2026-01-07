@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -19,6 +19,11 @@ export default function Navbar() {
     const { t } = useTranslation();
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const wishlistCount = wishlistItems.length;
+
+    useEffect(() => {
+        document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = language;
+    }, [language]);
 
     return (
         <div className="sticky top-0 z-50 bg-background-dark/95 backdrop-blur-md border-b border-surface-highlight">

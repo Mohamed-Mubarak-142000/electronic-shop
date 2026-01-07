@@ -6,17 +6,17 @@ type Language = 'en' | 'ar';
 interface LanguageState {
     language: Language;
     setLanguage: (lang: Language) => void;
-    direction: 'ltr' | 'rtl';
+    dir: 'ltr' | 'rtl';
 }
 
 export const useLanguageStore = create<LanguageState>()(
     persist(
         (set) => ({
-            language: 'ar',
-            direction: 'rtl',
-            setLanguage: (lang) => set({
-                language: lang,
-                direction: lang === 'ar' ? 'rtl' : 'ltr'
+            language: 'en',
+            dir: 'ltr',
+            setLanguage: (language) => set({
+                language,
+                dir: language === 'ar' ? 'rtl' : 'ltr'
             }),
         }),
         {

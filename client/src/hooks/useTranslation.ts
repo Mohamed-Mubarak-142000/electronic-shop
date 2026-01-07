@@ -1,25 +1,21 @@
-"use client";
-
 import { useLanguageStore } from '../store/useLanguageStore';
-import { translations } from '../lib/translations';
+import { en, ar } from '../locales/translations';
 
 export const useTranslation = () => {
     const { language } = useLanguageStore();
+    const translations = language === 'ar' ? ar : en;
 
-    const t = (path: string) => {
-        const keys = path.split('.');
-        let current: any = translations[language];
+    const t = (key: keyof typeof en, params?: Record<string, string | number>) => {
+        let text = translations[key] || en[key] || key;
 
-        for (const key of keys) {
-            if (current && current[key]) {
-                current = current[key];
-            } else {
-                return path;
-            }
+        if (params) {
+            Object.entries(params).forEach(([k, v]) => {
+                text = text.replace(`{${k}}`, String(v));
+            });
         }
 
-        return current;
+        return text;
     };
 
-    return { t, language, direction: language === 'ar' ? 'rtl' : 'ltr' };
+    return { t, language, dir: language === 'ar' ? 'rtl' : 'ltr' };
 };

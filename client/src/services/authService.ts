@@ -2,7 +2,7 @@ import api from './api';
 import { useAuthStore } from '../store/useAuthStore';
 
 export const authService = {
-    async login(data: any) {
+    async login(data: Record<string, unknown>) {
         const response = await api.post('/auth/login', data);
         if (response.data) {
             useAuthStore.getState().login(response.data);
@@ -10,12 +10,12 @@ export const authService = {
         return response.data;
     },
 
-    async register(data: any) {
+    async register(data: Record<string, unknown>) {
         const response = await api.post('/auth/register', data);
         return response.data;
     },
 
-    async registerBusiness(data: any) {
+    async registerBusiness(data: Record<string, unknown>) {
         const response = await api.post('/auth/register-business', data);
         return response.data;
     },
@@ -33,7 +33,7 @@ export const authService = {
         return response.data;
     },
 
-    async resetPassword(token: string, data: any) {
+    async resetPassword(token: string, data: Record<string, unknown>) {
         const response = await api.put(`/auth/reset-password/${token}`, data);
         return response.data;
     },

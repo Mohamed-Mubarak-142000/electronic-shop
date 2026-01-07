@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authService } from '@/services/authService';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from '@/hooks/useTranslation';
 
-export default function VerifyOtpPage() {
+function VerifyOtpContent() {
     const [otp, setOtp] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -59,5 +59,13 @@ export default function VerifyOtpPage() {
                 </button>
             </form>
         </div>
+    );
+}
+
+export default function VerifyOtpPage() {
+    return (
+        <Suspense fallback={<div className="flex justify-center mt-20">Loading...</div>}>
+            <VerifyOtpContent />
+        </Suspense>
     );
 }

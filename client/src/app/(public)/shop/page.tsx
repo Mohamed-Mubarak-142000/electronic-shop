@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import ProductCard from "@/components/shared/ProductCard";
 import { productService } from "@/services/productService";
 import { categoryService, brandService } from "@/services/metadataService";
 
-export default function ShopPage() {
+function ShopContent() {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -306,5 +306,13 @@ export default function ShopPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function ShopPage() {
+    return (
+        <Suspense fallback={<div className="flex justify-center items-center h-screen bg-background-dark text-white">Loading Shop...</div>}>
+            <ShopContent />
+        </Suspense>
     );
 }

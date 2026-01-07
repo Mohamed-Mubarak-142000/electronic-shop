@@ -9,7 +9,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     const { id } = use(params);
     const { data: product, isLoading } = useQuery({
         queryKey: ['product', id],
-        queryFn: () => productService.getProductById(id),
+        queryFn: () => productService.getProduct(id),
     });
 
 

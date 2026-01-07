@@ -1,22 +1,22 @@
 import api from './api';
 
 export const productService = {
-    async getProducts(params: any) {
+    async getProducts(params: Record<string, unknown> = {}) {
         const response = await api.get('/products', { params });
         return response.data;
     },
 
-    async getProductById(id: string) {
+    async getProduct(id: string) {
         const response = await api.get(`/products/${id}`);
         return response.data;
     },
 
-    async createProduct(data: any) {
+    async createProduct(data: Record<string, unknown>) {
         const response = await api.post('/products', data);
         return response.data;
     },
 
-    async updateProduct(id: string, data: any) {
+    async updateProduct(id: string, data: Record<string, unknown>) {
         const response = await api.put(`/products/${id}`, data);
         return response.data;
     },
