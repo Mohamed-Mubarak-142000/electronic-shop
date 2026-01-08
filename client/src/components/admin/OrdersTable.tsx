@@ -6,6 +6,8 @@ import Pagination from './ui/Pagination';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { orderService } from '@/services/orderService';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useCurrency } from '@/hooks/useCurrency';
 
 type Order = {
     _id: string;
@@ -21,6 +23,8 @@ type Order = {
 };
 
 export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order) => void }) {
+    const { t } = useTranslation();
+    const { formatPrice } = useCurrency();
     const [page, setPage] = useState(1);
     const limit = 10;
 
@@ -36,19 +40,19 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
     // Transform API data to Table format if needed
     const orders: Order[] = ordersData.map((order: any) => ({
         ...order,
-        status: order.isDelivered ? 'Delivered' : (order.isPaid ? 'Shipped' : 'Processing'), // Simplified status logic
+        status: order.isDelivered ? 'Delivered' : (order.isPaid ? 'Paid' : 'Pending'), 
     }));
 
     const columns: Column<Order>[] = [
         {
-            header: 'Order ID',
+            header: t('admin.table.order_id'),
             className: 'font-bold text-white',
             cell: (row) => (
                 <span className="text-white">{row._id.substring(0, 8)}...</span>
             )
         },
         {
-            header: 'Customer',
+            header: t('admin.table.customer'),
             cell: (row) => (
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-indigo-900/50 border border-indigo-700 text-indigo-300 flex items-center justify-center text-xs font-bold uppercase">
@@ -62,27 +66,23 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
             )
         },
         {
-            header: 'Date',
+            header: t('admin.table.order_date'),
             cell: (row) => <span className="text-gray-400">{new Date(row.createdAt).toLocaleDateString()}</span>,
             className: 'text-gray-400'
         },
         {
-            header: 'Total',
-            cell: (row) => <span className="font-mono font-medium text-white">${row.totalPrice.toFixed(2)}</span>,
+            header: t('admin.table.total'),
+            cell: (row) => <span className="font-mono font-medium text-white">{formatPrice(row.totalPrice)}</span>,
             className: 'font-mono font-medium text-white'
         },
         {
-            header: 'Status',
+            header: t('admin.table.status'),
             cell: (row) => {
                 let statusStyles = '';
                 let dotColor = '';
 
-                // Logic: isDelivered > Delivered
-                // !isDelivered && isPaid > Paid/Shipped? (Let's assume paid = processing/shipped)
-                // !isPaid > Pending?
-
-                // Using derived status from map or raw flags
                 const status = row.isDelivered ? 'Delivered' : (row.isPaid ? 'Paid' : 'Pending');
+                const statusLabel = row.isDelivered ? t('admin.status.delivered') : (row.isPaid ? t('admin.status.paid') : t('admin.status.pending'));
 
                 if (status === 'Pending') {
                     statusStyles = 'bg-yellow-500/20 text-yellow-400 border-yellow-500/20';
@@ -98,13 +98,13 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
                 return (
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${statusStyles}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
-                        {status}
+                        {statusLabel}
                     </span>
                 );
             }
         },
         {
-            header: 'Actions',
+            header: t('admin.table.actions'),
             className: 'text-right',
             cell: (row) => (
                 <button className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors">

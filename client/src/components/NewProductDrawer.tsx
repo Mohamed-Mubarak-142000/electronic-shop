@@ -6,6 +6,7 @@ import { useSocket } from '../hooks/useSocket';
 import { X } from 'lucide-react';
 import { productService } from '../services/productService';
 import { useTranslation } from '../hooks/useTranslation';
+import { useCurrency } from '@/hooks/useCurrency';
 
 interface Product {
     _id: string;
@@ -22,6 +23,7 @@ export default function NewProductDrawer() {
     const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
     const socket = useSocket();
     const { language, t } = useTranslation();
+    const { formatPrice } = useCurrency();
 
     useEffect(() => {
         if (!socket) return;
@@ -129,7 +131,7 @@ export default function NewProductDrawer() {
 
                             <div className="mt-4 flex items-center justify-between">
                                 <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                                    ${currentProduct.price}
+                                    {formatPrice(currentProduct.price)}
                                 </span>
                                 <button className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl transition-all hover:scale-105 active:scale-95 font-medium">
                                     {t('product.addToCart')}

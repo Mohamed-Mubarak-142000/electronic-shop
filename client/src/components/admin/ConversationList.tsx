@@ -4,6 +4,8 @@ import React from 'react';
 import { Conversation } from '@/services/chatService';
 import { User, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { ar, enUS } from 'date-fns/locale';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface ConversationListProps {
     conversations: Conversation[];
@@ -18,6 +20,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
     onSelectUser,
     isLoading
 }) => {
+    const { t, language } = useTranslation();
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -30,7 +34,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         return (
             <div className="flex flex-col items-center justify-center h-full text-gray-400">
                 <User size={48} className="mb-4 opacity-50" />
-                <p className="text-sm">No conversations yet</p>
+                <p className="text-sm">{t('admin.chat.no_conversations')}</p>
             </div>
         );
     }
@@ -67,7 +71,10 @@ const ConversationList: React.FC<ConversationListProps> = ({
                         <div className="flex items-center gap-1 text-gray-500 text-xs">
                             <Clock size={12} />
                             <span>
-                                {formatDistanceToNow(new Date(conversation.lastMessageTime), { addSuffix: true })}
+                                {formatDistanceToNow(new Date(conversation.lastMessageTime), { 
+                                    addSuffix: true,
+                                    locale: language === 'ar' ? ar : enUS
+                                })}
                             </span>
                         </div>
                     </div>

@@ -53,7 +53,18 @@ export default function RevenueChart({ data }: { data: number[] }) {
                 </svg>
             </div>
             <div className="flex justify-between text-xs text-gray-500 mt-4 px-2">
-                <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+                <span>{t('common.months.jan')}</span>
+                <span>{t('common.months.feb')}</span>
+                <span>{t('common.months.mar')}</span>
+                <span>{t('common.months.apr')}</span>
+                <span>{t('common.months.may')}</span>
+                <span>{t('common.months.jun')}</span>
+                <span>{t('common.months.jul')}</span>
+                <span>{t('common.months.aug')}</span>
+                <span>{t('common.months.sep')}</span>
+                <span>{t('common.months.oct')}</span>
+                <span>{t('common.months.nov')}</span>
+                <span>{t('common.months.dec')}</span>
             </div>
         </div>
     );

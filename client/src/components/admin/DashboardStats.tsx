@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import dashboardService, { DashboardStats as StatsType } from '@/services/dashboardService';
-
+import { useCurrency } from '@/hooks/useCurrency';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface DashboardStatsProps {
@@ -12,19 +12,22 @@ interface DashboardStatsProps {
 
 export default function DashboardStats({ stats }: DashboardStatsProps) {
     const { t } = useTranslation();
+    const { formatPrice } = useCurrency();
 
     if (!stats) return null;
 
     const cards = [
         {
+            id: 'revenue',
             title: t('admin.stats.revenue'),
-            value: `$${stats.totalRevenue.toLocaleString()}`,
+            value: formatPrice(stats.totalRevenue),
             icon: 'payments',
             trend: `+${stats.trends.revenue}%`,
             color: 'text-primary',
             href: '/admin/orders'
         },
         {
+            id: 'orders',
             title: t('admin.stats.orders'),
             value: stats.totalOrders.toLocaleString(),
             icon: 'shopping_bag',
@@ -33,30 +36,34 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
             href: '/admin/orders'
         },
         {
+            id: 'products',
             title: t('admin.stats.products'),
             value: stats.totalProducts.toLocaleString(),
             icon: 'inventory_2',
-            trend: stats.lowStockCount > 0 ? `${stats.lowStockCount} low stock` : 'Healthy stock',
+            trend: stats.lowStockCount > 0 ? t('admin.stats.low_stock', { count: stats.lowStockCount }) : t('admin.stats.healthy_stock'),
             color: 'text-orange-400',
             href: '/admin/products'
         },
         {
+            id: 'categories',
             title: t('admin.stats.categories'),
             value: stats.totalCategories.toLocaleString(),
             icon: 'category',
-            trend: 'Direct browse',
+            trend: t('admin.stats.direct_browse'),
             color: 'text-pink-400',
             href: '/admin/categories'
         },
         {
+            id: 'brands',
             title: t('admin.stats.brands'),
             value: stats.totalBrands.toLocaleString(),
             icon: 'verified_user',
-            trend: 'Partner brands',
+            trend: t('admin.stats.partner_brands'),
             color: 'text-indigo-400',
             href: '/admin/brands'
         },
         {
+            id: 'customers',
             title: t('admin.stats.customers'),
             value: stats.totalUsers.toLocaleString(),
             icon: 'group',
@@ -74,8 +81,8 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
                         <div className={`p-2 bg-background-dark rounded-lg ${card.color}`}>
                             <span className="material-symbols-outlined">{card.icon}</span>
                         </div>
-                        <span className={`flex items-center text-xs font-bold px-2 py-1 rounded-full ${card.title === 'Products' && stats.lowStockCount > 0 ? 'text-red-400 bg-red-400/10' : 'text-primary bg-primary/10'}`}>
-                            {card.trend !== 'Direct browse' && card.trend !== 'Healthy stock' && card.trend !== 'Partner brands' && (
+                        <span className={`flex items-center text-xs font-bold px-2 py-1 rounded-full ${card.id === 'products' && stats.lowStockCount > 0 ? 'text-red-400 bg-red-400/10' : 'text-primary bg-primary/10'}`}>
+                            {card.id !== 'categories' && card.id !== 'brands' && card.id !== 'products' && (
                                 <span className="material-symbols-outlined text-sm mr-1">trending_up</span>
                             )}
                             {card.trend}

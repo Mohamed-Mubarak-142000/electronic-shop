@@ -19,7 +19,9 @@ const productSchema = new mongoose.Schema({
         of: String
     },
     tags: [{ type: String }],
-    isPublished: { type: Boolean, default: true }
+    isPublished: { type: Boolean, default: true },
+    salePrice: { type: Number, default: 0 },
+    isDiscountActive: { type: Boolean, default: false }
 }, { timestamps: true });
 
 // Text index for search

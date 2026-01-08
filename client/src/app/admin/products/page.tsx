@@ -6,8 +6,12 @@ import ProductsTable from '@/components/admin/ProductsTable';
 import { productService } from '@/services/productService';
 import { categoryService, brandService } from '@/services/metadataService';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useCurrency } from '@/hooks/useCurrency';
 
 export default function ProductsPage() {
+    const { t } = useTranslation();
+    const { formatPrice } = useCurrency();
     const [searchTerm, setSearchTerm] = useState('');
     const [category, setCategory] = useState('');
     const [brand, setBrand] = useState('');
@@ -34,33 +38,25 @@ export default function ProductsPage() {
         fetchMetadata();
     }, []);
 
-    const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 1
-        }).format(value);
-    };
-
     return (
         <div className="flex flex-col gap-6">
             {/* Breadcrumbs */}
             <div className="flex items-center gap-2 text-sm">
-                <Link href="/admin" className="text-gray-400 hover:text-primary transition-colors font-medium">Dashboard</Link>
+                <Link href="/admin" className="text-gray-400 hover:text-primary transition-colors font-medium">{t('admin.sidebar.dashboard')}</Link>
                 <span className="text-gray-400">/</span>
-                <span className="text-white font-medium">Products</span>
+                <span className="text-white font-medium">{t('admin.sidebar.products')}</span>
             </div>
 
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-white text-3xl font-bold tracking-tight">Products Inventory</h2>
-                    <p className="text-gray-400 mt-1">Manage your product catalog, prices, and stock levels.</p>
+                    <h2 className="text-white text-3xl font-bold tracking-tight">{t('admin.products.title')}</h2>
+                    <p className="text-gray-400 mt-1">{t('admin.products.subtitle')}</p>
                 </div>
                 <Link href="/admin/products/create">
                     <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-6 bg-primary hover:bg-green-400 text-background-dark text-sm font-bold transition-all shadow-lg shadow-primary/20">
                         <span className="material-symbols-outlined text-[20px]">add</span>
-                        <span>Add Product</span>
+                        <span>{t('admin.add_product')}</span>
                     </button>
                 </Link>
             </div>
@@ -69,7 +65,7 @@ export default function ProductsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col gap-1 rounded-xl p-5 border border-white/10 bg-surface-dark shadow-sm">
                     <div className="flex items-center justify-between">
-                        <p className="text-gray-400 text-sm font-medium">Total Products</p>
+                        <p className="text-gray-400 text-sm font-medium">{t('admin.stats.total_products')}</p>
                         <span className="material-symbols-outlined text-primary">inventory</span>
                     </div>
                     <div className="flex items-baseline gap-2 mt-2">
@@ -80,7 +76,7 @@ export default function ProductsPage() {
                 </div>
                 <div className="flex flex-col gap-1 rounded-xl p-5 border border-white/10 bg-surface-dark shadow-sm">
                     <div className="flex items-center justify-between">
-                        <p className="text-gray-400 text-sm font-medium">Low Stock Alerts</p>
+                        <p className="text-gray-400 text-sm font-medium">{t('admin.stats.low_stock_alerts')}</p>
                         <span className="material-symbols-outlined text-orange-400">warning</span>
                     </div>
                     <div className="flex items-baseline gap-2 mt-2">
@@ -88,18 +84,18 @@ export default function ProductsPage() {
                             {statsLoading ? '...' : stats?.lowStockCount || 0}
                         </p>
                         {stats?.lowStockCount > 0 && (
-                            <p className="text-orange-400 text-xs font-medium bg-orange-400/10 px-2 py-0.5 rounded-full">Attention</p>
+                            <p className="text-orange-400 text-xs font-medium bg-orange-400/10 px-2 py-0.5 rounded-full">{t('admin.stats.attention')}</p>
                         )}
                     </div>
                 </div>
                 <div className="flex flex-col gap-1 rounded-xl p-5 border border-white/10 bg-surface-dark shadow-sm">
                     <div className="flex items-center justify-between">
-                        <p className="text-gray-400 text-sm font-medium">Inventory Value</p>
+                        <p className="text-gray-400 text-sm font-medium">{t('admin.stats.inventory_value')}</p>
                         <span className="material-symbols-outlined text-primary">attach_money</span>
                     </div>
                     <div className="flex items-baseline gap-2 mt-2">
                         <p className="text-white text-2xl font-bold">
-                            {statsLoading ? '...' : formatCurrency(stats?.totalInventoryValue || 0)}
+                            {statsLoading ? '...' : formatPrice(stats?.totalInventoryValue || 0)}
                         </p>
                     </div>
                 </div>
@@ -114,7 +110,7 @@ export default function ProductsPage() {
                     </div>
                     <input
                         className="block w-full pl-10 pr-3 py-2.5 border-none rounded-lg leading-5 bg-background-dark text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary sm:text-sm transition-all"
-                        placeholder="Search products..."
+                        placeholder={t('admin.products.search_placeholder')}
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -127,7 +123,7 @@ export default function ProductsPage() {
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                     >
-                        <option value="">All Categories</option>
+                        <option value="">{t('admin.table.all_categories')}</option>
                         {categories.map(cat => (
                             <option key={cat._id} value={cat._id}>{cat.name}</option>
                         ))}
@@ -137,7 +133,7 @@ export default function ProductsPage() {
                         value={brand}
                         onChange={(e) => setBrand(e.target.value)}
                     >
-                        <option value="">All Brands</option>
+                        <option value="">{t('admin.table.all_brands')}</option>
                         {brands.map(br => (
                             <option key={br._id} value={br._id}>{br.name}</option>
                         ))}
@@ -147,7 +143,7 @@ export default function ProductsPage() {
                         value={stockStatus}
                         onChange={(e) => setStockStatus(e.target.value)}
                     >
-                        <option value="">All Statuses</option>
+                        <option value="">{t('admin.products.filter_status')}</option>
                         <option value="in-stock">In Stock</option>
                         <option value="low-stock">Low Stock</option>
                         <option value="out-of-stock">Out of Stock</option>

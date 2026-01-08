@@ -7,10 +7,12 @@ import chatService, { ChatMessage, Conversation } from '@/services/chatService';
 import ConversationList from '@/components/admin/ConversationList';
 import AdminChatInterface from '@/components/admin/AdminChatInterface';
 import { MessageCircle } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5000';
 
 export default function MessagesPage() {
+    const { t } = useTranslation();
     const { user } = useAuthStore();
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -127,8 +129,8 @@ export default function MessagesPage() {
                     <MessageCircle size={24} />
                 </div>
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Messages</h1>
-                    <p className="text-gray-400 text-sm">Manage customer conversations</p>
+                    <h1 className="text-2xl font-bold text-white">{t('admin.messages.title')}</h1>
+                    <p className="text-gray-400 text-sm">{t('admin.messages.subtitle')}</p>
                 </div>
             </div>
 
@@ -137,9 +139,9 @@ export default function MessagesPage() {
                 {/* Conversation List - Left Side */}
                 <div className="w-80 border-r border-white/10 flex-shrink-0">
                     <div className="p-4 border-b border-white/10">
-                        <h2 className="font-semibold text-white">Conversations</h2>
+                        <h2 className="font-semibold text-white">{t('admin.messages.conversations_list')}</h2>
                         <p className="text-xs text-gray-400 mt-1">
-                            {conversations.length} {conversations.length === 1 ? 'conversation' : 'conversations'}
+                            {conversations.length} {conversations.length === 1 ? t('admin.messages.conversation_count') : t('admin.messages.conversations_count')}
                         </p>
                     </div>
                     <ConversationList

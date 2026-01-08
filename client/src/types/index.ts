@@ -36,4 +36,17 @@ export interface Product {
     numReviews: number;
     createdAt: string;
     updatedAt: string;
+    salePrice?: number;
+    isDiscountActive?: boolean;
+}
+
+export interface DiscountSchedule {
+    _id: string;
+    product: Product;
+    type: 'percentage' | 'fixed';
+    value: number;
+    startTime: string;
+    endTime: string;
+    status: 'pending' | 'active' | 'completed' | 'cancelled';
+    createdAt: string;
 }

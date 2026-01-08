@@ -10,6 +10,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
+import { useTranslation } from "@/hooks/useTranslation";
 
 export interface Column<T> {
     header: string | React.ReactNode
@@ -31,6 +32,8 @@ export function DataTable<T>({
     className,
     onRowClick,
 }: DataTableProps<T>) {
+    const { t } = useTranslation();
+
     return (
         <div className={cn("rounded-xl border bg-card text-card-foreground shadow-sm", className)}>
             <Table>
@@ -68,7 +71,7 @@ export function DataTable<T>({
                                 colSpan={columns.length}
                                 className="h-24 text-center text-muted-foreground"
                             >
-                                No results.
+                                {t('no_results')}
                             </TableCell>
                         </TableRow>
                     )}

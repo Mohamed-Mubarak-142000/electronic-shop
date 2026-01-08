@@ -1,11 +1,13 @@
 'use client';
 
+import { useTranslation } from '@/hooks/useTranslation';
 import React, { useState, useEffect, useRef } from 'react';
 import { ChatMessage } from '@/services/chatService';
 import { Send, Loader2, MessageCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Socket } from 'socket.io-client';
 import { formatDistanceToNow } from 'date-fns';
+import { ar, enUS } from 'date-fns/locale';
 
 interface AdminChatInterfaceProps {
     userId: string | null;
@@ -25,6 +27,7 @@ const AdminChatInterface: React.FC<AdminChatInterfaceProps> = ({
     socket
 }) => {
     const { user } = useAuthStore();
+    const { t, language } = useTranslation();
     const [inputText, setInputText] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -50,8 +53,8 @@ const AdminChatInterface: React.FC<AdminChatInterfaceProps> = ({
         return (
             <div className="flex flex-col items-center justify-center h-full text-gray-400">
                 <MessageCircle size={64} className="mb-4 opacity-30" />
-                <p className="text-lg font-medium">Select a conversation</p>
-                <p className="text-sm mt-2">Choose a user from the list to start messaging</p>
+                <p className="text-lg font-medium">{t('admin.chat.select_conversation')}</p>
+                <p className="text-sm mt-2">{t('admin.chat.choose_user')}</p>
             </div>
         );
     }
@@ -66,7 +69,7 @@ const AdminChatInterface: React.FC<AdminChatInterfaceProps> = ({
                 <div>
                     <h2 className="font-semibold text-white">{userName}</h2>
                     <p className="text-xs text-gray-400">
-                        {socket?.connected ? 'Online' : 'Offline'}
+                        {socket?.connected ? t('admin.chat.online') : t('admin.chat.offline')}
                     </p>
                 </div>
             </div>
@@ -82,7 +85,7 @@ const AdminChatInterface: React.FC<AdminChatInterfaceProps> = ({
                         {messages.length === 0 && (
                             <div className="text-center py-10 opacity-50">
                                 <MessageCircle size={40} className="mx-auto mb-2 text-gray-400" />
-                                <p className="text-sm text-gray-400">No messages yet</p>
+                                <p className="text-sm text-gray-400">{t('admin.chat.no_messages')}</p>
                             </div>
                         )}
                         {messages.map((msg, index) => {
@@ -102,7 +105,10 @@ const AdminChatInterface: React.FC<AdminChatInterfaceProps> = ({
                                             {msg.text}
                                         </div>
                                         <span className="text-xs text-gray-500 mt-1 px-2">
-                                            {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
+                                            {formatDistanceToNow(new Date(msg.createdAt), { 
+                                                addSuffix: true,
+                                                locale: language === 'ar' ? ar : enUS
+                                            })}
                                         </span>
                                     </div>
                                 </div>
@@ -122,7 +128,7 @@ const AdminChatInterface: React.FC<AdminChatInterfaceProps> = ({
                     type="text"
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
-                    placeholder="Type your message..."
+                    placeholder={t('admin.chat.type_message')}
                     className="flex-1 bg-background-dark border border-white/10 rounded-full px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary outline-none text-white placeholder-gray-500"
                 />
                 <button

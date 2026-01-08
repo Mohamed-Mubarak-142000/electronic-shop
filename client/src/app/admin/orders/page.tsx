@@ -4,8 +4,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import OrdersTable from '@/components/admin/OrdersTable';
 import OrderDetailsDrawer from '@/components/admin/OrderDetailsDrawer';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function OrdersPage() {
+    const { t } = useTranslation();
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
     return (
@@ -14,8 +16,8 @@ export default function OrdersPage() {
             <header className="bg-background-dark border-b border-white/5 py-5 px-8 flex flex-col gap-6 sticky top-0 z-10">
                 <div className="flex flex-wrap justify-between items-end gap-4">
                     <div>
-                        <h2 className="text-white text-3xl font-black leading-tight tracking-[-0.02em]">Orders Management</h2>
-                        <p className="text-gray-400 text-sm mt-1">Track and manage customer orders and shipments.</p>
+                        <h2 className="text-white text-3xl font-black leading-tight tracking-[-0.02em]">{t('admin.orders.title')}</h2>
+                        <p className="text-gray-400 text-sm mt-1">{t('admin.orders.subtitle')}</p>
                     </div>
                 </div>
                 {/* Stats Row */}

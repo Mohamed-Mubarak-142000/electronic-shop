@@ -8,12 +8,14 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import CheckoutDialog from '@/components/checkout/CheckoutDialog';
 import { useTranslation } from "@/hooks/useTranslation";
+import { useCurrency } from "@/hooks/useCurrency";
 
 export default function CartPage() {
     const router = useRouter();
     const { cartItems, updateQuantity, removeItem } = useCartStore();
     const { user } = useAuthStore();
     const { t, dir } = useTranslation();
+    const { formatPrice } = useCurrency();
     const [activeTab, setActiveTab] = useState("cart");
     const [isLoaded, setIsLoaded] = useState(false);
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -150,12 +152,12 @@ export default function CartPage() {
 
                                     {/* Price (Mobile: hidden, Desktop: visible) */}
                                     <div className="hidden md:block md:col-span-2 text-center">
-                                        <p className="text-slate-900 dark:text-white font-medium">${item.price.toFixed(2)}</p>
+                                        <p className="text-slate-900 dark:text-white font-medium">{formatPrice(item.price)}</p>
                                     </div>
 
                                     {/* Quantity Control */}
                                     <div className="flex justify-between items-center md:justify-center md:col-span-2">
-                                        <div className="md:hidden text-slate-900 dark:text-white font-bold">${item.price.toFixed(2)}</div>
+                                        <div className="md:hidden text-slate-900 dark:text-white font-bold">{formatPrice(item.price)}</div>
                                         <div className="flex items-center bg-gray-100 dark:bg-black/20 rounded-full">
                                             <button
                                                 onClick={() => handleUpdateQuantity(item.id, -1)}
@@ -181,7 +183,7 @@ export default function CartPage() {
                                     {/* Total & Actions */}
                                     <div className="flex justify-between items-center md:justify-end md:col-span-2 gap-4">
                                         <div className="text-right">
-                                            <p className="text-lg font-bold text-primary">${(item.price * item.quantity).toFixed(2)}</p>
+                                            <p className="text-lg font-bold text-primary">{formatPrice(item.price * item.quantity)}</p>
                                         </div>
                                         <div className="flex gap-1 md:absolute md:top-4 md:right-4 md:opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
@@ -211,11 +213,11 @@ export default function CartPage() {
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">
                                     <span className="text-sm">{t('subtotal')}</span>
-                                    <span className="font-bold text-slate-900 dark:text-white">${subtotal.toFixed(2)}</span>
+                                    <span className="font-bold text-slate-900 dark:text-white">{formatPrice(subtotal)}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">
                                     <span className="text-sm">{t('tax')}</span>
-                                    <span className="font-bold text-slate-900 dark:text-white">${tax.toFixed(2)}</span>
+                                    <span className="font-bold text-slate-900 dark:text-white">{formatPrice(tax)}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">
                                     <span className="text-sm">{t('shipping')}</span>
@@ -226,9 +228,9 @@ export default function CartPage() {
                             <div className="flex justify-between items-end">
                                 <span className="text-base font-bold text-slate-900 dark:text-white">{t('total')}</span>
                                 <div className="text-right">
-                                    <span className="text-sm text-slate-500 dark:text-slate-400 font-normal">USD</span>
+                                    
                                     <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                                        ${total.toFixed(2)}
+                                        {formatPrice(total)}
                                     </span>
                                 </div>
                             </div>

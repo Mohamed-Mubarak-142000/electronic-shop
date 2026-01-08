@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useConfigStore } from "@/store/useConfigStore";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import Dialog from "../ui/dialog";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useCurrency } from "@/hooks/useCurrency";
 import { clsx } from "clsx";
 
 interface CheckoutDialogProps {
@@ -19,7 +21,9 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
     const router = useRouter();
     const { cartItems, clearCart } = useCartStore();
     const { user } = useAuthStore();
+    const { configs } = useConfigStore();
     const { t, dir } = useTranslation();
+    const { symbol: currency } = useCurrency();
 
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -40,9 +44,10 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
         referenceNumber: ""
     });
 
+    const shippingCost = Number(configs.taxiAmount) || 0;
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const tax = subtotal * 0.08;
-    const total = subtotal + tax;
+    const total = subtotal + tax + shippingCost;
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -102,7 +107,7 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
                 })),
                 shipping: {
                     address: `${shipping.address}, ${shipping.city}, ${shipping.zip}, ${shipping.country}`,
-                    cost: 0
+                    cost: shippingCost
                 },
                 paymentMethod,
                 total: total,
@@ -226,10 +231,10 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="font-bold text-sm text-slate-900 dark:text-white truncate">{item.name}</p>
-                                    <p className="text-xs text-slate-500 font-medium mt-0.5">{item.quantity} x ${item.price.toFixed(2)}</p>
+                                    <p className="text-xs text-slate-500 font-medium mt-0.5">{item.quantity} x {currency}{item.price.toFixed(2)}</p>>>
                                 </div>
                                 <div className="font-bold text-sm tabular-nums">
-                                    ${(item.price * item.quantity).toFixed(2)}
+                                    {currency}{(item.price * item.quantity).toFixed(2)}
                                 </div>
                             </div>
                         ))}
@@ -251,8 +256,9 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
                                     {paymentMethod === 'card' ? "Transfer to Card" : paymentMethod === 'vodafone_cash' ? "Vodafone Cash Wallet" : "InstaPay Address"}
                                 </p>
                                 <p className="font-mono font-bold text-slate-900 dark:text-white text-sm select-all dir-ltr tracking-wide">
-                                    {paymentMethod === 'card' && '4745 0101 3539 3008'}
-                                    {(paymentMethod === 'vodafone_cash' || paymentMethod === 'instapay') && '010 5086 7135'}
+                                    {paymentMethod === 'card' && (configs.creditCardNumber || '4745 0101 3539 3008')}
+                                    {paymentMethod === 'vodafone_cash' && (configs.vodafoneCashNumber || '010 5086 7135')}
+                                    {paymentMethod === 'instapay' && (configs.instapayNumber || '010 5086 7135')}
                                 </p>
                             </div>
                         </div>
@@ -273,7 +279,7 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
                     <div className="flex flex-col md:flex-row gap-4 items-center justify-between border-t border-dashed border-slate-200 dark:border-surface-highlight pt-5">
                         <div className="flex flex-col">
                             <span className="text-slate-400 font-medium text-xs uppercase tracking-wider">{t('total')}</span>
-                            <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tight -mt-1">${total.toFixed(2)}</span>
+                            <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tight -mt-1">{currency}{total.toFixed(2)}</span>
                         </div>
 
                         <button

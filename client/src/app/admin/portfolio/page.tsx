@@ -64,15 +64,25 @@ export default function AdminPortfolioPage() {
                     body: formData,
                 });
                 const data = await response.json();
-                setFormData((prev) => ({
-                    ...prev,
-                    images: [...prev.images, ...data]
-                }));
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Upload failed');
+                }
+
+                if (Array.isArray(data)) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        images: [...prev.images, ...data]
+                    }));
+                } else {
+                    throw new Error('Invalid response format');
+                }
+                
                 setUploading(false);
-            } catch (error) {
+            } catch (error: any) {
                 console.error(error);
                 setUploading(false);
-                toast.error('Image upload failed');
+                toast.error(error.message || 'Image upload failed');
             }
         }
     };
@@ -282,18 +292,21 @@ export default function AdminPortfolioPage() {
 
                             <div className="col-span-2">
                                 <label className="block text-xs font-semibold text-gray-400 uppercase mb-1">{t('admin.portfolio.project_images')}</label>
-                                <input
-                                    type="file"
-                                    multiple
-                                    onChange={uploadFileHandler}
-                                    className="block w-full text-sm text-gray-400
-                                      file:mr-4 file:py-2 file:px-4
-                                      file:rounded-full file:border-0
-                                      file:text-sm file:font-semibold
-                                      file:bg-primary file:text-background-dark
-                                      hover:file:bg-green-400
-                                      cursor-pointer"
-                                />
+                                <label className="relative cursor-pointer block mt-2">
+                                    <input
+                                        type="file"
+                                        multiple
+                                        onChange={uploadFileHandler}
+                                        className="hidden"
+                                    />
+                                    <div className="flex items-center justify-center gap-3 w-full h-32 rounded-lg border-2 border-dashed border-white/20 bg-background-dark hover:border-primary hover:bg-white/5 transition-all">
+                                        <span className="material-symbols-outlined text-4xl text-primary">add</span>
+                                        <div className="flex flex-col items-center">
+                                            <span className="text-white font-semibold">{t('admin.product.choose_images')}</span>
+                                            <span className="text-gray-400 text-sm">{t('admin.product.drag_drop')}</span>
+                                        </div>
+                                    </div>
+                                </label>
                                 {uploading && <p className="text-sm text-yellow-400 mt-2">{t('admin.portfolio.uploading')}</p>}
                                 <div className="flex flex-wrap gap-4 mt-4">
                                     {formData.images.map((img, index) => (

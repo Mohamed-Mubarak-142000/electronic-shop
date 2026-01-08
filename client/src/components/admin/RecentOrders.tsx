@@ -2,17 +2,31 @@
 
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useCurrency } from '@/hooks/useCurrency';
 
 export default function RecentOrders({ orders }: { orders: any[] }) {
     const { t } = useTranslation();
+    const { formatPrice } = useCurrency();
 
     if (!orders || orders.length === 0) {
         return (
             <div className="xl:col-span-2 bg-card-dark rounded-xl border border-white/5 overflow-hidden flex flex-col p-6 items-center justify-center text-gray-400">
-                <p>No recent orders found.</p>
+                <p>{t('admin.orders.no_orders')}</p>
             </div>
         );
     }
+
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'Delivered': return t('admin.status.delivered');
+            case 'Cancelled': return t('admin.status.cancelled');
+            case 'Shipped': return t('admin.status.shipped');
+            case 'Paid': return t('admin.status.paid');
+            case 'Pending': return t('admin.status.pending');
+            case 'Processing': return t('admin.status.processing');
+            default: return status;
+        }
+    };
 
     return (
         <div className="xl:col-span-2 bg-card-dark rounded-xl border border-white/5 overflow-hidden flex flex-col">
@@ -46,10 +60,10 @@ export default function RecentOrders({ orders }: { orders: any[] }) {
                                                 order.status === 'Shipped' ? 'bg-primary' :
                                                     'bg-yellow-400'
                                             }`}></span>
-                                        {order.status}
+                                        {getStatusLabel(order.status)}
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 text-right text-white font-medium">${order.total?.toFixed(2)}</td>
+                                <td className="px-6 py-4 text-right text-white font-medium">{formatPrice(order.total)}</td>
                             </tr>
                         ))}
                     </tbody>

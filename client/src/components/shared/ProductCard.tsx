@@ -3,6 +3,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { toast } from "react-hot-toast";
+import { useCurrency } from "@/hooks/useCurrency";
 
 interface Product {
     _id: string;
@@ -22,14 +23,22 @@ interface Product {
         _id: string;
         name: string;
     };
+    salePrice?: number;
+    isDiscountActive?: boolean;
 }
 
 export default function ProductCard({ product }: { product: Product }) {
     const user = useAuthStore((state) => state.user);
     const addItem = useCartStore((state) => state.addItem);
     const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+    const { formatPrice } = useCurrency();
 
     const isWishlisted = isInWishlist(product._id);
+
+    // Helpers
+    const currentPrice = (product.isDiscountActive && product.salePrice) 
+        ? product.salePrice 
+        : product.price;
 
     // Helper to determine image source
     const imageSrc = product.imageUrl ||
@@ -47,7 +56,7 @@ export default function ProductCard({ product }: { product: Product }) {
         addItem({
             id: product._id,
             name: product.name,
-            price: product.price,
+            price: currentPrice,
             quantity: 1,
             imageUrl: imageSrc,
             subtitle: product.description,
@@ -73,7 +82,7 @@ export default function ProductCard({ product }: { product: Product }) {
             addToWishlist({
                 id: product._id,
                 name: product.name,
-                price: product.price,
+                price: currentPrice,
                 imageUrl: imageSrc,
                 description: product.description
             });
@@ -91,9 +100,9 @@ export default function ProductCard({ product }: { product: Product }) {
                         src={imageSrc}
                     />
                 </Link>
-                {product.discount && product.discount > 0 && (
+                {product.isDiscountActive && product.salePrice && (
                     <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
-                        -{product.discount}%
+                        -{Math.round(((product.price - product.salePrice) / product.price) * 100)}%
                     </div>
                 )}
             </div>
@@ -130,13 +139,13 @@ export default function ProductCard({ product }: { product: Product }) {
 
                 <div className="mt-auto flex items-center justify-between">
                     <div className="flex flex-col">
-                        {product.discount ? (
+                        {product.isDiscountActive && product.salePrice ? (
                             <>
-                                <span className="text-gray-500 text-sm line-through">${(product.price * (1 + product.discount / 100)).toFixed(2)}</span>
-                                <span className="text-primary text-xl font-bold">${product.price.toFixed(2)}</span>
+                                <span className="text-gray-500 text-sm line-through">{formatPrice(product.price)}</span>
+                                <span className="text-primary text-xl font-bold">{formatPrice(product.salePrice)}</span>
                             </>
                         ) : (
-                            <span className="text-primary text-xl font-bold">${product.price.toFixed(2)}</span>
+                            <span className="text-primary text-xl font-bold">{formatPrice(product.price)}</span>
                         )}
                     </div>
                     <div className="flex gap-2">

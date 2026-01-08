@@ -36,7 +36,7 @@ export default function LowStockAlert({ products }: { products: any[] }) {
                         </div>
                     ))
                 ) : (
-                    <div className="text-center text-gray-500 py-4">No low stock items</div>
+                    <div className="text-center text-gray-500 py-4">{t('admin.no_low_stock')}</div>
                 )}
             </div>
             <div className="mt-auto p-4 border-t border-white/5">

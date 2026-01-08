@@ -1,14 +1,11 @@
+import 'dotenv/config';
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import connectDB from './config/db.js';
-
-// Load env vars
-dotenv.config();
 
 // Connect to database
 connectDB();
@@ -45,6 +42,8 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 import portfolioRoutes from './routes/portfolioRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
+import scheduleRoutes from './routes/scheduleRoutes.js';
+import configRoutes from './routes/configRoutes.js';
 import Message from './models/Message.js';
 import jwt from 'jsonwebtoken';
 import User from './models/User.js';
@@ -59,7 +58,13 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/portfolio', portfolioRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/schedules', scheduleRoutes);
+app.use('/api/config', configRoutes);
 import uploadRoutes from './routes/uploadRoutes.js';
+
+import { seedConfigs } from './controllers/configController.js';
+seedConfigs(); // Initialize configs on startup
+
 app.use('/api/upload', uploadRoutes);
 
 

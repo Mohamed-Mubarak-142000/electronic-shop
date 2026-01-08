@@ -4,16 +4,22 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useLanguageStore } from '../store/useLanguageStore';
+import { useConfigStore } from '../store/useConfigStore';
 import { useEffect } from 'react';
 import NewProductDrawer from '../components/NewProductDrawer';
 
 const LanguageWrapper = ({ children }: { children: React.ReactNode }) => {
     const { language, direction } = useLanguageStore();
+    const { fetchConfigs } = useConfigStore();
 
     useEffect(() => {
         document.documentElement.dir = direction;
         document.documentElement.lang = language;
     }, [language, direction]);
+
+    useEffect(() => {
+        fetchConfigs();
+    }, []);
 
     return <>{children}</>;
 };

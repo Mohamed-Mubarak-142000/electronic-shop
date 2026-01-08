@@ -1,6 +1,7 @@
 'use client';
 
-'use client';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useCurrency } from '@/hooks/useCurrency';
 
 type Order = {
     _id: string;
@@ -43,6 +44,8 @@ interface OrderDetailsDrawerProps {
 }
 
 export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawerProps) {
+    const { t } = useTranslation();
+    const { formatPrice } = useCurrency();
     if (!order) return null;
 
     return (
@@ -53,7 +56,7 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
                     <div className="flex items-center gap-3">
                         <h3 className="text-2xl font-bold text-white">#{order._id.substring(0, 8)}</h3>
                         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${order.isPaid ? 'bg-blue-500/20 text-blue-400 border-blue-500/20' : 'bg-yellow-500/20 text-yellow-400 border-yellow-500/20'} border`}>
-                            {order.isDelivered ? 'Delivered' : (order.isPaid ? 'Paid' : 'Pending')}
+                            {order.isDelivered ? t('admin.status.delivered') : (order.isPaid ? t('admin.status.paid') : t('admin.status.pending'))}
                         </span>
                     </div>
                     <button onClick={onClose} className="text-gray-400 hover:text-white">
@@ -63,12 +66,12 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
                 {/* Status Actions */}
                 <div className="flex gap-2">
                     <select className="bg-surface-dark border border-white/10 text-white text-sm rounded-lg px-3 py-2 focus:ring-primary focus:border-primary w-full" defaultValue={order.isDelivered ? 'delivered' : (order.isPaid ? 'paid' : 'pending')}>
-                        <option value="pending">Pending</option>
-                        <option value="paid">Paid</option>
-                        <option value="delivered">Delivered</option>
+                        <option value="pending">{t('admin.status.pending')}</option>
+                        <option value="paid">{t('admin.status.paid')}</option>
+                        <option value="delivered">{t('admin.status.delivered')}</option>
                     </select>
                     <button className="bg-primary text-black font-bold px-4 py-2 rounded-lg text-sm whitespace-nowrap">
-                        Update
+                        {t('admin.orders.update_status')}
                     </button>
                 </div>
             </div>
@@ -76,7 +79,7 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {/* Customer Info */}
                 <div className="bg-[#112117] rounded-xl p-4 border border-white/10">
-                    <h4 className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-3">Customer Details</h4>
+                    <h4 className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-3">{t('admin.orders.details.customer_details')}</h4>
                     <div className="flex items-center gap-4 mb-4">
                         <div className="w-12 h-12 rounded-full bg-indigo-900/50 border border-indigo-700 text-indigo-300 flex items-center justify-center text-lg font-bold uppercase">
                             {order.user?.name?.substring(0, 2) || 'NA'}
@@ -89,7 +92,7 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
                 </div>
                 {/* Products */}
                 <div>
-                    <h4 className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-3">Items ({order.orderItems?.length || 0})</h4>
+                    <h4 className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-3">{t('admin.orders.details.items')} ({order.orderItems?.length || 0})</h4>
                     <div className="space-y-3">
                         {order.orderItems?.map((item, index) => (
                             <div key={index} className="flex gap-4 p-3 rounded-xl bg-[#112117] border border-white/10 hover:border-gray-600 transition-colors">
@@ -97,11 +100,11 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
                                 <div className="flex-1">
                                     <div className="flex justify-between items-start">
                                         <p className="text-white text-sm font-bold line-clamp-2">{item.name}</p>
-                                        <p className="text-white font-mono text-sm font-bold">${item.price}</p>
+                                        <p className="text-white font-mono text-sm font-bold">{formatPrice(item.price)}</p>
                                     </div>
                                     <div className="flex justify-between items-center mt-2">
-                                        <span className="text-xs text-gray-400">Qty: {item.qty}</span>
-                                        <p className="text-primary text-sm font-bold">${(item.price * item.qty).toFixed(2)}</p>
+                                        <span className="text-xs text-gray-400">{t('quantity')}: {item.qty}</span>
+                                        <p className="text-primary text-sm font-bold">{formatPrice(item.price * item.qty)}</p>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +113,7 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
                 </div>
                 {/* Shipping Address */}
                 <div className="bg-[#112117] rounded-xl p-4 border border-white/10">
-                    <h4 className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-3">Shipping Address</h4>
+                    <h4 className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-3">{t('admin.orders.details.shipping_address')}</h4>
                     <div className="flex gap-3">
                         <span className="material-symbols-outlined text-gray-500 mt-0.5">location_on</span>
                         <div>
@@ -122,23 +125,23 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
                 </div>
                 {/* Payment Summary */}
                 <div className="bg-[#112117] rounded-xl p-4 border border-white/10">
-                    <h4 className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-3">Payment Summary</h4>
+                    <h4 className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-3">{t('admin.orders.details.payment_summary')}</h4>
                     <div className="space-y-2 text-sm">
                         <div className="flex justify-between text-gray-400">
-                            <span>Subtotal</span>
-                            <span className="text-white font-mono">${order.itemsPrice?.toFixed(2)}</span>
+                            <span>{t('admin.orders.summary.subtotal')}</span>
+                            <span className="text-white font-mono">{formatPrice(order.itemsPrice)}</span>
                         </div>
                         <div className="flex justify-between text-gray-400">
-                            <span>Shipping</span>
-                            <span className="text-white font-mono">${order.shippingPrice?.toFixed(2)}</span>
+                            <span>{t('admin.orders.summary.shipping')}</span>
+                            <span className="text-white font-mono">{formatPrice(order.shippingPrice)}</span>
                         </div>
                         <div className="flex justify-between text-gray-400">
-                            <span>Tax</span>
-                            <span className="text-white font-mono">${order.taxPrice?.toFixed(2)}</span>
+                            <span>{t('admin.orders.summary.tax')}</span>
+                            <span className="text-white font-mono">{formatPrice(order.taxPrice)}</span>
                         </div>
                         <div className="flex justify-between pt-2 border-t border-white/10 mt-2 items-end">
-                            <span className="text-white font-bold">Total</span>
-                            <span className="text-2xl text-primary font-bold font-mono">${order.totalPrice?.toFixed(2)}</span>
+                            <span className="text-white font-bold">{t('admin.orders.summary.total')}</span>
+                            <span className="text-2xl text-primary font-bold font-mono">{formatPrice(order.totalPrice)}</span>
                         </div>
                     </div>
                 </div>
@@ -148,7 +151,7 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
             <div className="p-4 border-t border-white/5 bg-[#15261d] flex gap-3">
                 <button className="flex-1 py-3 rounded-full bg-surface-dark border border-white/10 text-white font-bold hover:bg-white/5 transition-colors flex justify-center items-center gap-2">
                     <span className="material-symbols-outlined text-sm">print</span>
-                    Invoice
+                    {t('admin.orders.invoice')}
                 </button>
             </div>
         </div>

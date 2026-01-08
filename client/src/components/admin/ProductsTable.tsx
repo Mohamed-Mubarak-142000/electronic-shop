@@ -7,6 +7,8 @@ import Pagination from './ui/Pagination';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { productService } from '@/services/productService';
 import Link from 'next/link';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useCurrency } from '@/hooks/useCurrency';
 
 // Define the Product type based on API response
 type Product = {
@@ -31,6 +33,8 @@ interface ProductsTableProps {
 }
 
 export default function ProductsTable({ filters }: ProductsTableProps) {
+    const { t } = useTranslation();
+    const { formatPrice } = useCurrency();
     const [page, setPage] = useState(1);
     const limit = 10;
     const queryClient = useQueryClient();
@@ -76,7 +80,7 @@ export default function ProductsTable({ filters }: ProductsTableProps) {
 
     const columns: Column<Product>[] = [
         {
-            header: 'Product',
+            header: t('admin.table.product'),
             cell: (row) => (
                 <div className="flex items-center gap-4">
                     <div className="h-12 w-12 rounded-lg bg-white/5 flex-shrink-0 overflow-hidden border border-white/10">
@@ -94,40 +98,40 @@ export default function ProductsTable({ filters }: ProductsTableProps) {
             )
         },
         {
-            header: 'Category',
+            header: t('admin.table.category'),
             cell: (row) => <span className="text-gray-300">{row.category?.name || 'N/A'}</span>,
             className: 'text-gray-300'
         },
         {
-            header: 'Brand',
+            header: t('admin.table.brand'),
             cell: (row) => <span className="text-gray-300">{row.brand?.name || 'N/A'}</span>,
             className: 'text-gray-300'
         },
         {
-            header: 'Price',
-            cell: (row) => <span className="text-white font-medium">${row.price.toFixed(2)}</span>,
+            header: t('admin.table.price'),
+            cell: (row) => <span className="text-white font-medium">{formatPrice(row.price)}</span>,
             className: 'text-white font-medium text-right'
         },
         {
-            header: 'Stock',
+            header: t('admin.table.stock'),
             accessorKey: 'stock',
             className: 'text-gray-300 text-right'
         },
         {
-            header: 'Status',
+            header: t('admin.table.status'),
             className: 'text-center',
             cell: (row) => {
                 let statusColor = '';
                 let statusText = '';
                 if (row.stock > 10) {
                     statusColor = 'bg-primary/10 text-primary border-primary/20';
-                    statusText = 'In Stock';
+                    statusText = t('admin.status.in_stock');
                 } else if (row.stock > 0) {
                     statusColor = 'bg-orange-400/10 text-orange-400 border-orange-400/20';
-                    statusText = 'Low Stock';
+                    statusText = t('admin.status.low_stock');
                 } else {
                     statusColor = 'bg-red-500/10 text-red-500 border-red-500/20';
-                    statusText = 'Out of Stock';
+                    statusText = t('admin.status.out_of_stock');
                 }
 
                 return (
@@ -138,7 +142,7 @@ export default function ProductsTable({ filters }: ProductsTableProps) {
             }
         },
         {
-            header: 'Actions',
+            header: t('admin.table.actions'),
             className: 'text-right',
             cell: (row) => (
                 <div className="flex items-center justify-end gap-2 text-right">

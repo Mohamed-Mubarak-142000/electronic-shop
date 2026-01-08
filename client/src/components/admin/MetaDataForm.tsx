@@ -8,6 +8,7 @@ import * as z from 'zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { categoryService, brandService } from '@/services/metadataService';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const schema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -24,6 +25,7 @@ interface MetaDataFormProps {
 }
 
 export default function MetaDataForm({ type, initialData }: MetaDataFormProps) {
+    const { t } = useTranslation();
     const router = useRouter();
     const queryClient = useQueryClient();
     const isCategory = type === 'category';
@@ -88,7 +90,7 @@ export default function MetaDataForm({ type, initialData }: MetaDataFormProps) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 max-w-2xl">
             <div className="bg-surface-dark rounded-xl p-6 shadow-sm border border-white/10 flex flex-col gap-6">
                 <label className="flex flex-col w-full">
-                    <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Name</span>
+                    <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.table.name')}</span>
                     <input
                         {...form.register('name')}
                         className={inputClass(form.formState.errors.name)}
@@ -98,7 +100,7 @@ export default function MetaDataForm({ type, initialData }: MetaDataFormProps) {
                 </label>
 
                 <label className="flex flex-col w-full">
-                    <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Description</span>
+                    <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.table.description')}</span>
                     <textarea
                         {...form.register('description')}
                         className="form-textarea w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary p-4 min-h-[100px] placeholder:text-gray-400"
@@ -108,7 +110,7 @@ export default function MetaDataForm({ type, initialData }: MetaDataFormProps) {
 
                 {isCategory ? (
                     <label className="flex flex-col w-full">
-                        <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Image URL</span>
+                        <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.category.image')}</span>
                         <input
                             {...form.register('imageUrl')}
                             className={inputClass(form.formState.errors.imageUrl)}
@@ -118,7 +120,7 @@ export default function MetaDataForm({ type, initialData }: MetaDataFormProps) {
                     </label>
                 ) : (
                     <label className="flex flex-col w-full">
-                        <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Logo URL</span>
+                        <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.brand.logo')}</span>
                         <input
                             {...form.register('logoUrl')}
                             className={inputClass(form.formState.errors.logoUrl)}
@@ -133,7 +135,7 @@ export default function MetaDataForm({ type, initialData }: MetaDataFormProps) {
                     disabled={createMutation.isPending || updateMutation.isPending}
                     className="w-full flex items-center justify-center rounded-lg h-12 bg-primary text-background-dark text-base font-bold shadow-lg hover:bg-green-400 transition-colors disabled:opacity-50"
                 >
-                    {(createMutation.isPending || updateMutation.isPending) ? 'Saving...' : (initialData ? 'Update' : 'Create')}
+                    {(createMutation.isPending || updateMutation.isPending) ? t('admin.product.saving') : (initialData ? t('admin.orders.update_status') : t(isCategory ? 'admin.category.create' : 'admin.brand.create'))}
                 </button>
             </div>
         </form>

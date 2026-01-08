@@ -7,6 +7,7 @@ import Pagination from './ui/Pagination';
 import { cn } from '@/lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userService } from '@/services/userService';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type User = {
     _id: string;
@@ -17,6 +18,7 @@ type User = {
 };
 
 export default function CustomersTable() {
+    const { t } = useTranslation();
     const [page, setPage] = useState(1);
     const limit = 10;
     const queryClient = useQueryClient();
@@ -49,42 +51,42 @@ export default function CustomersTable() {
 
     const columns: Column<User>[] = [
         {
-            header: 'ID',
+            header: t('admin.table.id'),
             cell: (row) => <span className="text-gray-400 text-xs">{row._id.substring(0, 8)}...</span>,
             className: 'w-24'
         },
         {
-            header: 'Name',
+            header: t('admin.table.name'),
             accessorKey: 'name',
             className: 'font-medium text-white'
         },
         {
-            header: 'Email',
+            header: t('admin.table.email'),
             accessorKey: 'email',
             className: 'text-gray-400'
         },
         {
-            header: 'Role',
+            header: t('admin.table.role'),
             cell: (row) => (
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${row.isAdmin ? 'bg-primary/20 text-primary' : 'bg-gray-700/50 text-gray-300'
                     }`}>
-                    {row.isAdmin ? 'Admin' : 'Customer'}
+                    {row.isAdmin ? t('admin.role.admin') : t('admin.role.customer')}
                 </span>
             )
         },
         {
-            header: 'Joined',
+            header: t('admin.table.joined'),
             cell: (row) => <span className="text-gray-400">{new Date(row.createdAt).toLocaleDateString()}</span>,
         },
         {
-            header: 'Actions',
+            header: t('admin.table.actions'),
             className: 'text-right',
             cell: (row) => (
                 <div className="flex justify-end gap-2">
                     <button
                         onClick={() => handleDelete(row._id)}
                         className="p-1 hover:bg-white/10 rounded-lg text-gray-400 hover:text-red-400 transition-colors"
-                        title="Delete User"
+                        title={t('admin.tooltips.delete_user')}
                     >
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                     </button>

@@ -8,6 +8,7 @@ import * as z from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { categoryService, brandService } from '@/services/metadataService';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const categorySchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -26,6 +27,7 @@ interface CategoryFormProps {
 }
 
 export default function CategoryForm({ initialData }: CategoryFormProps) {
+    const { t } = useTranslation();
     const router = useRouter();
     const queryClient = useQueryClient();
     const { data: brandsData } = useQuery({ queryKey: ['brands'], queryFn: brandService.getBrands });
@@ -127,11 +129,11 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
             <div className="lg:col-span-2 flex flex-col gap-8">
                 {/* General Information Card */}
                 <div className="bg-surface-dark rounded-xl p-6 shadow-sm border border-white/10">
-                    <h2 className="text-lg font-bold text-white mb-6">General Information</h2>
+                    <h2 className="text-lg font-bold text-white mb-6">{t('admin.category.general_info')}</h2>
                     <div className="flex flex-col gap-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <label className="flex flex-col w-full">
-                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Category Name (EN)</span>
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.category.name_en')}</span>
                                 <input
                                     {...form.register('name')}
                                     className={inputClass(form.formState.errors.name)}
@@ -141,7 +143,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                                 {form.formState.errors.name && <span className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</span>}
                             </label>
                             <label className="flex flex-col w-full">
-                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Category Name (AR)</span>
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.category.name_ar')}</span>
                                 <input
                                     {...form.register('nameAr')}
                                     className={inputClass(form.formState.errors.nameAr)}
@@ -153,7 +155,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <label className="flex flex-col w-full">
-                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Description (EN)</span>
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.category.desc_en')}</span>
                                 <div className="flex flex-col rounded-lg border border-white/10 bg-background-dark overflow-hidden">
                                     <textarea
                                         {...form.register('description')}
@@ -164,7 +166,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                                 {form.formState.errors.description && <span className="text-red-500 text-sm mt-1">{form.formState.errors.description.message}</span>}
                             </label>
                             <label className="flex flex-col w-full">
-                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Description (AR)</span>
+                                <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.category.desc_ar')}</span>
                                 <div className="flex flex-col rounded-lg border border-white/10 bg-background-dark overflow-hidden">
                                     <textarea
                                         {...form.register('descriptionAr')}
@@ -182,7 +184,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                     <h2 className="text-lg font-bold text-white mb-6">Category Media</h2>
                     <div className="flex flex-col gap-6">
                         <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Category Image</span>
+                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.category.image')}</span>
                             <label className="relative cursor-pointer">
                                 <input
                                     type="file"
@@ -191,10 +193,10 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                                     id="category-image-upload"
                                 />
                                 <div className="flex items-center justify-center gap-3 w-full h-32 rounded-lg border-2 border-dashed border-white/20 bg-background-dark hover:border-primary hover:bg-white/5 transition-all">
-                                    <span className="material-symbols-outlined text-4xl text-primary">add_photo_alternate</span>
+                                    <span className="material-symbols-outlined text-4xl text-primary">add</span>
                                     <div className="flex flex-col">
-                                        <span className="text-white font-semibold">Choose Image</span>
-                                        <span className="text-gray-400 text-sm">or drag and drop</span>
+                                        <span className="text-white font-semibold">{t('admin.product.choose_images')}</span>
+                                        <span className="text-gray-400 text-sm">{t('admin.product.drag_drop')}</span>
                                     </div>
                                 </div>
                             </label>
@@ -220,29 +222,29 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
             <div className="flex flex-col gap-8">
                 {/* Organization Card */}
                 <div className="bg-surface-dark rounded-xl p-6 shadow-sm border border-white/10">
-                    <h2 className="text-lg font-bold text-white mb-6">Organization</h2>
+                    <h2 className="text-lg font-bold text-white mb-6">{t('admin.product.organization')}</h2>
                     <div className="flex flex-col gap-6">
                         {/* Status / Published */}
                         <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Status</span>
+                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.product.status')}</span>
                             <select
                                 {...form.register('isPublished')}
                                 className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
                                 onChange={(e) => form.setValue('isPublished', e.target.value === 'true')}
                                 value={form.watch('isPublished') ? 'true' : 'false'}
                             >
-                                <option value="true">Active / Published</option>
-                                <option value="false">Hidden / Draft</option>
+                                <option value="true">{t('admin.product.published')}</option>
+                                <option value="false">{t('admin.product.draft')}</option>
                             </select>
                         </label>
                         {/* Brand Select Box */}
                         <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Brand</span>
+                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.product.brand')}</span>
                             <select
                                 {...form.register('brand')}
                                 className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
                             >
-                                <option value="">Select Brand</option>
+                                <option value="">{t('admin.product.select_brand')}</option>
                                 {brandsList.map((brand: any) => (
                                     <option key={brand._id} value={brand._id}>{brand.name}</option>
                                 ))}
@@ -256,7 +258,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                     disabled={createMutation.isPending || updateMutation.isPending}
                     className="w-full flex items-center justify-center rounded-lg h-12 bg-primary text-background-dark text-base font-bold shadow-lg hover:bg-green-400 transition-colors disabled:opacity-50"
                 >
-                    {(createMutation.isPending || updateMutation.isPending) ? 'Saving...' : (initialData ? 'Update Category' : 'Create Category')}
+                    {(createMutation.isPending || updateMutation.isPending) ? t('admin.product.saving') : (initialData ? t('admin.category.update') : t('admin.category.create'))}
                 </button>
             </div>
         </form>

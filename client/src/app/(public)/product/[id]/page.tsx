@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { toast } from "react-hot-toast";
 import ProductCard from "@/components/shared/ProductCard";
+import { useCurrency } from "@/hooks/useCurrency";
 
 interface Product {
     _id: string;
@@ -24,6 +25,7 @@ interface Product {
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
+    const { formatPrice } = useCurrency();
     const [product, setProduct] = useState<Product | null>(null);
     const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
@@ -226,7 +228,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                             )}
                         </h1>
                         <div className="flex items-end gap-4 mb-6">
-                            <span className="text-4xl font-bold text-primary">${product.price}</span>
+                            <span className="text-4xl font-bold text-primary">{formatPrice(product.price)}</span>
                         </div>
                         <div className="p-4 rounded-xl bg-slate-50 dark:bg-surface-dark border border-slate-100 dark:border-transparent mb-8">
                             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">

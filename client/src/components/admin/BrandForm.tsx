@@ -8,6 +8,7 @@ import * as z from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { brandService, categoryService } from '@/services/metadataService';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const brandSchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -26,6 +27,7 @@ interface BrandFormProps {
 }
 
 export default function BrandForm({ initialData }: BrandFormProps) {
+    const { t } = useTranslation();
     const router = useRouter();
     const queryClient = useQueryClient();
     const { data: categoriesData } = useQuery({ queryKey: ['categories'], queryFn: categoryService.getCategories });
@@ -220,29 +222,29 @@ export default function BrandForm({ initialData }: BrandFormProps) {
             <div className="flex flex-col gap-8">
                 {/* Organization Card */}
                 <div className="bg-surface-dark rounded-xl p-6 shadow-sm border border-white/10">
-                    <h2 className="text-lg font-bold text-white mb-6">Organization</h2>
+                    <h2 className="text-lg font-bold text-white mb-6">{t('admin.product.organization')}</h2>
                     <div className="flex flex-col gap-6">
                         {/* Status / Published */}
                         <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Status</span>
+                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.product.status')}</span>
                             <select
                                 {...form.register('isPublished')}
                                 className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
                                 onChange={(e) => form.setValue('isPublished', e.target.value === 'true')}
                                 value={form.watch('isPublished') ? 'true' : 'false'}
                             >
-                                <option value="true">Active / Published</option>
-                                <option value="false">Hidden / Draft</option>
+                                <option value="true">{t('admin.product.published')}</option>
+                                <option value="false">{t('admin.product.draft')}</option>
                             </select>
                         </label>
                         {/* Category Select Box */}
                         <label className="flex flex-col w-full">
-                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">Category</span>
+                            <span className="text-white text-sm font-bold uppercase tracking-wide pb-2">{t('admin.product.category')}</span>
                             <select
                                 {...form.register('category')}
                                 className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
                             >
-                                <option value="">Select Category</option>
+                                <option value="">{t('admin.product.select_category')}</option>
                                 {categoriesList.map((cat: any) => (
                                     <option key={cat._id} value={cat._id}>{cat.name}</option>
                                 ))}
@@ -256,7 +258,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                     disabled={createMutation.isPending || updateMutation.isPending}
                     className="w-full flex items-center justify-center rounded-lg h-12 bg-primary text-background-dark text-base font-bold shadow-lg hover:bg-green-400 transition-colors disabled:opacity-50"
                 >
-                    {(createMutation.isPending || updateMutation.isPending) ? 'Saving...' : (initialData ? 'Update Brand' : 'Create Brand')}
+                    {(createMutation.isPending || updateMutation.isPending) ? t('admin.product.saving') : (initialData ? t('admin.brand.update') : t('admin.brand.create'))}
                 </button>
             </div>
         </form>
