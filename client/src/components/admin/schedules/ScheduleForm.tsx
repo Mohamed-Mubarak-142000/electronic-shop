@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Resolver, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { AxiosError } from 'axios';
+import Image from 'next/image';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
@@ -16,8 +18,9 @@ import { Product } from '@/types';
 import { X } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
+import { en } from '@/locales/translations';
 
-const createScheduleSchema = (t: any) => z.object({
+const createScheduleSchema = (t: (key: keyof typeof en) => string) => z.object({
     productId: z.string().min(1, t('admin.schedules.form.product') + ' ' + t('validation.required')),
     type: z.enum(['percentage', 'fixed']),
     value: z.coerce.number().min(0.01, t('admin.schedules.form.value') + ' must be greater than 0'),
@@ -58,7 +61,7 @@ export default function ScheduleForm() {
     const products: Product[] = productData?.products || [];
 
     const form = useForm<ScheduleFormValues>({
-        resolver: zodResolver(scheduleSchema),
+        resolver: zodResolver(scheduleSchema) as Resolver<ScheduleFormValues>,
         defaultValues: {
             type: 'percentage',
             value: 0,
@@ -74,7 +77,7 @@ export default function ScheduleForm() {
             form.reset();
             setSelectedProduct(null);
         },
-        onError: (error: any) => {
+        onError: (error: AxiosError<{ message: string }>) => {
             toast.error(error.response?.data?.message || 'Failed to create schedule');
         }
     });
@@ -83,11 +86,12 @@ export default function ScheduleForm() {
         createMutation.mutate(data);
     };
 
+    const type = useWatch({ control: form.control, name: 'type' });
+    const value = Number(useWatch({ control: form.control, name: 'value' }) || 0);
+
     // Calculate preview price
     const calculateNewPrice = () => {
         if (!selectedProduct) return null;
-        const type = form.watch('type');
-        const value = Number(form.watch('value') || 0);
 
         if (type === 'percentage') {
             return Math.max(0, Math.round(selectedProduct.price * (1 - value / 100)));
@@ -119,9 +123,15 @@ export default function ScheduleForm() {
                             {selectedProduct ? (
                                 <div className="flex items-center justify-between p-2 border border-white/10 rounded-md bg-black/20">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-10 h-10 bg-gray-700 rounded overflow-hidden">
+                                        <div className="w-10 h-10 bg-gray-700 rounded overflow-hidden relative">
                                             {selectedProduct.images?.[0] && (
-                                                <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="w-full h-full object-cover" />
+                                                <Image 
+                                                    src={selectedProduct.images[0]} 
+                                                    alt={selectedProduct.name} 
+                                                    fill
+                                                    className="object-cover"
+                                                    sizes="40px"
+                                                />
                                             )}
                                         </div>
                                         <div>

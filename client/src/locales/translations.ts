@@ -6,6 +6,11 @@ export const en = {
     "nav.profile": "Profile",
     "nav.logout": "Logout",
     "auth.login": "Login",
+    "auth.forgotPassword": "Forgot Password",
+    "auth.email": "Email Address",
+    "auth.name": "Full Name",
+    "auth.verifyOtp": "Verify OTP",
+    "auth.enterOtp": "Enter the code sent to your email",
 
     // Common
     welcome: "Welcome",
@@ -24,6 +29,7 @@ export const en = {
     go_shopping: "Go Shopping",
     items_in_cart: "You have {count} items in your cart",
     product: "Product",
+    "product.addToCart": "Add to Cart",
     price: "Price",
     quantity: "Quantity",
     total: "Total",
@@ -212,7 +218,13 @@ export const en = {
     "admin.product.update": "Update Product",
     "admin.product.publish": "Publish Product",
     "admin.product.saving": "Saving...",
-    
+
+    // Client Chat
+    "chat.title": "Support Chat",
+    "chat.subtitle": "We are here to help!",
+    "chat.startPrompt": "Start a conversation...",
+    "chat.inputPlaceholder": "Type your message...",
+
     // Admin Chat
     "admin.chat.select_conversation": "Select a conversation",
     "admin.chat.choose_user": "Choose a user from the list to start messaging",
@@ -435,6 +447,30 @@ export const en = {
     "validation.max_images": "No more than {max} image(s) allowed",
     "validation.image_limit_error": "You can only have up to {max} images",
     "validation.image_range_hint": "Min: {min} - Max: {max}",
+
+    // Footer
+    "footer.description": "Your trusted source for electrical supplies and components. Quality products, competitive prices, and expert support.",
+    "footer.shop": "Shop",
+    "footer.allProducts": "All Products",
+    "footer.lighting": "Lighting",
+    "footer.fans": "Fans",
+    "footer.tools": "Tools",
+    "footer.clearance": "Clearance",
+    "footer.support": "Customer Support",
+    "footer.trackOrder": "Track Order",
+    "footer.returns": "Returns & Refunds",
+    "footer.guide": "Installation Guide",
+    "footer.faq": "FAQs",
+    "footer.contact": "Contact Us",
+    "footer.stayPowered": "Stay Powered",
+    "footer.subscribeDesc": "Subscribe to our newsletter for latest products and offers.",
+    "footer.emailPlaceholder": "Your email address",
+    "footer.subscribe": "Subscribe",
+    "footer.rights": "All rights reserved.",
+    "footer.privacy": "Privacy Policy",
+    "footer.terms": "Terms of Service",
+    "footer.sitemap": "Sitemap",
+    "validation.common_error": "Please check the form for errors",
 };
 
 export const ar = {
@@ -445,6 +481,11 @@ export const ar = {
     "nav.profile": "الملف الشخصي",
     "nav.logout": "تسجيل خروج",
     "auth.login": "دخول",
+    "auth.forgotPassword": "نسيت كلمة المرور",
+    "auth.email": "البريد الإلكتروني",
+    "auth.name": "الاسم الكامل",
+    "auth.verifyOtp": "تحقق من رمز التحقق",
+    "auth.enterOtp": "أدخل الرمز المرسل إلى بريدك الإلكتروني",
 
     // Common
     welcome: "مرحباً",
@@ -463,6 +504,7 @@ export const ar = {
     go_shopping: "تسوق الآن",
     items_in_cart: "لديك {count} منتجات في العربة",
     product: "المنتج",
+    "product.addToCart": "أضف إلى السلة",
     price: "السعر",
     quantity: "الكمية",
     total: "المجموع",
@@ -645,6 +687,12 @@ export const ar = {
     "admin.product.update": "تحديث المنتج",
     "admin.product.publish": "نشر المنتج",
     "admin.product.saving": "جاري الحفظ...",
+
+    // Client Chat
+    "chat.title": "محادثة الدعم",
+    "chat.subtitle": "نحن هنا للمساعدة!",
+    "chat.startPrompt": "ابدأ محادثة...",
+    "chat.inputPlaceholder": "اكتب رسالتك...",
 
     // Admin Chat
     "admin.chat.select_conversation": "اختر محادثة",
@@ -871,4 +919,28 @@ export const ar = {
     "validation.max_images": "غير مسموح بأكثر من {max} صورة/صور",
     "validation.image_limit_error": "يمكنك فقط رفع ما يصل إلى {max} صور",
     "validation.image_range_hint": "الحد الأدنى: {min} - الأقصى: {max}",
+
+    // Footer
+    "footer.description": "مصدرك الموثوق للمستلزمات الكهربائية والمكونات. منتجات عالية الجودة، أسعار منافسة، ودعم الخبراء.",
+    "footer.shop": "المتجر",
+    "footer.allProducts": "كل المنتجات",
+    "footer.lighting": "إضاءة",
+    "footer.fans": "مراوح",
+    "footer.tools": "أدوات",
+    "footer.clearance": "تصفية",
+    "footer.support": "دعم العملاء",
+    "footer.trackOrder": "تتبع الطلب",
+    "footer.returns": "الإرجاع والاسترداد",
+    "footer.guide": "دليل التركيب",
+    "footer.faq": "الأسئلة الشائعة",
+    "footer.contact": "اتصل بنا",
+    "footer.stayPowered": "ابق على تواصل",
+    "footer.subscribeDesc": "اشترك في نشرتنا البريدية للحصول على أحدث المنتجات والعروض.",
+    "footer.emailPlaceholder": "بريدك الإلكتروني",
+    "footer.subscribe": "اشتراك",
+    "footer.rights": "جميع الحقوق محفوظة.",
+    "footer.privacy": "سياسة الخصوصية",
+    "footer.terms": "شروط الخدمة",
+    "footer.sitemap": "خريطة الموقع",
+    "validation.common_error": "يرجى التحقق من النموذج بحثاً عن أخطاء",
 };

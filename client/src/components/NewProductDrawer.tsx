@@ -63,6 +63,7 @@ export default function NewProductDrawer() {
     useEffect(() => {
         if (!currentProduct && queue.length > 0) {
             const next = queue[0];
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCurrentProduct(next);
             setQueue(prev => prev.slice(1));
 

@@ -77,7 +77,8 @@ export default function ProfilePage() {
         setLoading(true);
         try {
             const updatedUser = await userService.updateProfile(formData);
-            login(updatedUser);
+            // Ensure token is preserved if not returned
+            login({ ...updatedUser, token: updatedUser.token || user?.token || '' });
             toast.success(language === 'ar' ? 'تم تحديث الملف الشخصي بنجاح' : 'Profile updated successfully');
         } catch (error: any) {
             toast.error(error.response?.data?.message || 'Update failed');

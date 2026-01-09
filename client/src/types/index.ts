@@ -5,28 +5,40 @@ export interface User {
     role: 'user' | 'admin' | 'business';
     avatar?: string;
     token?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Category {
     _id: string;
     name: string;
+    nameAr?: string;
     slug: string;
     image?: string;
     description?: string;
+    descriptionAr?: string;
+    isPublished?: boolean;
 }
 
 export interface Brand {
     _id: string;
     name: string;
+    nameAr?: string;
     slug: string;
     image?: string;
+    logoUrl?: string;
     description?: string;
+    descriptionAr?: string;
+    isPublished?: boolean;
+    category?: string | Category;
 }
 
 export interface Product {
     _id: string;
     name: string;
+    nameAr: string;
     description: string;
+    descriptionAr: string;
     price: number;
     category: Category | string;
     brand: Brand | string;
@@ -38,6 +50,10 @@ export interface Product {
     updatedAt: string;
     salePrice?: number;
     isDiscountActive?: boolean;
+    sku?: string;
+    tags?: string[];
+    isPublished?: boolean;
+    slug?: string;
 }
 
 export interface DiscountSchedule {
@@ -49,4 +65,107 @@ export interface DiscountSchedule {
     endTime: string;
     status: 'pending' | 'active' | 'completed' | 'cancelled';
     createdAt: string;
+}
+
+export interface PaginationParams {
+    page?: number;
+    limit?: number;
+    search?: string;
+    sort?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+}
+
+export interface PaginatedResponse<T> {
+    data: T[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
+export interface PaginatedResponseBase {
+    page: number;
+    pages: number;
+    total: number;
+}
+
+export interface UserPaginatedResponse extends PaginatedResponseBase {
+    users: User[];
+}
+
+export interface OrderPaginatedResponse extends PaginatedResponseBase {
+    orders: Order[];
+}
+
+export interface Portfolio {
+    _id: string;
+    title: string;
+    titleAr?: string;
+    description: string;
+    descriptionAr?: string;
+    client?: string;
+    clientAr?: string;
+    completedAt?: string;
+    images: string[];
+    isPublished: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface PortfolioOwnerResponse {
+    owner: User & { jobTitle?: string; bio?: string; bioAr?: string; skills?: any[] };
+    portfolios: Portfolio[];
+}
+
+export interface OrderItem {
+    name: string;
+    qty: number;
+    image: string;
+    price: number;
+    product: string | Product;
+}
+
+export interface ShippingAddress {
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+}
+
+export interface Order {
+    _id: string;
+    user: User;
+    orderItems: OrderItem[];
+    shippingAddress: ShippingAddress;
+    paymentMethod: string;
+    paymentResult?: {
+        id: string;
+        status: string;
+        update_time: string;
+        email_address: string;
+    };
+    itemsPrice: number;
+    taxPrice: number;
+    shippingPrice: number;
+    totalPrice: number;
+    isPaid: boolean;
+    paidAt?: string;
+    isDelivered: boolean;
+    deliveredAt?: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface Config {
+    language: string;
+    currency: string;
+    vodafoneCashNumber: string;
+    instapayNumber: string;
+    creditCardNumber: string;
+    taxiAmount: number;
+    minProductImages: number;
+    maxProductImages: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
 }

@@ -41,6 +41,7 @@ export default function ProductsTable({ filters }: ProductsTableProps) {
 
     // Reset page on filter change
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPage(1);
     }, [filters]);
 

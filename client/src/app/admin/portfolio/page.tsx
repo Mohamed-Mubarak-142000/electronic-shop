@@ -8,10 +8,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 interface Project {
     _id: string;
     title: string;
-    titleAr: string;
-    client: string;
+    titleAr?: string;
+    client?: string;
     isPublished: boolean;
-    completedAt: string;
+    completedAt?: string;
 }
 
 export default function AdminPortfolioPage() {
@@ -107,12 +107,12 @@ export default function AdminPortfolioPage() {
             const project = await portfolioService.getPortfolioById(id);
             setFormData({
                 title: project.title,
-                titleAr: project.titleAr,
+                titleAr: project.titleAr || '',
                 description: project.description,
-                descriptionAr: project.descriptionAr,
-                client: project.client,
-                clientAr: project.clientAr,
-                completedAt: project.completedAt.split('T')[0],
+                descriptionAr: project.descriptionAr || '',
+                client: project.client || '',
+                clientAr: project.clientAr || '',
+                completedAt: project.completedAt ? project.completedAt.split('T')[0] : '',
                 images: project.images,
                 isPublished: project.isPublished
             });
@@ -191,7 +191,7 @@ export default function AdminPortfolioPage() {
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 text-sm">
-                                    {new Date(project.completedAt).toLocaleDateString()}
+                                    {project.completedAt ? new Date(project.completedAt).toLocaleDateString() : '-'}
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="flex gap-2">

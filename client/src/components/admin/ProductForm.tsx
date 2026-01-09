@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useForm } from 'react-hook-form';
+import { useForm, FieldErrors, FieldError, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -11,6 +11,7 @@ import { productService } from '@/services/productService';
 import { categoryService, brandService } from '@/services/metadataService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useConfigStore } from '@/store/useConfigStore';
+import { Product, Category, Brand } from '@/types';
 
 const createProductSchema = (minImages: number, maxImages: number, t: any) => z.object({
     name: z.string().min(1, 'Name is required'),
@@ -26,13 +27,13 @@ const createProductSchema = (minImages: number, maxImages: number, t: any) => z.
         .min(minImages, t('validation.min_images', { min: minImages }))
         .max(maxImages, t('validation.max_images', { max: maxImages })),
     tags: z.string().optional(),
-    isPublished: z.boolean().default(true),
+    isPublished: z.union([z.boolean(), z.string()]).transform(val => val === true || val === 'true'),
 });
 
 type ProductFormValues = z.infer<ReturnType<typeof createProductSchema>>;
 
 interface ProductFormProps {
-    initialData?: any;
+    initialData?: Product;
 }
 
 export default function ProductForm({ initialData }: ProductFormProps) {
@@ -46,11 +47,11 @@ export default function ProductForm({ initialData }: ProductFormProps) {
     const maxImages = Number(configs.maxProductImages) || 4;
     const productSchema = createProductSchema(minImages, maxImages, t);
 
-    const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: categoryService.getCategories });
-    const { data: brands } = useQuery({ queryKey: ['brands'], queryFn: brandService.getBrands });
+    const { data: categories } = useQuery<Category[]>({ queryKey: ['categories'], queryFn: categoryService.getCategories });
+    const { data: brands } = useQuery<Brand[]>({ queryKey: ['brands'], queryFn: brandService.getBrands });
 
     const form = useForm<ProductFormValues>({
-        resolver: zodResolver(productSchema) as any,
+        resolver: zodResolver(productSchema) as Resolver<ProductFormValues>,
         defaultValues: {
             name: initialData?.name || '',
             nameAr: initialData?.nameAr || '',
@@ -59,8 +60,8 @@ export default function ProductForm({ initialData }: ProductFormProps) {
             descriptionAr: initialData?.descriptionAr || '',
             price: initialData?.price || 0,
             stock: initialData?.stock || 0,
-            category: initialData?.category?._id || '',
-            brand: initialData?.brand?._id || '',
+            category: typeof initialData?.category === 'object' ? initialData.category._id : initialData?.category || '',
+            brand: typeof initialData?.brand === 'object' ? initialData.brand._id : initialData?.brand || '',
             images: initialData?.images && initialData.images.length > 0 ? initialData.images : [],
             tags: initialData?.tags ? initialData.tags.join(', ') : '',
             isPublished: initialData?.isPublished ?? true,
@@ -78,8 +79,8 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                 descriptionAr: initialData.descriptionAr,
                 price: initialData.price,
                 stock: initialData.stock,
-                category: initialData.category?._id,
-                brand: initialData.brand?._id,
+                category: typeof initialData.category === 'object' ? initialData.category._id : initialData.category,
+                brand: typeof initialData.brand === 'object' ? initialData.brand._id : initialData.brand,
                 images: initialData.images,
                 tags: initialData.tags?.join(', '),
                 isPublished: initialData.isPublished,
@@ -107,9 +108,9 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                     body: formData,
                 });
                 const data = await response.json();
-                if (data.urls && Array.isArray(data.urls)) {
+                if (Array.isArray(data)) {
                     const currentImages = form.getValues('images') || [];
-                    form.setValue('images', [...currentImages, ...data.urls]);
+                    form.setValue('images', [...currentImages, ...data]);
                     toast.success('Images uploaded successfully');
                 } else {
                     throw new Error('Invalid response from server');
@@ -134,18 +135,18 @@ export default function ProductForm({ initialData }: ProductFormProps) {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             router.push('/admin/products');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to create product');
         }
     });
 
     const updateMutation = useMutation({
-        mutationFn: (data: any) => productService.updateProduct(initialData?._id, data),
+        mutationFn: (data: ProductFormValues) => productService.updateProduct(initialData?._id || '', data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             router.push('/admin/products');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to update product');
         }
     });
@@ -157,16 +158,21 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         };
 
         if (initialData) {
-            updateMutation.mutate(payload);
+            updateMutation.mutate(payload as any);
         } else {
-            createMutation.mutate(payload);
+            createMutation.mutate(payload as any);
         }
     };
 
-    const inputClass = (error?: any) => `form-input flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4 placeholder:text-gray-400 ${error ? 'border-red-500 focus:border-red-500' : ''}`;
+    const inputClass = (error?: FieldError) => `form-input flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4 placeholder:text-gray-400 ${error ? 'border-red-500 focus:border-red-500' : ''}`;
+
+    const onError = (errors: FieldErrors<ProductFormValues>) => {
+        console.error('Form validation errors:', errors);
+        toast.error(t('validation.common_error'));
+    };
 
     return (
-        <form onSubmit={form.handleSubmit(onSubmit as any)} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <form onSubmit={form.handleSubmit(onSubmit, onError)} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 flex flex-col gap-8">
                 <div className="bg-surface-dark rounded-xl p-6 shadow-sm border border-white/10">
                     <h2 className="text-lg font-bold text-white mb-6">{t('admin.product.general_info')}</h2>
@@ -284,7 +290,6 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                             <select
                                 {...form.register('isPublished')}
                                 className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
-                                onChange={(e) => form.setValue('isPublished', e.target.value === 'true')}
                             >
                                 <option value="true">{t('admin.product.published')}</option>
                                 <option value="false">{t('admin.product.draft')}</option>
@@ -298,7 +303,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                                 className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
                             >
                                 <option value="">{t('admin.product.select_category')}</option>
-                                {categories?.map((cat: any) => (
+                                {categories?.map((cat: Category) => (
                                     <option key={cat._id} value={cat._id}>{cat.name}</option>
                                 ))}
                             </select>
@@ -312,7 +317,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                                 className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
                             >
                                 <option value="">{t('admin.product.select_brand')}</option>
-                                {brands?.map((brand: any) => (
+                                {brands?.map((brand: Brand) => (
                                     <option key={brand._id} value={brand._id}>{brand.name}</option>
                                 ))}
                             </select>

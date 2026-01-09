@@ -9,17 +9,17 @@ import { useEffect } from 'react';
 import NewProductDrawer from '../components/NewProductDrawer';
 
 const LanguageWrapper = ({ children }: { children: React.ReactNode }) => {
-    const { language, direction } = useLanguageStore();
+    const { language, dir } = useLanguageStore();
     const { fetchConfigs } = useConfigStore();
 
     useEffect(() => {
-        document.documentElement.dir = direction;
+        document.documentElement.dir = dir;
         document.documentElement.lang = language;
-    }, [language, direction]);
+    }, [language, dir]);
 
     useEffect(() => {
         fetchConfigs();
-    }, []);
+    }, [fetchConfigs]);
 
     return <>{children}</>;
 };

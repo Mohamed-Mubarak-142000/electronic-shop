@@ -8,14 +8,7 @@ import { cn } from '@/lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userService } from '@/services/userService';
 import { useTranslation } from '@/hooks/useTranslation';
-
-type User = {
-    _id: string;
-    name: string;
-    email: string;
-    isAdmin: boolean;
-    createdAt: string;
-};
+import { User } from '@/types';
 
 export default function CustomersTable() {
     const { t } = useTranslation();
@@ -68,9 +61,9 @@ export default function CustomersTable() {
         {
             header: t('admin.table.role'),
             cell: (row) => (
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${row.isAdmin ? 'bg-primary/20 text-primary' : 'bg-gray-700/50 text-gray-300'
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${row.role === 'admin' ? 'bg-primary/20 text-primary' : 'bg-gray-700/50 text-gray-300'
                     }`}>
-                    {row.isAdmin ? t('admin.role.admin') : t('admin.role.customer')}
+                    {row.role === 'admin' ? t('admin.role.admin') : t('admin.role.customer')}
                 </span>
             )
         },

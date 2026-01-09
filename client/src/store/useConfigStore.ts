@@ -1,17 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { configService } from '@/services/configService';
+import { Config } from '@/types';
 
 interface ConfigState {
-    configs: Record<string, any>;
+    configs: Config;
     isLoading: boolean;
     fetchConfigs: () => Promise<void>;
-    updateConfigs: (data: Record<string, any>) => Promise<void>;
+    updateConfigs: (data: Partial<Config>) => Promise<void>;
 }
 
 export const useConfigStore = create<ConfigState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             configs: {
                 language: 'en',
                 currency: 'USD',
@@ -33,7 +34,7 @@ export const useConfigStore = create<ConfigState>()(
                     set({ isLoading: false });
                 }
             },
-            updateConfigs: async (data) => {
+            updateConfigs: async (data: Partial<Config>) => {
                 set({ isLoading: true });
                 try {
                     const newConfigs = await configService.updateConfigs(data);

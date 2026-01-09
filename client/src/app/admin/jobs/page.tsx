@@ -82,10 +82,10 @@ export default function JobsPage() {
                     body: formData,
                 });
                 const data = await response.json();
-                if (data.url) {
+                if (data.path) {
                     setNewJob(prev => ({
                         ...prev,
-                        data: { ...prev.data, imageUrl: data.url }
+                        data: { ...prev.data, imageUrl: data.path }
                     }));
                     toast.success('Image uploaded successfully');
                 }

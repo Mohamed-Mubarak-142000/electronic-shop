@@ -125,7 +125,7 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
                 }
             };
 
-            let baseUrl = 'http://localhost:5000/api';
+            const baseUrl = 'http://localhost:5000/api';
 
             await axios.post(`${baseUrl}/orders`, orderData, config);
 
@@ -231,7 +231,7 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="font-bold text-sm text-slate-900 dark:text-white truncate">{item.name}</p>
-                                    <p className="text-xs text-slate-500 font-medium mt-0.5">{item.quantity} x {currency}{item.price.toFixed(2)}</p>>>
+                                    <p className="text-xs text-slate-500 font-medium mt-0.5">{item.quantity} x {currency}{item.price.toFixed(2)}</p>
                                 </div>
                                 <div className="font-bold text-sm tabular-nums">
                                     {currency}{(item.price * item.quantity).toFixed(2)}

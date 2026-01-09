@@ -1,4 +1,5 @@
 import api from './api';
+import { Order, Product } from '../types';
 
 export interface DashboardStats {
     totalProducts: number;
@@ -14,8 +15,8 @@ export interface DashboardStats {
         users: number;
     };
     revenueGraphData: number[];
-    recentOrders: any[];
-    lowStockProducts: any[];
+    recentOrders: Order[];
+    lowStockProducts: Product[];
 }
 
 export const getDashboardStats = async (): Promise<DashboardStats> => {

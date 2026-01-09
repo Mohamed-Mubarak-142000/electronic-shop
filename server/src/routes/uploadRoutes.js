@@ -14,7 +14,16 @@ router.post('/', upload.single('image'), (req, res) => {
     res.json({ path: req.file.path });
 });
 
+router.post('/cloudinary', upload.single('image'), (req, res) => {
+    res.json({ path: req.file.path });
+});
+
 router.post('/multiple', upload.array('images', 10), (req, res) => {
+    const filePaths = req.files.map(file => file.path);
+    res.send(filePaths);
+});
+
+router.post('/cloudinary/multiple', upload.array('images', 10), (req, res) => {
     const filePaths = req.files.map(file => file.path);
     res.send(filePaths);
 });

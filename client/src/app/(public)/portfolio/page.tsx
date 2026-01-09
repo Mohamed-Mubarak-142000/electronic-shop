@@ -32,13 +32,13 @@ interface Skill {
 interface Project {
     _id: string;
     title: string;
-    titleAr: string;
+    titleAr?: string;
     description: string;
-    descriptionAr: string;
+    descriptionAr?: string;
     images: string[];
-    client: string;
-    clientAr: string;
-    completedAt: string;
+    client?: string;
+    clientAr?: string;
+    completedAt?: string;
     category?: string;
 }
 

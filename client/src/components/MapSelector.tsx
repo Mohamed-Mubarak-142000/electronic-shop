@@ -17,6 +17,7 @@ export default function MapSelector({ value, onChange }: MapSelectorProps) {
     const [mapError, setMapError] = useState<string | null>(null);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMounted(true);
     }, []);
 

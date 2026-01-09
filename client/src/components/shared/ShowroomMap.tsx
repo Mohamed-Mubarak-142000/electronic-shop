@@ -16,6 +16,7 @@ export default function ShowroomMap({ location, name }: ShowroomMapProps) {
     const [showPopup, setShowPopup] = useState(true);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMounted(true);
     }, []);
 

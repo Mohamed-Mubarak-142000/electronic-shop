@@ -1,27 +1,28 @@
 import api from './api';
+import { User, PaginationParams, UserPaginatedResponse } from '../types';
 
 export const userService = {
-    async getUsers(params: any) {
+    async getUsers(params: PaginationParams): Promise<UserPaginatedResponse> {
         const response = await api.get('/users', { params });
         return response.data;
     },
 
-    async getUser(id: string) {
+    async getUser(id: string): Promise<User> {
         const response = await api.get(`/users/${id}`);
         return response.data;
     },
 
-    async updateUser(id: string, data: any) {
+    async updateUser(id: string, data: Partial<User>): Promise<User> {
         const response = await api.put(`/users/${id}`, data);
         return response.data;
     },
 
-    async deleteUser(id: string) {
+    async deleteUser(id: string): Promise<void> {
         const response = await api.delete(`/users/${id}`);
         return response.data;
     },
 
-    async updateProfile(data: any) {
+    async updateProfile(data: Partial<User> | FormData): Promise<User> {
         const response = await api.put('/users/profile', data);
         return response.data;
     },

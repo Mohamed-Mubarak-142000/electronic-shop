@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
@@ -31,8 +31,8 @@ export default function SettingsPage() {
     const settingsSchema = createSettingsSchema(t);
 
     const form = useForm<SettingsFormValues>({
-        resolver: zodResolver(settingsSchema),
-        defaultValues: configs as SettingsFormValues,
+        resolver: zodResolver(settingsSchema) as Resolver<SettingsFormValues>,
+        defaultValues: configs as unknown as SettingsFormValues,
     });
 
     useEffect(() => {
@@ -41,7 +41,7 @@ export default function SettingsPage() {
 
     useEffect(() => {
         if (configs) {
-            form.reset(configs);
+            form.reset(configs as unknown as SettingsFormValues);
         }
     }, [configs, form]);
 

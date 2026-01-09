@@ -2,13 +2,14 @@
 
 import React, { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useForm } from 'react-hook-form';
+import { useForm, Resolver, FieldError } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { brandService, categoryService } from '@/services/metadataService';
 import { useTranslation } from '@/hooks/useTranslation';
+import { Brand } from '@/types';
 
 const brandSchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -23,7 +24,7 @@ const brandSchema = z.object({
 type BrandFormValues = z.infer<typeof brandSchema>;
 
 interface BrandFormProps {
-    initialData?: any;
+    initialData?: Brand;
 }
 
 export default function BrandForm({ initialData }: BrandFormProps) {
@@ -35,13 +36,13 @@ export default function BrandForm({ initialData }: BrandFormProps) {
     const [uploading, setUploading] = React.useState(false);
 
     const form = useForm<BrandFormValues>({
-        resolver: zodResolver(brandSchema) as any,
+        resolver: zodResolver(brandSchema) as Resolver<BrandFormValues>,
         defaultValues: {
             name: initialData?.name || '',
             nameAr: initialData?.nameAr || '',
             description: initialData?.description || '',
             descriptionAr: initialData?.descriptionAr || '',
-            logoUrl: initialData?.logoUrl || '',
+            logoUrl: initialData?.logoUrl || initialData?.image || '',
             isPublished: initialData?.isPublished ?? true,
             category: typeof initialData?.category === 'string' ? initialData.category : initialData?.category?._id || '',
         },
@@ -55,7 +56,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                 nameAr: initialData.nameAr,
                 description: initialData.description,
                 descriptionAr: initialData.descriptionAr,
-                logoUrl: initialData.logoUrl,
+                logoUrl: initialData.logoUrl || initialData.image,
                 isPublished: initialData.isPublished ?? true,
                 category: typeof initialData.category === 'string' ? initialData.category : initialData.category?._id || '',
             });
@@ -74,8 +75,8 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                     body: formData,
                 });
                 const data = await response.json();
-                if (data.url) {
-                    form.setValue('logoUrl', data.url);
+                if (data.path) {
+                    form.setValue('logoUrl', data.path);
                     toast.success('Image uploaded successfully');
                 } else {
                     throw new Error('Invalid response from server');
@@ -96,19 +97,19 @@ export default function BrandForm({ initialData }: BrandFormProps) {
             toast.success('Brand created successfully');
             router.push('/admin/brands');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to create brand');
         }
     });
 
     const updateMutation = useMutation({
-        mutationFn: (data: any) => brandService.updateBrand(initialData?._id, data),
+        mutationFn: (data: BrandFormValues) => brandService.updateBrand(initialData?._id!, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['brands'] });
             toast.success('Brand updated successfully');
             router.push('/admin/brands');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to update brand');
         }
     });
@@ -121,10 +122,10 @@ export default function BrandForm({ initialData }: BrandFormProps) {
         }
     };
 
-    const inputClass = (error?: any) => `form-input flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4 placeholder:text-gray-400 ${error ? 'border-red-500 focus:border-red-500' : ''}`;
+    const inputClass = (error?: FieldError) => `form-input flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4 placeholder:text-gray-400 ${error ? 'border-red-500 focus:border-red-500' : ''}`;
 
     return (
-        <form onSubmit={form.handleSubmit(onSubmit as any)} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column: Main Form Data (2/3 width) */}
             <div className="lg:col-span-2 flex flex-col gap-8">
                 {/* General Information Card */}
