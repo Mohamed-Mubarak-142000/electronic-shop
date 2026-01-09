@@ -8,6 +8,7 @@ import { categoryService, brandService } from '@/services/metadataService';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
+import { Category, Brand } from '@/types';
 
 export default function ProductsPage() {
     const { t } = useTranslation();
@@ -18,8 +19,8 @@ export default function ProductsPage() {
     const [stockStatus, setStockStatus] = useState('');
     const [sort, setSort] = useState('-createdAt');
 
-    const [categories, setCategories] = useState<unknown[]>([]);
-    const [brands, setBrands] = useState<unknown[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [brands, setBrands] = useState<Brand[]>([]);
 
     const { data: stats, isLoading: statsLoading } = useQuery({
         queryKey: ['product-stats'],
@@ -124,7 +125,7 @@ export default function ProductsPage() {
                         onChange={(e) => setCategory(e.target.value)}
                     >
                         <option value="">{t('admin.table.all_categories')}</option>
-                        {categories.map(cat => (
+                        {categories.map((cat) => (
                             <option key={cat._id} value={cat._id}>{cat.name}</option>
                         ))}
                     </select>
@@ -134,7 +135,7 @@ export default function ProductsPage() {
                         onChange={(e) => setBrand(e.target.value)}
                     >
                         <option value="">{t('admin.table.all_brands')}</option>
-                        {brands.map(br => (
+                        {brands.map((br) => (
                             <option key={br._id} value={br._id}>{br.name}</option>
                         ))}
                     </select>

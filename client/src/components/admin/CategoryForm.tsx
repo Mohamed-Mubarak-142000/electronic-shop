@@ -9,7 +9,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { categoryService, brandService } from '@/services/metadataService';
 import { useTranslation } from '@/hooks/useTranslation';
-import { Category } from '@/types';
+import { Category, Brand } from '@/types';
 
 const categorySchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -42,9 +42,9 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
             nameAr: initialData?.nameAr || '',
             description: initialData?.description || '',
             descriptionAr: initialData?.descriptionAr || '',
-            imageUrl: initialData?.image || (initialData as any)?.imageUrl || '',
+            imageUrl: initialData?.image || initialData?.imageUrl || '',
             isPublished: initialData?.isPublished ?? true,
-            brand: (initialData as any)?.brand ? (typeof (initialData as any).brand === 'string' ? (initialData as any).brand : (initialData as any).brand?._id || '') : '',
+            brand: initialData?.brand ? (typeof initialData.brand === 'string' ? initialData.brand : initialData.brand._id || '') : '',
         },
         mode: 'onChange'
     });
@@ -56,9 +56,9 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                 nameAr: initialData.nameAr,
                 description: initialData.description,
                 descriptionAr: initialData.descriptionAr,
-                imageUrl: initialData.image || (initialData as any)?.imageUrl,
+                imageUrl: initialData.image || initialData.imageUrl,
                 isPublished: initialData.isPublished ?? true,
-                brand: (initialData as any)?.brand ? (typeof (initialData as any).brand === 'string' ? (initialData as any).brand : (initialData as any).brand?._id || '') : '',
+                brand: initialData.brand ? (typeof initialData.brand === 'string' ? initialData.brand : initialData.brand._id || '') : '',
             });
         }
     }, [initialData, form]);
@@ -103,7 +103,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
     });
 
     const updateMutation = useMutation({
-        mutationFn: (data: CategoryFormValues) => categoryService.updateCategory(initialData?._id!, data),
+        mutationFn: (data: CategoryFormValues) => categoryService.updateCategory(initialData!._id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['categories'] });
             toast.success('Category updated successfully');
@@ -246,7 +246,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                                 className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
                             >
                                 <option value="">{t('admin.product.select_brand')}</option>
-                                {brandsList.map((brand: any) => (
+                                {brandsList.map((brand: Brand) => (
                                     <option key={brand._id} value={brand._id}>{brand.name}</option>
                                 ))}
                             </select>

@@ -101,6 +101,11 @@ io.use(async (socket, next) => {
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.user?.name} (${socket.id})`);
 
+    // Auto-join 'notifications' room for non-admin users
+    if (socket.user && socket.user.role !== 'admin') {
+        socket.join('notifications');
+    }
+
     socket.on('join_room', (roomId) => {
         // Validation: user can only join their own room unless they are admin
         if (socket.user.role !== 'admin' && socket.user._id.toString() !== roomId) {

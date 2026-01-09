@@ -1,9 +1,9 @@
 'use client';
 
 import { useTranslation } from '@/hooks/useTranslation';
-import Image from 'next/image';
+import { Product } from '@/types';
 
-export default function LowStockAlert({ products }: { products: any[] }) {
+export default function LowStockAlert({ products }: { products?: Product[] }) {
     const { t } = useTranslation();
 
     return (

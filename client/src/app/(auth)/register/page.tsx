@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import * as z from 'zod';
 
 export default function RegisterPage() {
 

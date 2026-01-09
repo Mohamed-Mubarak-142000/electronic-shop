@@ -68,7 +68,7 @@ export default function ProductsTable({ filters }: ProductsTableProps) {
             queryClient.invalidateQueries({ queryKey: ['product-stats'] });
             toast.success('Product deleted successfully');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to delete product');
         }
     });

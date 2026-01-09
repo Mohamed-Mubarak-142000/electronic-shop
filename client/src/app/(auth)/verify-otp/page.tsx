@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, Suspense } from 'react';
+import { AxiosError } from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authService } from '@/services/authService';
 import { toast } from 'react-hot-toast';
@@ -25,8 +26,8 @@ function VerifyOtpContent() {
             await authService.verifyOTP({ email, otp });
             toast.success(language === 'ar' ? 'تم تفعيل الحساب بنجاح' : 'Account verified successfully');
             router.push('/');
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Verification failed');
+        } catch (error: unknown) {
+            toast.error((error as AxiosError<{ message: string }>).response?.data?.message || 'Verification failed');
         } finally {
             setLoading(false);
         }

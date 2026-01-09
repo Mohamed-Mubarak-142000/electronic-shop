@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useWishlistStore } from "@/store/useWishlistStore";
+import { useWishlistStore, WishlistItem } from "@/store/useWishlistStore";
 import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-hot-toast";
@@ -11,7 +11,7 @@ export default function WishlistPage() {
     const { addItem } = useCartStore();
     const { user } = useAuthStore();
 
-    const handleAddToCart = (item: any) => {
+    const handleAddToCart = (item: WishlistItem) => {
         if (!user) {
             toast.error("Please login to add items to cart");
             return;

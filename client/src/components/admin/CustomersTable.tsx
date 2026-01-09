@@ -4,7 +4,6 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { DataTable, Column } from '@/components/ui/data-table';
 import Pagination from './ui/Pagination';
-import { cn } from '@/lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userService } from '@/services/userService';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -27,7 +26,7 @@ export default function CustomersTable() {
             queryClient.invalidateQueries({ queryKey: ['users'] });
             toast.success('User deleted successfully');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to delete user');
         }
     });

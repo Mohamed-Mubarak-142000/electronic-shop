@@ -8,7 +8,6 @@ import * as z from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import { authService } from '@/services/authService';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/useAuthStore';
 
 // Existing schema
 const formSchema = z.object({
@@ -18,7 +17,6 @@ const formSchema = z.object({
 
 export default function LoginPage() {
     const router = useRouter();
-    const { login } = useAuthStore();
     const [error, setError] = useState('');
 
     const form = useForm<z.infer<typeof formSchema>>({

@@ -2,41 +2,7 @@
 
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
-
-type Order = {
-    _id: string;
-    user: {
-        name: string;
-        email: string;
-    };
-    orderItems: {
-        name: string;
-        qty: number;
-        image: string;
-        price: number;
-        product: string;
-    }[];
-    shippingAddress: {
-        address: string;
-        city: string;
-        postalCode: string;
-        country: string;
-    };
-    paymentMethod: string;
-    paymentResult?: {
-        status: string;
-        update_time: string;
-    };
-    itemsPrice: number;
-    taxPrice: number;
-    shippingPrice: number;
-    totalPrice: number;
-    isPaid: boolean;
-    paidAt?: string;
-    isDelivered: boolean;
-    deliveredAt?: string;
-    status?: string;
-};
+import { Order } from '@/types';
 
 interface OrderDetailsDrawerProps {
     order?: Order | null;

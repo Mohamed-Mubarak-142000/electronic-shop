@@ -17,7 +17,7 @@ interface Project {
 export default function AdminPortfolioPage() {
     const { t } = useTranslation();
     const [projects, setProjects] = useState<Project[]>([]);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [formData, setFormData] = useState({
@@ -36,10 +36,10 @@ export default function AdminPortfolioPage() {
         try {
             const data = await portfolioService.getPortfolios();
             setProjects(data);
-        } catch (error) {
+        } catch {
             toast.error('Failed to fetch projects');
         } finally {
-            setLoading(false);
+            // setLoading(false);
         }
     };
 
@@ -79,10 +79,10 @@ export default function AdminPortfolioPage() {
                 }
                 
                 setUploading(false);
-            } catch (error: any) {
+            } catch (error: unknown) {
                 console.error(error);
                 setUploading(false);
-                toast.error(error.message || 'Image upload failed');
+                toast.error((error as Error).message || 'Image upload failed');
             }
         }
     };
@@ -118,7 +118,7 @@ export default function AdminPortfolioPage() {
             });
             setEditingId(id);
             setShowModal(true);
-        } catch (error) {
+        } catch {
             toast.error('Failed to load project details');
         }
     };
@@ -136,7 +136,7 @@ export default function AdminPortfolioPage() {
             setShowModal(false);
             resetForm();
             fetchProjects();
-        } catch (error) {
+        } catch {
             toast.error('Failed to save project');
         }
     };
@@ -147,7 +147,7 @@ export default function AdminPortfolioPage() {
             await portfolioService.deletePortfolio(id);
             toast.success('Project deleted');
             fetchProjects();
-        } catch (error) {
+        } catch {
             toast.error('Failed to delete project');
         }
     };

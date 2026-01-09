@@ -9,7 +9,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { brandService, categoryService } from '@/services/metadataService';
 import { useTranslation } from '@/hooks/useTranslation';
-import { Brand } from '@/types';
+import { Brand, Category } from '@/types';
 
 const brandSchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -103,7 +103,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
     });
 
     const updateMutation = useMutation({
-        mutationFn: (data: BrandFormValues) => brandService.updateBrand(initialData?._id!, data),
+        mutationFn: (data: BrandFormValues) => brandService.updateBrand(initialData!._id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['brands'] });
             toast.success('Brand updated successfully');
@@ -246,7 +246,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                 className="form-select flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4"
                             >
                                 <option value="">{t('admin.product.select_category')}</option>
-                                {categoriesList.map((cat: any) => (
+                                {categoriesList.map((cat: Category) => (
                                     <option key={cat._id} value={cat._id}>{cat.name}</option>
                                 ))}
                             </select>

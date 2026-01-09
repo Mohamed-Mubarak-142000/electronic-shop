@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import CustomersTable from '@/components/admin/CustomersTable';
 import { useTranslation } from '@/hooks/useTranslation';
 

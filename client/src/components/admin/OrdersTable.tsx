@@ -3,24 +3,11 @@
 import { useState } from 'react';
 import { DataTable, Column } from '@/components/ui/data-table';
 import Pagination from './ui/Pagination';
-import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { orderService } from '@/services/orderService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
-
-type Order = {
-    _id: string;
-    user: {
-        name: string;
-        email: string;
-    };
-    createdAt: string;
-    totalPrice: number;
-    isPaid: boolean;
-    isDelivered: boolean;
-    status?: string; // Derived
-};
+import { Order } from '@/types';
 
 export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order) => void }) {
     const { t } = useTranslation();
@@ -38,10 +25,7 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
     const totalItems = data?.total || 0; // Assuming API returns total count
 
     // Transform API data to Table format if needed
-    const orders: Order[] = ordersData.map((order: Order & { status?: string }) => ({
-        ...order,
-        status: order.isDelivered ? 'Delivered' : (order.isPaid ? 'Paid' : 'Pending'), 
-    }));
+    const orders: Order[] = ordersData;
 
     const columns: Column<Order>[] = [
         {
@@ -106,7 +90,7 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
         {
             header: t('admin.table.actions'),
             className: 'text-right',
-            cell: (row) => (
+            cell: () => (
                 <button className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors">
                     <span className="material-symbols-outlined">visibility</span>
                 </button>

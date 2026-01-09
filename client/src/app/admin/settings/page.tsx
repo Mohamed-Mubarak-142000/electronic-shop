@@ -11,7 +11,8 @@ import { Label } from '@/components/ui/label';
 import { useConfigStore } from '@/store/useConfigStore';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const createSettingsSchema = (t: any) => z.object({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createSettingsSchema = (t: (key: any, params?: Record<string, string | number>) => string) => z.object({
     language: z.enum(['en', 'ar']),
     currency: z.enum(['USD', 'EGP', 'AED']),
     vodafoneCashNumber: z.string().min(1, t('validation.required')),
@@ -49,7 +50,7 @@ export default function SettingsPage() {
         try {
             await updateConfigs(data);
             toast.success(t('settings.success'));
-        } catch (error) {
+        } catch {
             toast.error(t('settings.error'));
         }
     };

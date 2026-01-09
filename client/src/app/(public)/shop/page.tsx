@@ -6,15 +6,16 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import ProductCard from "@/components/shared/ProductCard";
 import { productService } from "@/services/productService";
 import { categoryService, brandService } from "@/services/metadataService";
+import { Product, Category, Brand } from "@/types";
 
 function ShopContent() {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const [products, setProducts] = useState<any[]>([]);
-    const [categories, setCategories] = useState<any[]>([]);
-    const [brands, setBrands] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [brands, setBrands] = useState<Brand[]>([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
     const [pages, setPages] = useState(1);
@@ -43,7 +44,7 @@ function ShopContent() {
     const fetchProducts = useCallback(async () => {
         setLoading(true);
         try {
-            const params: any = {
+            const params: Record<string, string | number> = {
                 page,
                 limit: 9,
                 sort: sortBy

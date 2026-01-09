@@ -8,14 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { brandService } from '@/services/metadataService';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
-
-type Brand = {
-    _id: string;
-    logoUrl: string;
-    name: string;
-    slug: string;
-    description: string;
-};
+import { Brand } from '@/types';
 
 interface BrandsTableProps {
     filters: {
@@ -40,7 +33,7 @@ export default function BrandsTable({ filters }: BrandsTableProps) {
     const filteredBrands = useMemo(() => {
         return brands.filter(brand =>
             brand.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-            brand.description.toLowerCase().includes(filters.searchTerm.toLowerCase())
+            (brand.description && brand.description.toLowerCase().includes(filters.searchTerm.toLowerCase()))
         );
     }, [brands, filters.searchTerm]);
 
@@ -55,7 +48,7 @@ export default function BrandsTable({ filters }: BrandsTableProps) {
             queryClient.invalidateQueries({ queryKey: ['brand-stats'] });
             toast.success('Brand deleted successfully');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to delete brand');
         }
     });

@@ -11,10 +11,8 @@ interface PaginationProps {
 
 export default function Pagination({
     currentPage = 1,
-    totalPages = 10,
     totalItems = 100,
     itemsPerPage = 10,
-    onPageChange,
     className = ''
 }: PaginationProps) {
     const startItem = (currentPage - 1) * itemsPerPage + 1;

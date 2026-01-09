@@ -8,7 +8,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "react-hot-toast";
-import { Globe, User as UserIcon } from "lucide-react";
+import { User as UserIcon } from "lucide-react";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -75,22 +75,6 @@ export default function Navbar() {
                         >
                             {t('nav.portfolio')}
                         </Link>
-                        {/* Desktop Language Switcher */}
-                        <button
-                            onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
-                            className="text-sm font-medium text-white hover:text-primary transition-colors flex items-center gap-2"
-                        >
-                            <span className="material-symbols-outlined text-[18px]">language</span>
-                            <span>{language === 'en' ? 'العربية' : 'English'}</span>
-                        </button>
-                        {user?.role === 'admin' && (
-                            <Link
-                                href="/admin"
-                                className="text-sm font-medium text-primary hover:text-white transition-colors"
-                            >
-                                {t('nav.admin')}
-                            </Link>
-                        )}
                     </div>
 
                     {/* Action Buttons */}
@@ -149,16 +133,6 @@ export default function Navbar() {
                                             <span className="material-symbols-outlined text-lg">language</span>
                                             {language === 'ar' ? 'English' : 'العربية'}
                                         </button>
-
-                                        {user.role === 'admin' && (
-                                            <Link
-                                                href="/admin"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 text-sm text-primary transition-colors font-bold"
-                                            >
-                                                <span className="material-symbols-outlined text-lg">dashboard</span>
-                                                {t('nav.admin')}
-                                            </Link>
-                                        )}
 
                                         <div className="h-px bg-surface-highlight mx-2 my-1"></div>
 

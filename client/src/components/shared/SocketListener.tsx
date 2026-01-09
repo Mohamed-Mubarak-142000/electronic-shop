@@ -37,10 +37,16 @@ export default function SocketListener() {
                 icon: '🔔',
                 duration: 5000,
             });
-            // Optionally play sound
         });
 
-        socket.on('order_status_updated', (data: unknown) => {
+        socket.on('new_product', (product: { name: string }) => {
+             toast(`New product available: ${product.name}`, {
+                 icon: '🆕',
+                 duration: 6000,
+             });
+        });
+
+        socket.on('order_status_updated', () => {
              // This might be redundant if covered by 'new_notification'
              // But if specific UI update needed:
              // invalidate queries?
@@ -49,6 +55,7 @@ export default function SocketListener() {
         return () => {
             socket.off('connect');
             socket.off('new_notification');
+            socket.off('new_product');
             socket.off('order_status_updated');
         };
     }, [socket, user, router]);

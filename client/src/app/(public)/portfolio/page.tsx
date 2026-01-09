@@ -6,11 +6,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAuthStore } from '@/store/useAuthStore';
 import Link from 'next/link';
+import { Portfolio, PortfolioOwnerResponse } from '@/types';
 import {
     Briefcase,
     MapPin,
     Award,
-    Calendar,
     ExternalLink,
     Plus,
     Edit3,
@@ -22,46 +22,10 @@ import {
     Zap
 } from 'lucide-react';
 
-interface Skill {
-    name: string;
-    nameAr: string;
-    level: string;
-    icon: string;
-}
-
-interface Project {
-    _id: string;
-    title: string;
-    titleAr?: string;
-    description: string;
-    descriptionAr?: string;
-    images: string[];
-    client?: string;
-    clientAr?: string;
-    completedAt?: string;
-    category?: string;
-}
-
-interface Owner {
-    _id: string;
-    name: string;
-    email: string;
-    phone?: string;
-    jobTitle?: string;
-    jobTitleAr?: string;
-    bio?: string;
-    bioAr?: string;
-    skills?: Skill[];
-    experience?: number;
-    isHiring?: boolean;
-    location?: { lat: number; lng: number };
-    address?: { city: string; state: string };
-}
-
-const ProjectCard = ({ project, index, language }: { project: Project; index: number; language: string }) => {
+const ProjectCard = ({ project, index, language }: { project: Portfolio; index: number; language: string }) => {
     const [currentImage, setCurrentImage] = useState(0);
 
-    const nextImage = (e: any) => {
+    const nextImage = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         if (project.images && project.images.length > 0) {
@@ -69,7 +33,7 @@ const ProjectCard = ({ project, index, language }: { project: Project; index: nu
         }
     };
 
-    const prevImage = (e: any) => {
+    const prevImage = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         if (project.images && project.images.length > 0) {
@@ -144,9 +108,9 @@ const ProjectCard = ({ project, index, language }: { project: Project; index: nu
 };
 
 export default function PortfolioDashboard() {
-    const [data, setData] = useState<{ owner: Owner; portfolios: Project[] } | null>(null);
+    const [data, setData] = useState<PortfolioOwnerResponse | null>(null);
     const [loading, setLoading] = useState(true);
-    const { language, t } = useTranslation();
+    const { language } = useTranslation();
     const { user } = useAuthStore();
 
     const isAdmin = user?.role === 'admin' && user?._id === data?.owner?._id;

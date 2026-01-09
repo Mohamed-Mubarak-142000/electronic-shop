@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import dashboardService, { DashboardStats as StatsType } from '@/services/dashboardService';
+import { DashboardStats as StatsType } from '@/services/dashboardService';
 import { useCurrency } from '@/hooks/useCurrency';
 import { useTranslation } from '@/hooks/useTranslation';
 

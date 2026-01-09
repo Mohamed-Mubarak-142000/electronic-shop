@@ -8,14 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { categoryService } from '@/services/metadataService';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
-
-type Category = {
-    _id: string;
-    imageUrl: string;
-    name: string;
-    slug: string;
-    description: string;
-};
+import { Category } from '@/types';
 
 interface CategoriesTableProps {
     filters: {
@@ -40,7 +33,7 @@ export default function CategoriesTable({ filters }: CategoriesTableProps) {
     const filteredCategories = useMemo(() => {
         return categories.filter(cat =>
             cat.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-            cat.description.toLowerCase().includes(filters.searchTerm.toLowerCase())
+            (cat.description && cat.description.toLowerCase().includes(filters.searchTerm.toLowerCase()))
         );
     }, [categories, filters.searchTerm]);
 
@@ -55,7 +48,7 @@ export default function CategoriesTable({ filters }: CategoriesTableProps) {
             queryClient.invalidateQueries({ queryKey: ['category-stats'] });
             toast.success('Category deleted successfully');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to delete category');
         }
     });

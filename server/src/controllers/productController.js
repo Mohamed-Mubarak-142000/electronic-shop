@@ -134,9 +134,8 @@ export const createProduct = async (req, res) => {
         const createdProduct = await Product.create(product);
 
         // Emit socket event for real-time notification
-        const io = req.app.get('io');
-        if (io) {
-            io.emit('new_product', createdProduct);
+        if (req.io) {
+            req.io.to('notifications').emit('new_product', createdProduct);
         }
 
         res.status(201).json(createdProduct);

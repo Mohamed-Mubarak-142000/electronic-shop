@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import OrdersTable from '@/components/admin/OrdersTable';
 import OrderDetailsDrawer from '@/components/admin/OrderDetailsDrawer';
 import { useTranslation } from '@/hooks/useTranslation';
+import { Order } from '@/types';
 
 export default function OrdersPage() {
     const { t } = useTranslation();
-    const [selectedOrder, setSelectedOrder] = useState<any>(null);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
     return (
         <div className="h-full flex flex-col relative overflow-hidden">

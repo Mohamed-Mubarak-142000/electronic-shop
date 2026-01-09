@@ -8,20 +8,7 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import { toast } from "react-hot-toast";
 import ProductCard from "@/components/shared/ProductCard";
 import { useCurrency } from "@/hooks/useCurrency";
-
-interface Product {
-    _id: string;
-    name: string;
-    description: string;
-    price: number;
-    images: string[];
-    stock: number;
-    brand?: { _id: string; name: string };
-    category?: { _id: string; name: string };
-    attributes?: Record<string, string>;
-    tags?: string[];
-    slug: string;
-}
+import { Product } from "@/types";
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -60,8 +47,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                         setRelatedProducts(relatedData.products.filter((p: Product) => p._id !== data._id));
                     }
                 }
-            } catch (err: any) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError((err as Error).message);
             } finally {
                 setLoading(false);
             }
@@ -91,7 +78,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
             addItem({
                 id: product._id,
                 name: product.name,
-                price: product.price,
+                price: (product.isDiscountActive && product.salePrice) ? product.salePrice : product.price,
                 quantity: quantity,
                 imageUrl: product.images[0] || "",
                 inStock: product.stock > 0
@@ -147,7 +134,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                     <Link href="/" className="hover:text-primary transition-colors">Home</Link>
                     <span className="material-symbols-outlined text-base">chevron_right</span>
                     <Link href="/shop" className="hover:text-primary transition-colors">Shop</Link>
-                    {product.category && (
+                    {product.category && typeof product.category === 'object' && (
                         <>
                             <span className="material-symbols-outlined text-base">chevron_right</span>
                             <Link href={`/shop?category=${product.category._id}`} className="hover:text-primary transition-colors">
@@ -223,12 +210,27 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                         </div>
                         <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-bold text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-4">
                             {product.name}
-                            {product.brand && (
+                            {product.brand && typeof product.brand === 'object' && (
                                 <span className="block text-2xl lg:text-3xl font-normal text-slate-500 dark:text-slate-400 mt-1">by {product.brand.name}</span>
                             )}
                         </h1>
                         <div className="flex items-end gap-4 mb-6">
-                            <span className="text-4xl font-bold text-primary">{formatPrice(product.price)}</span>
+                            {product.isDiscountActive && product.salePrice ? (
+                                <div className="flex flex-col">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-4xl font-bold text-red-500">{formatPrice(product.salePrice)}</span>
+                                        <span className="text-xl text-slate-400 decoration-1 line-through">{formatPrice(product.price)}</span>
+                                    </div>
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <span className="bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                                            {Math.round(((product.price - product.salePrice) / product.price) * 100)}% OFF
+                                        </span>
+                                        <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">Limited Time Offer</span>
+                                    </div>
+                                </div>
+                            ) : (
+                                <span className="text-4xl font-bold text-primary">{formatPrice(product.price)}</span>
+                            )}
                         </div>
                         <div className="p-4 rounded-xl bg-slate-50 dark:bg-surface-dark border border-slate-100 dark:border-transparent mb-8">
                             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -257,13 +259,18 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                         <div className="flex flex-col gap-4 py-8 mt-4 border-t border-slate-200 dark:border-surface-highlight">
                             <div className="flex items-center gap-3 text-sm">
                                 <span className="text-slate-500 dark:text-[#95c6a9] font-semibold min-w-[100px]">Category:</span>
-                                <Link href={`/shop?category=${product.category?._id}`} className="text-slate-900 dark:text-white hover:text-primary transition-colors font-medium">
-                                    {product.category?.name || 'N/A'}
+                                <Link 
+                                    href={`/shop?category=${typeof product.category === 'object' ? product.category._id : product.category}`} 
+                                    className="text-slate-900 dark:text-white hover:text-primary transition-colors font-medium"
+                                >
+                                    {typeof product.category === 'object' ? product.category.name : 'N/A'}
                                 </Link>
                             </div>
                             <div className="flex items-center gap-3 text-sm">
                                 <span className="text-slate-500 dark:text-[#95c6a9] font-semibold min-w-[100px]">Brand:</span>
-                                <span className="text-slate-900 dark:text-white font-medium">{product.brand?.name || 'N/A'}</span>
+                                <span className="text-slate-900 dark:text-white font-medium">
+                                    {typeof product.brand === 'object' ? product.brand.name : 'N/A'}
+                                </span>
                             </div>
                             {product.tags && product.tags.length > 0 && (
                                 <div className="flex items-center gap-3 text-sm">
@@ -372,11 +379,15 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                                 <div className="space-y-4">
                                     <div className="flex justify-between pb-4 border-b border-slate-200 dark:border-surface-highlight">
                                         <span className="text-slate-500 dark:text-[#95c6a9]">Brand</span>
-                                        <span className="font-medium text-slate-900 dark:text-white">{product.brand?.name || 'N/A'}</span>
+                                        <span className="font-medium text-slate-900 dark:text-white">
+                                            {typeof product.brand === 'object' ? product.brand.name : 'N/A'}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between pb-4 border-b border-slate-200 dark:border-surface-highlight">
                                         <span className="text-slate-500 dark:text-[#95c6a9]">Category</span>
-                                        <span className="font-medium text-slate-900 dark:text-white">{product.category?.name || 'N/A'}</span>
+                                        <span className="font-medium text-slate-900 dark:text-white">
+                                            {typeof product.category === 'object' ? product.category.name : 'N/A'}
+                                        </span>
                                     </div>
                                     {product.attributes && Object.entries(product.attributes).map(([key, value]) => (
                                         <div key={key} className="flex justify-between pb-4 border-b border-slate-200 dark:border-surface-highlight">
@@ -395,7 +406,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                     <div className="mb-16">
                         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">Related Products</h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-                            {relatedProducts.map((item: any) => (
+                            {relatedProducts.map((item: Product) => (
                                 <ProductCard key={item._id} product={item} />
                             ))}
                         </div>

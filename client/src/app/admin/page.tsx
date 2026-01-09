@@ -6,12 +6,12 @@ import OrdersStatusChart from '@/components/admin/OrdersStatusChart';
 import RecentOrders from '@/components/admin/RecentOrders';
 import LowStockAlert from '@/components/admin/LowStockAlert';
 import { useState, useEffect } from 'react';
-import dashboardService from '@/services/dashboardService';
+import dashboardService, { DashboardStats as DashboardStatsType } from '@/services/dashboardService';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function AdminDashboardPage() {
     const { t } = useTranslation();
-    const [stats, setStats] = useState<any>(null);
+    const [stats, setStats] = useState<DashboardStatsType | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

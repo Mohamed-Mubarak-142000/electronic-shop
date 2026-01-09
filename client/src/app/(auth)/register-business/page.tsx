@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/authService';
 import { toast } from 'react-hot-toast';
@@ -18,7 +19,7 @@ export default function RegisterBusinessPage() {
     });
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const { t, language } = useTranslation();
+    const { language } = useTranslation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -27,8 +28,8 @@ export default function RegisterBusinessPage() {
             const res = await authService.registerBusiness(formData);
             toast.success(res.message);
             router.push(`/verify-otp?email=${formData.email}`);
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Registration failed');
+        } catch (error: unknown) {
+            toast.error((error as AxiosError<{ message: string }>).response?.data?.message || 'Registration failed');
         } finally {
             setLoading(false);
         }

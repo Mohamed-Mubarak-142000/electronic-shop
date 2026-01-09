@@ -15,9 +15,11 @@ export interface Category {
     nameAr?: string;
     slug: string;
     image?: string;
+    imageUrl?: string;
     description?: string;
     descriptionAr?: string;
     isPublished?: boolean;
+    brand?: string | Brand;
 }
 
 export interface Brand {
@@ -43,6 +45,7 @@ export interface Product {
     category: Category | string;
     brand: Brand | string;
     images: string[];
+    imageUrl?: string;
     stock: number;
     rating: number;
     numReviews: number;
@@ -54,6 +57,7 @@ export interface Product {
     tags?: string[];
     isPublished?: boolean;
     slug?: string;
+    attributes?: Record<string, string>;
 }
 
 export interface DiscountSchedule {
@@ -110,10 +114,27 @@ export interface Portfolio {
     isPublished: boolean;
     createdAt: string;
     updatedAt: string;
+    category?: string;
 }
 
 export interface PortfolioOwnerResponse {
-    owner: User & { jobTitle?: string; bio?: string; bioAr?: string; skills?: string[] };
+    owner: User & { 
+        jobTitle?: string; 
+        jobTitleAr?: string;
+        bio?: string; 
+        bioAr?: string; 
+        skills?: Array<{
+            name: string;
+            nameAr: string;
+            level: string;
+            icon: string;
+        }>;
+        experience?: number;
+        isHiring?: boolean;
+        location?: { lat: number; lng: number };
+        address?: { city: string; state: string };
+        phone?: string;
+    };
     portfolios: Portfolio[];
 }
 

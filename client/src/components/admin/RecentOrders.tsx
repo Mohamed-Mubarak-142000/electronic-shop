@@ -3,17 +3,9 @@
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
+import { Order } from '@/types';
 
-interface Order {
-    _id: string;
-    total: number;
-    status: string;
-    user?: {
-        name: string;
-    }
-}
-
-export default function RecentOrders({ orders }: { orders: Order[] }) {
+export default function RecentOrders({ orders }: { orders?: Order[] }) {
     const { t } = useTranslation();
     const { formatPrice } = useCurrency();
 
@@ -54,27 +46,28 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {orders.map((order) => (
+                        {orders.map((order) => {
+                             const status = order.isDelivered ? 'Delivered' : (order.isPaid ? 'Paid' : 'Pending');
+                             return (
                             <tr key={order._id} className="hover:bg-white/5 transition-colors">
                                 <td className="px-6 py-4 font-mono text-white">#{order._id.slice(-6).toUpperCase()}</td>
                                 <td className="px-6 py-4">{order.user?.name || 'Unknown'}</td>
                                 <td className="px-6 py-4">
-                                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${order.status === 'Delivered' ? 'bg-blue-400/10 text-blue-400' :
-                                        order.status === 'Cancelled' ? 'bg-red-400/10 text-red-400' :
-                                            order.status === 'Shipped' ? 'bg-primary/10 text-primary' :
+                                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${status === 'Delivered' ? 'bg-blue-400/10 text-blue-400' :
+                                        status === 'Paid' ? 'bg-primary/10 text-primary' :
                                                 'bg-yellow-400/10 text-yellow-400'
                                         }`}>
-                                        <span className={`size-1.5 rounded-full ${order.status === 'Delivered' ? 'bg-blue-400' :
-                                            order.status === 'Cancelled' ? 'bg-red-400' :
-                                                order.status === 'Shipped' ? 'bg-primary' :
+                                        <span className={`size-1.5 rounded-full ${status === 'Delivered' ? 'bg-blue-400' :
+                                            status === 'Paid' ? 'bg-primary' :
                                                     'bg-yellow-400'
                                             }`}></span>
-                                        {getStatusLabel(order.status)}
+                                        {getStatusLabel(status)}
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 text-right text-white font-medium">{formatPrice(order.total)}</td>
+                                <td className="px-6 py-4 text-right font-medium text-white">{formatPrice(order.totalPrice)}</td>
                             </tr>
-                        ))}
+                        )
+                        })}
                     </tbody>
                 </table>
             </div>

@@ -4,28 +4,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { toast } from "react-hot-toast";
 import { useCurrency } from "@/hooks/useCurrency";
-
-interface Product {
-    _id: string;
-    name: string;
-    description: string;
-    price: number;
-    images?: string[];
-    imageUrl?: string;
-    rating?: number;
-    numReviews?: number;
-    discount?: number;
-    brand?: {
-        _id: string;
-        name: string;
-    };
-    category?: {
-        _id: string;
-        name: string;
-    };
-    salePrice?: number;
-    isDiscountActive?: boolean;
-}
+import { Product } from "@/types";
 
 export default function ProductCard({ product }: { product: Product }) {
     const user = useAuthStore((state) => state.user);

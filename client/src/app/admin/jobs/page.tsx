@@ -11,7 +11,7 @@ interface Job {
     type: string;
     scheduledAt: string;
     status: string;
-    data: any;
+    data: Record<string, unknown>;
     imageUrl?: string;
 }
 
@@ -36,7 +36,7 @@ export default function JobsPage() {
         try {
             const { data } = await api.get('/jobs');
             setJobs(data);
-        } catch (error) {
+        } catch {
             toast.error(t('admin.jobs.error'));
         } finally {
             setLoading(false);
@@ -54,7 +54,7 @@ export default function JobsPage() {
             toast.success(t('admin.jobs.success'));
             setShowModal(false);
             fetchJobs();
-        } catch (error) {
+        } catch {
             toast.error(t('admin.jobs.error'));
         }
     };
@@ -65,7 +65,7 @@ export default function JobsPage() {
             await api.delete(`/jobs/${id}`);
             toast.success(t('admin.jobs.delete_success'));
             fetchJobs();
-        } catch (error) {
+        } catch {
             toast.error(t('admin.jobs.delete_error'));
         }
     };

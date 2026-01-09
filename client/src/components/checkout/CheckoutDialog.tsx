@@ -10,7 +10,6 @@ import axios from "axios";
 import Dialog from "../ui/dialog";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useCurrency } from "@/hooks/useCurrency";
-import { clsx } from "clsx";
 
 interface CheckoutDialogProps {
     isOpen: boolean;

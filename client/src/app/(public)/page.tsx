@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import ProductCard from "@/components/shared/ProductCard";
 import { productService } from "@/services/productService";
 import { categoryService, brandService } from "@/services/metadataService";
@@ -11,9 +12,10 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useQuery } from "@tanstack/react-query";
+import { Product } from "@/types";
 
-const ShowroomMap = dynamic<{ location: { lat: number; lng: number }; name: string }>(
-  () => import('../../components/shared/ShowroomMap'),
+const MapSelector = dynamic<{ value: { lat: number; lng: number }; onChange: (v: { lat: number, lng: number }) => void; readOnly?: boolean }>(
+  () => import('../../components/MapSelector'),
   { ssr: false }
 );
 
@@ -136,7 +138,7 @@ export default function Home() {
             Trusted by top brands
           </p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            {brands.length > 0 ? (
+            {brands && brands.length > 0 ? (
               brands.map((brand) => (
                 <div key={brand._id} className="text-2xl font-black text-white tracking-tighter uppercase">
                   {brand.name}
@@ -178,7 +180,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {homeCategories.length > 0 ? (
+            {homeCategories && homeCategories.length > 0 ? (
               homeCategories.map((cat) => (
                 <Link key={cat._id} href={`/shop?category=${cat._id}`} className="group flex flex-col items-center gap-4">
                   <div className="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
@@ -251,7 +253,7 @@ export default function Home() {
                 }
               ]}
             >
-              {bestSellers.map((product) => (
+              {bestSellers.map((product: Product) => (
                 <div key={product._id} className="px-3">
                   <ProductCard product={product} />
                 </div>
@@ -316,8 +318,10 @@ export default function Home() {
               {/* Visual Element */}
               <div className="relative size-64 md:size-80 flex-shrink-0">
                 <div className="absolute inset-0 bg-primary/20 rounded-full blur-3xl"></div>
-                <img
+                <Image
                   alt="Electrician hard hat and blueprints"
+                  width={320}
+                  height={320}
                   className="relative z-10 w-full h-full object-cover rounded-full border-4 border-[#254632] shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-AG2JpXiB2fT-3UQMvwbIsx9b-DzSLP8aG97UO710bW-wLjvufVzVglC4C3PuMCj9cIdNI-1kP9INrZraiWBOiuME2_9LXdrAwvqA0BdLCwAolHdbg6BwM0QDl6x2cF08AnJQGhu4fgIKUJPVsb-JYi3_YP20SlZrJmXcNQKYbyoOCLoowZlO4MEA0BRFoXxdbWCHjOko3iQJFK5207UCuOuof0n3TfwBpq8y2XofH1_FEEIgg2A7OJy5h48-xWaW-UdTY10xWPI"
                 />
@@ -345,11 +349,13 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {newArrivals.length > 0 ? (
-              newArrivals.map((item) => (
+              newArrivals.map((item: Product) => (
                 <Link key={item._id} href={`/product/${item._id}`} className="bg-surface-dark p-4 rounded-2xl hover:bg-surface-highlight transition-colors cursor-pointer group">
                   <div className="aspect-square bg-white rounded-xl mb-3 overflow-hidden">
-                    <img
+                    <Image
                       alt={item.name}
+                      width={400}
+                      height={400}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform"
                       src={item.imageUrl || (item.images && item.images[0]) || "https://placehold.co/400x400?text=" + item.name}
                     />
@@ -420,8 +426,12 @@ export default function Home() {
                 {t('home.getDirections')}
               </button>
             </div>
-            <div className="h-full min-h-[400px] w-full relative">
-              <ShowroomMap location={showroomInfo?.location || { lat: 30.0444, lng: 31.2357 }} name={showroomInfo?.name || 'ElectroShop'} />
+            <div className="h-full min-h-[600px] w-full relative">
+              <MapSelector 
+                value={showroomInfo?.location || { lat: 30.0444, lng: 31.2357 }} 
+                onChange={() => {}}
+                readOnly={true}
+              />
             </div>
           </div>
         </div>

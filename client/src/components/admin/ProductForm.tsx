@@ -13,7 +13,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useConfigStore } from '@/store/useConfigStore';
 import { Product, Category, Brand } from '@/types';
 
-const createProductSchema = (minImages: number, maxImages: number, t: any) => z.object({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createProductSchema = (minImages: number, maxImages: number, t: (key: any, params?: Record<string, string | number>) => string) => z.object({
     name: z.string().min(1, 'Name is required'),
     nameAr: z.string().min(1, 'Arabic Name is required'),
     sku: z.string().optional(),
@@ -130,7 +131,8 @@ export default function ProductForm({ initialData }: ProductFormProps) {
     };
 
     const createMutation = useMutation({
-        mutationFn: productService.createProduct,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        mutationFn: (data: any) => productService.createProduct(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             router.push('/admin/products');
@@ -141,7 +143,8 @@ export default function ProductForm({ initialData }: ProductFormProps) {
     });
 
     const updateMutation = useMutation({
-        mutationFn: (data: ProductFormValues) => productService.updateProduct(initialData?._id || '', data),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        mutationFn: (data: any) => productService.updateProduct(initialData?._id || '', data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             router.push('/admin/products');
@@ -158,9 +161,9 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         };
 
         if (initialData) {
-            updateMutation.mutate(payload as any);
+            updateMutation.mutate(payload);
         } else {
-            createMutation.mutate(payload as any);
+            createMutation.mutate(payload);
         }
     };
 

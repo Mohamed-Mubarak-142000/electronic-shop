@@ -27,6 +27,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${splineSans.variable} antialiased`}
+        suppressHydrationWarning={true}
       >
         <Providers>{children}</Providers>
       </body>

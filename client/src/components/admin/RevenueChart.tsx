@@ -2,7 +2,7 @@
 
 import { useTranslation } from '@/hooks/useTranslation';
 
-export default function RevenueChart({ data }: { data: number[] }) {
+export default function RevenueChart({ data }: { data?: number[] }) {
     const { t } = useTranslation();
 
     // Basic scaling for SVG path if data exists. Assumes max value for Y scaling.

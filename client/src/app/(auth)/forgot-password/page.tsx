@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AxiosError } from 'axios';
 import { authService } from '@/services/authService';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -19,8 +20,8 @@ export default function ForgotPasswordPage() {
             await authService.forgotPassword(email);
             setSent(true);
             toast.success(language === 'ar' ? 'تم إرسال رابط إعادة التعيين' : 'Reset link sent to your email');
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Error occurred');
+        } catch (error: unknown) {
+            toast.error((error as AxiosError<{ message: string }>).response?.data?.message || 'Error occurred');
         } finally {
             setLoading(false);
         }
