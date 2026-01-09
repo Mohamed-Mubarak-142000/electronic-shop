@@ -10,9 +10,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useConfigStore } from '@/store/useConfigStore';
 import { useTranslation } from '@/hooks/useTranslation';
+import { en } from '@/locales/translations';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createSettingsSchema = (t: (key: any, params?: Record<string, string | number>) => string) => z.object({
+const createSettingsSchema = (t: (key: keyof typeof en, params?: Record<string, string | number>) => string) => z.object({
     language: z.enum(['en', 'ar']),
     currency: z.enum(['USD', 'EGP', 'AED']),
     vodafoneCashNumber: z.string().min(1, t('validation.required')),

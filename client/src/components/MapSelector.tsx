@@ -5,15 +5,15 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import Map, { Marker, NavigationControl, FullscreenControl, GeolocateControl, Popup } from 'react-map-gl/mapbox';
 import type { MapRef, MapMouseEvent, MarkerDragEvent } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import axios from 'axios';
+import { mapService, SearchResult } from '@/services/mapService';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
-// Simple debounce utility to avoid @types/lodash dependency issues
-function debounce<F extends (...args: any[]) => void>(func: F, waitFor: number) {
+// Simple debounce utility
+function debounce<T extends unknown[]>(func: (...args: T) => void, waitFor: number) {
     let timeout: ReturnType<typeof setTimeout> | null = null;
 
-    return (...args: Parameters<F>): void => {
+    return (...args: T): void => {
         if (timeout !== null) {
             clearTimeout(timeout);
         }
@@ -27,11 +27,6 @@ interface MapSelectorProps {
     readOnly?: boolean;
 }
 
-interface SearchResult {
-    id: string;
-    place_name: string;
-    center: [number, number];
-}
 
 export default function MapSelector({ value, onChange, readOnly = false }: MapSelectorProps) {
     const mapRef = useRef<MapRef>(null);
@@ -69,17 +64,8 @@ export default function MapSelector({ value, onChange, readOnly = false }: MapSe
 
         setSearching(true);
         try {
-            const response = await axios.get(
-                `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json`,
-                {
-                    params: {
-                        access_token: MAPBOX_TOKEN,
-                        types: 'place,address,poi',
-                        limit: 5
-                    }
-                }
-            );
-            setSearchResults(response.data.features || []);
+            const results = await mapService.searchPlaces(query);
+            setSearchResults(results);
             setShowResults(true);
         } catch (error) {
             console.error('Search failed:', error);

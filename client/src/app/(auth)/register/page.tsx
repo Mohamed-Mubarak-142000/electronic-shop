@@ -1,8 +1,59 @@
 'use client';
 
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { authService } from '@/services/authService';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+
+const formSchema = z.object({
+    account_type: z.enum(['homeowner', 'business']),
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 export default function RegisterPage() {
+    const router = useRouter();
+    const [serverError, setServerError] = useState('');
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors,  isSubmitting },
+    } = useForm<FormData>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            account_type: 'homeowner',
+            name: '',
+            email: '',
+            password: '',
+        },
+    });
+
+    const mutation = useMutation({
+        mutationFn: async (values: FormData) => {
+            return await authService.register(values);
+        },
+        onSuccess: () => {
+            toast.success('Registration successful! Please log in.');
+            router.push('/login');
+        },
+        onError: (err: Error & { response?: { data?: { message?: string } } }) => {
+            setServerError(err.response?.data?.message || err.message || 'Registration failed');
+        },
+    });
+
+    const onSubmit = (values: FormData) => {
+        setServerError('');
+        mutation.mutate(values);
+    };
 
     return (
         <main className="relative flex min-h-screen w-full flex-col lg:flex-row">
@@ -54,17 +105,34 @@ export default function RegisterPage() {
                         <h2 className="text-3xl font-bold dark:text-white mb-2">Join the Circuit</h2>
                         <p className="text-gray-600 dark:text-gray-400">Create an account to start your project today.</p>
                     </div>
-                    <form className="flex flex-col gap-5">
+                    
+                    {serverError && (
+                        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded dark:bg-red-900/30 dark:border-red-900 dark:text-red-400">
+                            {serverError}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
                         {/* Segmented Control */}
                         <div className="p-1 bg-gray-200 dark:bg-surface-dark rounded-full flex relative">
                             <label className="flex-1 text-center cursor-pointer relative z-10">
-                                <input name="account_type" type="radio" value="homeowner" defaultChecked className="peer sr-only" />
+                                <input 
+                                    {...register("account_type")}
+                                    type="radio" 
+                                    value="homeowner" 
+                                    className="peer sr-only" 
+                                />
                                 <div className="w-full py-2.5 rounded-full text-sm font-medium text-gray-500 dark:text-gray-400 peer-checked:bg-white dark:peer-checked:bg-surface-highlight peer-checked:text-black dark:peer-checked:text-primary peer-checked:shadow-sm transition-all">
                                     Homeowner
                                 </div>
                             </label>
                             <label className="flex-1 text-center cursor-pointer relative z-10">
-                                <input name="account_type" type="radio" value="professional" className="peer sr-only" />
+                                <input 
+                                    {...register("account_type")}
+                                    type="radio" 
+                                    value="business" 
+                                    className="peer sr-only" 
+                                />
                                 <div className="w-full py-2.5 rounded-full text-sm font-medium text-gray-500 dark:text-gray-400 peer-checked:bg-white dark:peer-checked:bg-surface-highlight peer-checked:text-black dark:peer-checked:text-primary peer-checked:shadow-sm transition-all">
                                     Electrician / Business
                                 </div>
@@ -75,77 +143,67 @@ export default function RegisterPage() {
                         <label className="flex flex-col gap-1.5 group">
                             <span className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Full Name</span>
                             <div className="relative flex items-center">
-                                <input className="w-full bg-white dark:bg-surface-dark border border-gray-300 dark:border-border-dark text-gray-900 dark:text-white text-base rounded-full h-14 pl-5 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500" placeholder="e.g. Thomas Edison" type="text" />
+                                <input 
+                                    {...register("name")}
+                                    className="w-full bg-white dark:bg-surface-dark border border-gray-300 dark:border-border-dark text-gray-900 dark:text-white text-base rounded-full h-14 pl-5 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500" 
+                                    placeholder="e.g. Thomas Edison" 
+                                    type="text" 
+                                />
                                 <div className="absolute right-5 text-gray-400 dark:text-[#95c6a9] flex items-center pointer-events-none">
                                     <span className="material-symbols-outlined">person</span>
                                 </div>
                             </div>
+                            {errors.name && <span className="text-sm text-red-500 ml-1">{errors.name.message}</span>}
                         </label>
 
                         {/* Email Input */}
                         <label className="flex flex-col gap-1.5 group">
                             <span className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Email Address</span>
                             <div className="relative flex items-center">
-                                <input className="w-full bg-white dark:bg-surface-dark border border-gray-300 dark:border-border-dark text-gray-900 dark:text-white text-base rounded-full h-14 pl-5 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500" placeholder="name@example.com" type="email" />
+                                <input 
+                                    {...register("email")}
+                                    className="w-full bg-white dark:bg-surface-dark border border-gray-300 dark:border-border-dark text-gray-900 dark:text-white text-base rounded-full h-14 pl-5 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500" 
+                                    placeholder="name@example.com" 
+                                    type="email" 
+                                />
                                 <div className="absolute right-5 text-gray-400 dark:text-[#95c6a9] flex items-center pointer-events-none">
                                     <span className="material-symbols-outlined">mail</span>
                                 </div>
                             </div>
+                            {errors.email && <span className="text-sm text-red-500 ml-1">{errors.email.message}</span>}
                         </label>
 
                         {/* Password Input */}
                         <label className="flex flex-col gap-1.5 group">
                             <span className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Password</span>
                             <div className="relative flex items-center">
-                                <input className="w-full bg-white dark:bg-surface-dark border border-gray-300 dark:border-border-dark text-gray-900 dark:text-white text-base rounded-full h-14 pl-5 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500" placeholder="Create a strong password" type="password" />
+                                <input 
+                                    {...register("password")}
+                                    className="w-full bg-white dark:bg-surface-dark border border-gray-300 dark:border-border-dark text-gray-900 dark:text-white text-base rounded-full h-14 pl-5 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500" 
+                                    placeholder="Create a strong password" 
+                                    type="password" 
+                                />
                                 <div className="absolute right-5 text-gray-400 dark:text-[#95c6a9] flex items-center pointer-events-none">
                                     <span className="material-symbols-outlined">lock</span>
                                 </div>
                             </div>
-                            {/* Password Strength Indicator */}
-                            <div className="flex items-center gap-2 mt-1 px-1">
-                                <div className="h-1 flex-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                    <div className="h-full w-2/3 bg-yellow-500 rounded-full"></div>
-                                </div>
-                                <span className="text-xs font-medium text-yellow-600 dark:text-yellow-500">Medium</span>
-                            </div>
+                            {errors.password && <span className="text-sm text-red-500 ml-1">{errors.password.message}</span>}
                         </label>
 
-                        {/* Terms Checkbox */}
-                        <label className="flex items-start gap-3 mt-2 cursor-pointer">
-                            <input className="mt-1 w-4 h-4 rounded border-gray-300 dark:border-border-dark text-primary focus:ring-primary bg-white dark:bg-surface-dark" type="checkbox" />
-                            <span className="text-sm text-gray-600 dark:text-gray-400 leading-normal">
-                                I agree to the <a href="#" className="text-primary hover:underline">Terms of Service</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>.
-                            </span>
-                        </label>
-
-                        {/* Submit Button */}
-                        <button className="mt-4 w-full h-14 bg-primary hover:bg-[#2fd16f] active:scale-[0.98] transition-all text-background-dark text-base font-bold rounded-full shadow-[0_0_20px_rgba(54,226,123,0.3)] flex items-center justify-center gap-2" type="button">
-                            <span>Create Account</span>
-                            <span className="material-symbols-outlined text-lg font-bold">arrow_forward</span>
+                        <button 
+                            type="submit" 
+                            disabled={isSubmitting}
+                            className="mt-2 w-full h-14 rounded-full bg-primary hover:bg-primary/90 text-background-dark text-base font-bold shadow-[0_0_20px_rgba(54,226,123,0.4)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        >
+                            {isSubmitting ? 'Creating Account...' : 'Create Account'}
                         </button>
-
-                        {/* Divider */}
-                        <div className="relative flex items-center py-2">
-                            <div className="flex-grow border-t border-gray-300 dark:border-border-dark"></div>
-                            <span className="flex-shrink-0 mx-4 text-gray-400 text-sm">or register with</span>
-                            <div className="flex-grow border-t border-gray-300 dark:border-border-dark"></div>
-                        </div>
-
-                        {/* Social Buttons */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <button type="button" className="flex items-center justify-center gap-2 h-12 rounded-full border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-surface-highlight transition-colors text-sm font-bold text-gray-700 dark:text-white">
-                                <img alt="Google" className="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp9j_Wjaz2jSWsk7bEcOd5-CkmDWug9kvNf0gGzJHbNUGNdqAeTme8dgdL4hmUBkcUPk5lLpgrQfloKepUviw-prSju6CGCkSlVbZAup_x_8_wGhq3BCK53m-hEwN6L7LatwiHYzqxFU4k8Z4nw15RCzI0eAUnvVLDkTUaf1igsJK6QHvLhAJlvFhQjTTDfSzLN7VQPTMeGp4YHi38w5ccYFRAocnyvGxf2_MqPtWnnW-XGg42_WJfnHSp9IriNiOYH3auw-WPMUs" />
-                                <span>Google</span>
-                            </button>
-                            <button type="button" className="flex items-center justify-center gap-2 h-12 rounded-full border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-surface-highlight transition-colors text-sm font-bold text-gray-700 dark:text-white">
-                                <span className="material-symbols-outlined text-xl">ios</span>
-                                <span>Apple</span>
-                            </button>
-                        </div>
                     </form>
-                    <p className="text-center mt-8 text-sm text-gray-600 dark:text-gray-400">
-                        Already have an account? <Link href="/login" className="text-primary font-bold hover:underline">Log In</Link>
+
+                    <p className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                        Already have an account?{' '}
+                        <Link href="/login" className="font-bold text-gray-900 dark:text-white hover:text-primary transition-colors">
+                            Log In
+                        </Link>
                     </p>
                 </div>
             </div>

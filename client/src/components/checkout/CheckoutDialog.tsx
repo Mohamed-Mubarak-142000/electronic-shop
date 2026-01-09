@@ -6,7 +6,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useConfigStore } from "@/store/useConfigStore";
 import { toast } from "react-hot-toast";
-import axios from "axios";
+import { orderService } from "@/services/orderService";
 import Dialog from "../ui/dialog";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useCurrency } from "@/hooks/useCurrency";
@@ -114,19 +114,11 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
                     id: paymentMethod === 'card' ? 'simulated_card_tx' : (paymentDetails.transactionId || paymentDetails.referenceNumber),
                     status: 'completed',
                     update_time: new Date().toISOString(),
-                    email_address: user.email
+                    email_address: user?.email
                 }
             };
 
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${user.token}`
-                }
-            };
-
-            const baseUrl = 'http://localhost:5000/api';
-
-            await axios.post(`${baseUrl}/orders`, orderData, config);
+            await orderService.createOrder(orderData);
 
             toast.success(t('order_success'));
             clearCart();
@@ -135,12 +127,9 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
 
         } catch (error: unknown) {
             console.error("Order Error:", error);
-            let message = "Failed to place order";
-            if (axios.isAxiosError(error) && error.response?.data?.message) {
-                message = error.response.data.message;
-            } else if (error instanceof Error) {
-                message = error.message;
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err = error as any;
+            const message = err.response?.data?.message || err.message || "Failed to place order";
             toast.error(message);
         } finally {
             setIsProcessing(false);

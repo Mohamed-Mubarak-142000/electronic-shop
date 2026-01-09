@@ -36,6 +36,9 @@ export const updateUserProfile = async (req, res) => {
         user.phone = req.body.phone || user.phone;
         user.address = req.body.address || user.address;
         user.location = req.body.location || user.location;
+        user.jobTitle = req.body.jobTitle || user.jobTitle;
+        user.experience = req.body.experience || user.experience;
+        
         if (req.body.password) {
             user.password = req.body.password;
         }

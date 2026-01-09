@@ -27,8 +27,7 @@ export default function SchedulesTable() {
             queryClient.invalidateQueries({ queryKey: ['schedules'] });
             toast.success(t('admin.schedules.table.cancelled_success'));
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onError: (error: any) => {
+        onError: (error: Error & { response?: { data?: { message?: string } } }) => {
             toast.error(error.response?.data?.message || t('admin.schedules.table.cancel_error'));
         }
     });

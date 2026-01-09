@@ -17,6 +17,7 @@ const ChatPopup = () => {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [inputText, setInputText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isConnecting, setIsConnecting] = useState(false);
     const socketRef = useRef<Socket | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 

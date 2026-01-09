@@ -9,12 +9,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { productService } from '@/services/productService';
 import { categoryService, brandService } from '@/services/metadataService';
+import { uploadService } from '@/services/uploadService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useConfigStore } from '@/store/useConfigStore';
 import { Product, Category, Brand } from '@/types';
+import { en } from '@/locales/translations';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createProductSchema = (minImages: number, maxImages: number, t: (key: any, params?: Record<string, string | number>) => string) => z.object({
+const createProductSchema = (minImages: number, maxImages: number, t: (key: keyof typeof en, params?: Record<string, string | number>) => string) => z.object({
     name: z.string().min(1, 'Name is required'),
     nameAr: z.string().min(1, 'Arabic Name is required'),
     sku: z.string().optional(),
@@ -32,6 +33,10 @@ const createProductSchema = (minImages: number, maxImages: number, t: (key: any,
 });
 
 type ProductFormValues = z.infer<ReturnType<typeof createProductSchema>>;
+
+interface ProductPayload extends Omit<ProductFormValues, 'tags'> {
+    tags: string[];
+}
 
 interface ProductFormProps {
     initialData?: Product;
@@ -98,17 +103,9 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                 return;
             }
 
-            const formData = new FormData();
-            for (let i = 0; i < files.length; i++) {
-                formData.append('images', files[i]);
-            }
             setUploading(true);
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/upload/cloudinary/multiple`, {
-                    method: 'POST',
-                    body: formData,
-                });
-                const data = await response.json();
+                const data: string[] = await uploadService.uploadImages(files);
                 if (Array.isArray(data)) {
                     const currentImages = form.getValues('images') || [];
                     form.setValue('images', [...currentImages, ...data]);
@@ -132,7 +129,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
 
     const createMutation = useMutation({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        mutationFn: (data: any) => productService.createProduct(data),
+        mutationFn: (data: ProductPayload) => productService.createProduct(data as unknown as Record<string, unknown>),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             router.push('/admin/products');
@@ -144,7 +141,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
 
     const updateMutation = useMutation({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        mutationFn: (data: any) => productService.updateProduct(initialData?._id || '', data),
+        mutationFn: (data: ProductPayload) => productService.updateProduct(initialData?._id || '', data as unknown as Record<string, unknown>),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             router.push('/admin/products');

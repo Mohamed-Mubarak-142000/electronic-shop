@@ -2,7 +2,7 @@ import api from './api';
 import { Order, PaginationParams, OrderPaginatedResponse } from '../types';
 
 export const orderService = {
-    async createOrder(data: Partial<Order>): Promise<Order> {
+    async createOrder(data: Record<string, unknown>): Promise<Order> {
         const response = await api.post('/orders', data);
         return response.data;
     },

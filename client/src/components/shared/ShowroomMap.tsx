@@ -46,8 +46,7 @@ export default function ShowroomMap({ location, name }: ShowroomMapProps) {
                     latitude={location.lat}
                     longitude={location.lng}
                     anchor="bottom"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    onClick={(e: any) => {
+                    onClick={(e) => {
                         e.originalEvent.stopPropagation();
                         setShowPopup(true);
                     }}

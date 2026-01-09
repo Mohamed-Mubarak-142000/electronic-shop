@@ -7,6 +7,20 @@ export interface User {
     token?: string;
     createdAt: string;
     updatedAt: string;
+    phone?: string;
+    jobTitle?: string;
+    experience?: number;
+    location?: {
+        lat: number;
+        lng: number;
+    };
+    address?: {
+        street?: string;
+        city?: string;
+        state?: string;
+        country?: string;
+        zip?: string;
+    };
 }
 
 export interface Category {

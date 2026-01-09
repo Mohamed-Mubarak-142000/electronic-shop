@@ -8,6 +8,7 @@ import * as z from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { brandService, categoryService } from '@/services/metadataService';
+import { uploadService } from '@/services/uploadService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Brand, Category } from '@/types';
 
@@ -66,26 +67,20 @@ export default function BrandForm({ initialData }: BrandFormProps) {
     const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            const formData = new FormData();
-            formData.append('image', file);
             setUploading(true);
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/upload/cloudinary`, {
-                    method: 'POST',
-                    body: formData,
-                });
-                const data = await response.json();
+                const data = await uploadService.uploadImage(file);
                 if (data.path) {
                     form.setValue('logoUrl', data.path);
                     toast.success('Image uploaded successfully');
                 } else {
                     throw new Error('Invalid response from server');
                 }
-                setUploading(false);
             } catch (error) {
                 console.error(error);
-                setUploading(false);
                 toast.error('Image upload failed');
+            } finally {
+                setUploading(false);
             }
         }
     };
