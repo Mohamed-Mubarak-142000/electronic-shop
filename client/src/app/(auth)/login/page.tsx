@@ -38,7 +38,7 @@ export default function LoginPage() {
             if (data.role === 'admin') router.push('/admin');
             else router.push('/');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { response?: { data?: { message?: string } } }) => {
             setError(err.response?.data?.message || err.message || 'Login failed');
         },
     });

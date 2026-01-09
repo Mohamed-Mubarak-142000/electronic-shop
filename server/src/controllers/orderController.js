@@ -1,4 +1,8 @@
+import mongoose from 'mongoose';
 import Order from '../models/Order.js';
+import Product from '../models/Product.js';
+import { notifyOrderPlaced, notifyOrderStatusUpdate } from '../utils/notificationService.js';
+import sendEmail from '../utils/sendEmail.js';
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -14,22 +18,78 @@ export const addOrderItems = async (req, res) => {
     if (items && items.length === 0) {
         res.status(400);
         throw new Error('No order items');
-    } else {
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const orderItems = [];
+
+        for (const item of items) {
+            const product = await Product.findById(item.product).session(session);
+
+            if (!product) {
+                throw new Error(`Product not found: ${item.product}`);
+            }
+
+            if (product.stock < item.quantity) {
+                throw new Error(`Insufficient stock for product: ${product.name}`);
+            }
+
+            product.stock -= item.quantity;
+            await product.save({ session });
+
+            orderItems.push({
+                product: item.product,
+                qty: item.quantity,
+                price: item.price
+            });
+        }
+
         const order = new Order({
-            items: items.map((x) => ({
-                ...x,
-                product: x.product,
-                _id: undefined,
-            })),
+            items: orderItems,
             user: req.user._id,
             shipping,
             paymentMethod,
+            paymentResult: req.body.paymentDetails ? {
+                id: req.body.paymentDetails.transactionId || req.body.paymentDetails.referenceNumber,
+                status: 'Pending',
+                update_time: String(Date.now()),
+                email_address: req.user.email
+            } : undefined,
             total
         });
 
-        const createdOrder = await order.save();
+        const createdOrder = await order.save({ session });
+
+        await session.commitTransaction();
+        session.endSession();
+
+        // Notify Admin via Socket
+        if (req.io) {
+            notifyOrderPlaced(req.io, createdOrder, req.user);
+        }
+
+        // Send Email (Async)
+        try {
+            if (process.env.EMAIL_USER) {
+                await sendEmail({
+                    email: req.user.email,
+                    subject: 'Order Confirmation',
+                    message: `Thank you for your order. Order ID: ${createdOrder._id}`
+                });
+            }
+        } catch (error) {
+            console.error('Email send failed:', error);
+        }
 
         res.status(201).json(createdOrder);
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        res.status(400);
+        throw error;
     }
 };
 
@@ -71,6 +131,11 @@ export const updateOrderToPaid = async (req, res) => {
             };
 
             const updatedOrder = await order.save();
+
+            if (req.io) {
+                notifyOrderStatusUpdate(req.io, updatedOrder, 'paid');
+            }
+
             res.json(updatedOrder);
         } else {
             res.status(404).json({ message: 'Order not found' });
@@ -93,6 +158,11 @@ export const updateOrderToDelivered = async (req, res) => {
             order.status = 'Delivered';
 
             const updatedOrder = await order.save();
+
+            if (req.io) {
+                notifyOrderStatusUpdate(req.io, updatedOrder, 'delivered');
+            }
+
             res.json(updatedOrder);
         } else {
             res.status(404).json({ message: 'Order not found' });

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/shared/ProductCard";
 import { productService } from "@/services/productService";
@@ -11,14 +10,21 @@ import dynamic from 'next/dynamic';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useQuery } from "@tanstack/react-query";
 
 const ShowroomMap = dynamic<{ location: { lat: number; lng: number }; name: string }>(
   () => import('../../components/shared/ShowroomMap'),
   { ssr: false }
 );
 
-function SampleNextArrow(props: any) {
-  const { className, style, onClick } = props;
+interface ArrowProps {
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+function SampleNextArrow(props: ArrowProps) {
+  const { onClick } = props;
   return (
     <button
       className="absolute right-0 top-1/2 -translate-y-1/2 z-10 size-12 rounded-full bg-[#112117]/80 backdrop-blur-sm border border-[#254632] flex items-center justify-center text-white hover:bg-primary hover:text-[#112117] transition-all shadow-xl -mr-6"
@@ -29,8 +35,8 @@ function SampleNextArrow(props: any) {
   );
 }
 
-function SamplePrevArrow(props: any) {
-  const { className, style, onClick } = props;
+function SamplePrevArrow(props: ArrowProps) {
+  const { onClick } = props;
   return (
     <button
       className="absolute left-0 top-1/2 -translate-y-1/2 z-10 size-12 rounded-full bg-[#112117]/80 backdrop-blur-sm border border-[#254632] flex items-center justify-center text-white hover:bg-primary hover:text-[#112117] transition-all shadow-xl -ml-6"
@@ -42,40 +48,37 @@ function SamplePrevArrow(props: any) {
 }
 
 export default function Home() {
-  const [bestSellers, setBestSellers] = useState<any[]>([]);
-  const [homeCategories, setHomeCategories] = useState<any[]>([]);
-  const [newArrivals, setNewArrivals] = useState<any[]>([]);
-  const [brands, setBrands] = useState<any[]>([]);
-  const [showroomInfo, setShowroomInfo] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const { t, language } = useTranslation();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [productsData, categoriesData, arrivalsData, brandsData, showroomData] = await Promise.all([
-          productService.getProducts({ limit: 40 }), // Fetch more to support pagination locally
-          categoryService.getCategories(),
-          productService.getProducts({ limit: 5, sort: "-createdAt" }),
-          brandService.getBrands(),
-          userService.getShowroomInfo().catch(() => null)
-        ]);
+  const { data: bestSellersData, isLoading: loadingBestSellers } = useQuery({
+    queryKey: ['products', 'best-sellers'],
+    queryFn: () => productService.getProducts({ limit: 40 }),
+  });
 
-        setBestSellers(productsData.products || []);
-        setHomeCategories(categoriesData || []);
-        setNewArrivals(arrivalsData.products || []);
-        setBrands(brandsData || []);
-        setShowroomInfo(showroomData);
-      } catch (error) {
-        console.error("Error fetching home page data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: homeCategories, isLoading: loadingCategories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: categoryService.getCategories,
+  });
 
-    fetchData();
-  }, []);
+  const { data: newArrivalsData, isLoading: loadingNewArrivals } = useQuery({
+    queryKey: ['products', 'new-arrivals'],
+    queryFn: () => productService.getProducts({ limit: 5, sort: "-createdAt" }),
+  });
+
+  const { data: brands, isLoading: loadingBrands } = useQuery({
+    queryKey: ['brands'],
+    queryFn: brandService.getBrands,
+  });
+
+  const { data: showroomInfo, isLoading: loadingShowroom } = useQuery({
+    queryKey: ['showroom'],
+    queryFn: () => userService.getShowroomInfo().catch(() => null),
+  });
+
+  const loading = loadingBestSellers || loadingCategories || loadingNewArrivals || loadingBrands || loadingShowroom;
+
+  const bestSellers = bestSellersData?.products || [];
+  const newArrivals = newArrivalsData?.products || [];
 
   if (loading) {
     return (

@@ -31,6 +31,12 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('dev'));
 
+// Attach io to req
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
 // Routes
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';

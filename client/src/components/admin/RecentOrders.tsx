@@ -4,7 +4,16 @@ import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
 
-export default function RecentOrders({ orders }: { orders: any[] }) {
+interface Order {
+    _id: string;
+    total: number;
+    status: string;
+    user?: {
+        name: string;
+    }
+}
+
+export default function RecentOrders({ orders }: { orders: Order[] }) {
     const { t } = useTranslation();
     const { formatPrice } = useCurrency();
 

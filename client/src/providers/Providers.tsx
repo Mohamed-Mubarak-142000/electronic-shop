@@ -7,6 +7,7 @@ import { useLanguageStore } from '../store/useLanguageStore';
 import { useConfigStore } from '../store/useConfigStore';
 import { useEffect } from 'react';
 import NewProductDrawer from '../components/NewProductDrawer';
+import SocketListener from '../components/shared/SocketListener';
 
 const LanguageWrapper = ({ children }: { children: React.ReactNode }) => {
     const { language, dir } = useLanguageStore();
@@ -30,6 +31,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
             <LanguageWrapper>
+                <SocketListener />
                 {children}
                 <NewProductDrawer />
             </LanguageWrapper>

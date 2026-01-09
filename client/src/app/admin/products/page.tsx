@@ -18,8 +18,8 @@ export default function ProductsPage() {
     const [stockStatus, setStockStatus] = useState('');
     const [sort, setSort] = useState('-createdAt');
 
-    const [categories, setCategories] = useState<any[]>([]);
-    const [brands, setBrands] = useState<any[]>([]);
+    const [categories, setCategories] = useState<unknown[]>([]);
+    const [brands, setBrands] = useState<unknown[]>([]);
 
     const { data: stats, isLoading: statsLoading } = useQuery({
         queryKey: ['product-stats'],

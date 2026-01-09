@@ -72,8 +72,7 @@ export interface PaginationParams {
     limit?: number;
     search?: string;
     sort?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export interface PaginatedResponse<T> {
@@ -114,7 +113,7 @@ export interface Portfolio {
 }
 
 export interface PortfolioOwnerResponse {
-    owner: User & { jobTitle?: string; bio?: string; bioAr?: string; skills?: any[] };
+    owner: User & { jobTitle?: string; bio?: string; bioAr?: string; skills?: string[] };
     portfolios: Portfolio[];
 }
 
@@ -166,6 +165,5 @@ export interface Config {
     taxiAmount: number;
     minProductImages: number;
     maxProductImages: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
+    [key: string]: unknown;
 }

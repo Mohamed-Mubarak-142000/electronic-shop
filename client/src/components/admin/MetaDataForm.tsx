@@ -21,7 +21,13 @@ type FormValues = z.infer<typeof schema>;
 
 interface MetaDataFormProps {
     type: 'category' | 'brand';
-    initialData?: any;
+    initialData?: {
+        _id: string;
+        name: string;
+        description?: string;
+        imageUrl?: string;
+        logoUrl?: string;
+    };
 }
 
 export default function MetaDataForm({ type, initialData }: MetaDataFormProps) {
@@ -55,23 +61,23 @@ export default function MetaDataForm({ type, initialData }: MetaDataFormProps) {
     const redirectPath = isCategory ? '/admin/categories' : '/admin/brands';
 
     const createMutation = useMutation({
-        mutationFn: (data: any) => isCategory ? categoryService.createCategory(data) : brandService.createBrand(data),
+        mutationFn: (data: FormValues) => isCategory ? categoryService.createCategory(data) : brandService.createBrand(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [queryKey] });
             router.push(redirectPath);
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to create');
         }
     });
 
     const updateMutation = useMutation({
-        mutationFn: (data: any) => isCategory ? categoryService.updateCategory(initialData._id, data) : brandService.updateBrand(initialData._id, data),
+        mutationFn: (data: FormValues) => isCategory ? categoryService.updateCategory(initialData!._id, data) : brandService.updateBrand(initialData!._id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [queryKey] });
             router.push(redirectPath);
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || 'Failed to update');
         }
     });
@@ -84,7 +90,7 @@ export default function MetaDataForm({ type, initialData }: MetaDataFormProps) {
         }
     };
 
-    const inputClass = (error?: any) => `form-input flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4 placeholder:text-gray-400 ${error ? 'border-red-500 focus:border-red-500' : ''}`;
+    const inputClass = (error?: { message?: string }) => `form-input flex w-full rounded-lg border-white/10 bg-background-dark text-white focus:ring-2 focus:ring-primary focus:border-primary h-12 px-4 placeholder:text-gray-400 ${error ? 'border-red-500 focus:border-red-500' : ''}`;
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 max-w-2xl">

@@ -134,9 +134,14 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
             onClose();
             router.push('/profile');
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Order Error:", error);
-            const message = error.response?.data?.message || "Failed to place order";
+            let message = "Failed to place order";
+            if (axios.isAxiosError(error) && error.response?.data?.message) {
+                message = error.response.data.message;
+            } else if (error instanceof Error) {
+                message = error.message;
+            }
             toast.error(message);
         } finally {
             setIsProcessing(false);

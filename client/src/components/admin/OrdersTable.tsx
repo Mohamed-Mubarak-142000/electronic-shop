@@ -38,7 +38,7 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
     const totalItems = data?.total || 0; // Assuming API returns total count
 
     // Transform API data to Table format if needed
-    const orders: Order[] = ordersData.map((order: any) => ({
+    const orders: Order[] = ordersData.map((order: Order & { status?: string }) => ({
         ...order,
         status: order.isDelivered ? 'Delivered' : (order.isPaid ? 'Paid' : 'Pending'), 
     }));
