@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -9,6 +10,9 @@ import { useLanguageStore } from "@/store/useLanguageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "react-hot-toast";
 import { User as UserIcon } from "lucide-react";
+import { productService } from "@/services/productService";
+import { categoryService } from "@/services/metadataService";
+import { Product, Category } from "@/types";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,6 +23,72 @@ export default function Navbar() {
     const { t } = useTranslation();
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const wishlistCount = wishlistItems.length;
+    const router = useRouter();
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState<{ products: Product[], categories: Category[] }>({ products: [], categories: [] });
+    const [isSearching, setIsSearching] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+    const searchRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+                setShowResults(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(async () => {
+            if (searchQuery.trim().length > 1) {
+                setIsSearching(true);
+                try {
+                    const [productsData, categoriesData] = await Promise.all([
+                        productService.getProducts({ search: searchQuery, limit: 5 }),
+                        categoryService.getCategories()
+                    ]);
+                    
+                    const filteredCategories = categoriesData.filter(c => 
+                        c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                        (c.nameAr && c.nameAr.includes(searchQuery))
+                    ).slice(0, 3);
+
+                    setSearchResults({
+                        products: productsData.products || [],
+                        categories: filteredCategories
+                    });
+                    setShowResults(true);
+                } catch (error) {
+                    console.error("Search failed", error);
+                } finally {
+                    setIsSearching(false);
+                }
+            } else {
+                setSearchResults({ products: [], categories: [] });
+                setShowResults(false);
+            }
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchQuery]);
+
+    const handleProductClick = (productId: string) => {
+        router.push(`/product/${productId}`);
+        setShowResults(false);
+        setSearchQuery("");
+    };
+
+    const handleCategoryClick = (categoryId: string) => {
+        router.push(`/shop?category=${categoryId}`);
+        setShowResults(false);
+        setSearchQuery("");
+    };
 
     useEffect(() => {
         document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
@@ -45,7 +115,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Search Bar (Desktop) */}
-                    <div className="hidden md:flex items-center">
+                    <div className="hidden md:flex items-center relative" ref={searchRef}>
                         <label className="relative flex items-center min-w-[320px]">
                             <span className={language === 'ar' ? 'absolute right-4 text-[#95c6a9]' : 'absolute left-4 text-[#95c6a9]'}>
                                 <span className="material-symbols-outlined">search</span>
@@ -54,8 +124,74 @@ export default function Navbar() {
                                 className={`w-full bg-surface-highlight text-white placeholder:text-[#95c6a9] rounded-full py-2.5 ${language === 'ar' ? 'pr-12 pl-4' : 'pl-12 pr-4'} focus:ring-2 focus:ring-primary focus:outline-none border-none text-sm transition-all hover:bg-[#2d543c]`}
                                 placeholder={language === 'ar' ? 'بحث عن مصابيح، مفاتيح، أدوات...' : 'Search bulbs, switches, tools...'}
                                 type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onFocus={() => {
+                                    if(searchQuery.length > 1) setShowResults(true);
+                                }}
                             />
+                            {isSearching && (
+                                <span className={`absolute ${language === 'ar' ? 'left-4' : 'right-4'} animate-spin text-primary`}>
+                                    <span className="material-symbols-outlined text-sm">progress_activity</span>
+                                </span>
+                            )}
                         </label>
+
+                        {/* Search Results Dropdown */}
+                        {showResults && (searchResults.products.length > 0 || searchResults.categories.length > 0) && (
+                            <div className="absolute top-full left-0 w-[400px] mt-2 bg-background-dark border border-surface-highlight rounded-2xl shadow-2xl overflow-hidden z-50">
+                                {searchResults.categories.length > 0 && (
+                                    <div className="p-2">
+                                        <div className="text-xs font-bold text-gray-500 px-3 py-1 uppercase tracking-wider">{t('home.categories')}</div>
+                                        {searchResults.categories.map(cat => (
+                                            <div 
+                                                key={cat._id}
+                                                onClick={() => handleCategoryClick(cat._id)}
+                                                className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 cursor-pointer transition-colors"
+                                            >
+                                                <div className="size-8 rounded-lg bg-surface-highlight flex items-center justify-center shrink-0">
+                                                    {cat.imageUrl ? (
+                                                        <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover rounded-lg" />
+                                                    ) : (
+                                                        <span className="material-symbols-outlined text-primary text-sm">category</span>
+                                                    )}
+                                                </div>
+                                                <span className="text-white text-sm font-medium">{cat.name}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                
+                                {searchResults.categories.length > 0 && searchResults.products.length > 0 && (
+                                    <div className="h-px bg-surface-highlight mx-2"></div>
+                                )}
+
+                                {searchResults.products.length > 0 && (
+                                    <div className="p-2">
+                                        <div className="text-xs font-bold text-gray-500 px-3 py-1 uppercase tracking-wider">{t('nav.shop')}</div>
+                                        {searchResults.products.map(prod => (
+                                            <div 
+                                                key={prod._id}
+                                                onClick={() => handleProductClick(prod._id)}
+                                                className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 cursor-pointer transition-colors"
+                                            >
+                                                <div className="size-10 rounded-lg bg-surface-highlight overflow-hidden shrink-0">
+                                                    <img 
+                                                        src={prod.imageUrl || (prod.images && prod.images[0]) || "https://placehold.co/100x100"} 
+                                                        alt={prod.name} 
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-white text-sm font-medium truncate">{prod.name}</div>
+                                                    <div className="text-primary text-xs font-bold">${prod.salePrice || prod.price}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
 

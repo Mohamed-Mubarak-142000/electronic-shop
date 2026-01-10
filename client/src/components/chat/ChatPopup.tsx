@@ -72,6 +72,12 @@ const ChatPopup = () => {
     };
 
     useEffect(() => {
+        const handleOpenChat = () => setIsOpen(true);
+        window.addEventListener('open-chat', handleOpenChat);
+        return () => window.removeEventListener('open-chat', handleOpenChat);
+    }, []);
+
+    useEffect(() => {
         if (isOpen && !socketRef.current && user) {
             connectSocket();
             fetchHistory();

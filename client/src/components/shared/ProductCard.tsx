@@ -117,7 +117,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 </p>
 
                 <div className="mt-auto flex items-center justify-between">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col min-h-[3.5rem] justify-center">
                         {product.isDiscountActive && product.salePrice ? (
                             <>
                                 <span className="text-gray-500 text-sm line-through">{formatPrice(product.price)}</span>

@@ -7,6 +7,8 @@ import { productService } from "@/services/productService";
 import { categoryService, brandService } from "@/services/metadataService";
 import { useTranslation } from "@/hooks/useTranslation";
 import { userService } from "@/services/userService";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 import dynamic from 'next/dynamic';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -52,6 +54,8 @@ function SamplePrevArrow(props: ArrowProps) {
 
 export default function Home() {
   const { t, language } = useTranslation();
+  const router = useRouter();
+  const logout = useAuthStore((state) => state.logout);
 
   const { data: bestSellersData, isLoading: loadingBestSellers } = useQuery({
     queryKey: ['products', 'best-sellers'],
@@ -123,11 +127,15 @@ export default function Home() {
                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </button>
                 </Link>
-                <Link href="/register-business">
-                  <button className="h-12 px-8 rounded-full bg-surface-highlight/80 backdrop-blur-md text-white border border-[#3e6b50] text-base font-bold tracking-wide hover:bg-surface-highlight hover:scale-105 transition-all">
+                <button 
+                    onClick={() => {
+                        logout();
+                        router.push('/register');
+                    }}
+                    className="h-12 px-8 rounded-full bg-surface-highlight/80 backdrop-blur-md text-white border border-[#3e6b50] text-base font-bold tracking-wide hover:bg-surface-highlight hover:scale-105 transition-all"
+                >
                     {t('home.hero.forPros')}
-                  </button>
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -306,14 +314,11 @@ export default function Home() {
                   {t('home.b2b.description')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2">
-                  <Link href="/register-business">
-                    <button className="h-14 px-8 rounded-full bg-primary text-[#122118] text-lg font-bold hover:brightness-110 shadow-lg shadow-primary/25 transition-all w-full sm:w-auto">
-                      {t('home.b2b.register')}
+                  <Link href="/portfolio">
+                    <button className="h-14 px-8 rounded-full bg-transparent border-2 border-white/20 text-white text-lg font-bold hover:bg-white/10 transition-all">
+                      {t('nav.portfolio')} 
                     </button>
                   </Link>
-                  <button className="h-14 px-8 rounded-full bg-transparent border-2 border-white/20 text-white text-lg font-bold hover:bg-white/10 transition-all">
-                    {t('home.b2b.benefits')}
-                  </button>
                 </div>
               </div>
               {/* Visual Element */}
@@ -351,19 +356,9 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {newArrivals.length > 0 ? (
               newArrivals.map((item: Product) => (
-                <Link key={item._id} href={`/product/${item._id}`} className="bg-surface-dark p-4 rounded-2xl hover:bg-surface-highlight transition-colors cursor-pointer group">
-                  <div className="aspect-square bg-white rounded-xl mb-3 overflow-hidden">
-                    <Image
-                      alt={item.name}
-                      width={400}
-                      height={400}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                      src={item.imageUrl || (item.images && item.images[0]) || "https://placehold.co/400x400?text=" + item.name}
-                    />
-                  </div>
-                  <p className="text-white font-bold text-sm truncate">{item.name}</p>
-                  <p className="text-primary font-bold text-sm">${item.price.toFixed(2)}</p>
-                </Link>
+                <div key={item._id} className="h-full">
+                    <ProductCard product={item} />
+                </div>
               ))
             ) : (
               <div className="col-span-full py-12 flex flex-col items-center justify-center bg-surface-dark/30 rounded-2xl border border-surface-highlight/10">

@@ -150,10 +150,12 @@ export default function PortfolioDashboard() {
                     </p>
                 </div>
                 <div className="flex gap-4">
-                    <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-surface-highlight text-white hover:bg-[#1a3324] transition-all font-bold text-sm border border-white/5">
-                        <ExternalLink size={18} />
-                        {language === 'ar' ? 'عرض عام' : 'Public View'}
-                    </button>
+                    {user?.role !== 'user' && (
+                        <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-surface-highlight text-white hover:bg-[#1a3324] transition-all font-bold text-sm border border-white/5">
+                            <ExternalLink size={18} />
+                            {language === 'ar' ? 'عرض عام' : 'Public View'}
+                        </button>
+                    )}
                     {isAdmin && (
                         <Link href="/admin/portfolio">
                             <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-[#0a140e] hover:brightness-110 transition-all font-black text-sm shadow-lg shadow-primary/20">
@@ -347,11 +349,11 @@ export default function PortfolioDashboard() {
                             {language === 'ar' ? 'دعنا نتعاون لتحويل رؤيتك إلى حقيقة من خلال حلول كهربائية آمنة وذكية.' : 'Let’s collaborate to turn your vision into reality with safe and smart electrical solutions.'}
                         </p>
                         <div className="flex flex-wrap justify-center gap-4">
-                            <button className="px-10 py-5 rounded-full bg-[#0a140e] text-white text-lg font-black hover:scale-105 transition-transform shadow-2xl">
+                            <button 
+                                onClick={() => window.dispatchEvent(new Event('open-chat'))}
+                                className="px-10 py-5 rounded-full bg-[#0a140e] text-white text-lg font-black hover:scale-105 transition-transform shadow-2xl"
+                            >
                                 {language === 'ar' ? 'تواصل معنا' : 'Get In Touch'}
-                            </button>
-                            <button className="px-10 py-5 rounded-full bg-white/20 backdrop-blur-md text-[#0a140e] text-lg font-black border border-[#0a140e]/10 hover:bg-white/30 transition-all">
-                                {language === 'ar' ? 'السيرة الذاتية' : 'Resume'}
                             </button>
                         </div>
                     </div>
