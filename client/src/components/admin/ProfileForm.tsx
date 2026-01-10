@@ -7,7 +7,7 @@ import { userService } from '@/services/userService';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import MapSelector from '../MapSelector';
+import MapSelector from '../shared/MapSelector';
 
 const profileSchema = z.object({
     firstName: z.string().min(1, 'First name is required'),

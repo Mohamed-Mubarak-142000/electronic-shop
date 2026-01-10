@@ -1,6 +1,6 @@
 import React from 'react';
 import { DataTable, Column } from '@/components/ui/data-table';
-import Pagination from '@/components/admin/ui/Pagination';
+import Pagination from '@/components/shared/Pagination';
 
 interface AdminDataTableProps<T> {
     data: T[];

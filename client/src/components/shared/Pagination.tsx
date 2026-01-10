@@ -7,6 +7,7 @@ interface PaginationProps {
     itemsPerPage?: number;
     onPageChange: (page: number) => void;
     className?: string;
+    showResultsInfo?: boolean;
 }
 
 export default function Pagination({
@@ -15,7 +16,8 @@ export default function Pagination({
     totalItems,
     itemsPerPage = 10,
     onPageChange,
-    className = ''
+    className = '',
+    showResultsInfo = true
 }: PaginationProps) {
     const startItem = totalItems ? (currentPage - 1) * itemsPerPage + 1 : 0;
     const endItem = totalItems ? Math.min(currentPage * itemsPerPage, totalItems) : 0;
@@ -40,10 +42,10 @@ export default function Pagination({
     if (totalPages <= 1) return null;
 
     return (
-        <div className={`flex items-center justify-between border-t border-white/5 bg-background-dark px-4 py-3 sm:px-6 ${className}`}>
+        <div className={`flex items-center justify-between px-4 py-3 sm:px-6 ${className}`}>
             <div className="hidden sm:flex flex-1 items-center justify-between">
                 <div>
-                    {totalItems !== undefined && (
+                   {showResultsInfo && totalItems !== undefined && (
                         <p className="text-sm text-gray-400">
                             Showing <span className="font-medium text-white">{startItem}</span> to <span className="font-medium text-white">{endItem}</span> of <span className="font-medium text-white">{totalItems}</span> results
                         </p>

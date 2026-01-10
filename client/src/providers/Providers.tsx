@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import { useLanguageStore } from '../store/useLanguageStore';
 import { useConfigStore } from '../store/useConfigStore';
 import { useEffect } from 'react';
-import NewProductDrawer from '../components/NewProductDrawer';
+import NewProductDrawer from '../components/admin/NewProductDrawer';
 import SocketListener from '../components/shared/SocketListener';
 
 const LanguageWrapper = ({ children }: { children: React.ReactNode }) => {

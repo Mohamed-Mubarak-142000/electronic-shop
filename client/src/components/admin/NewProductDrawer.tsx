@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSocket } from '../hooks/useSocket';
+import { useSocket } from '@/hooks/useSocket';
 import { X } from 'lucide-react';
-import { productService } from '../services/productService';
-import { useTranslation } from '../hooks/useTranslation';
+import { productService } from '@/services/productService';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
 
 interface Product {

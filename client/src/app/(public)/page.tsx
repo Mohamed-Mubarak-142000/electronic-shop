@@ -18,7 +18,7 @@ import { Product } from "@/types";
 import Testimonials from "@/components/home/Testimonials";
 
 const MapSelector = dynamic<{ value: { lat: number; lng: number }; onChange: (v: { lat: number, lng: number }) => void; readOnly?: boolean }>(
-  () => import('../../components/MapSelector'),
+  () => import('../../components/shared/MapSelector'),
   { ssr: false }
 );
 
