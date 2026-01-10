@@ -8,6 +8,7 @@ import ConversationList from '@/components/admin/ConversationList';
 import AdminChatInterface from '@/components/admin/AdminChatInterface';
 import { MessageCircle } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { AdminPageHeader } from '@/components/admin/shared/AdminPageHeader';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5000';
 
@@ -35,7 +36,7 @@ export default function MessagesPage() {
         });
 
         socket.on('connect', () => {
-            console.log('Admin connected to chat server');
+            // Connected
         });
 
         socket.on('receive_message', (message: ChatMessage) => {
@@ -123,15 +124,11 @@ export default function MessagesPage() {
 
     return (
         <div className="flex flex-col h-full">
-            {/* Page Header */}
-            <div className="flex items-center gap-3 mb-6">
-                <div className="flex items-center justify-center size-12 rounded-xl bg-primary/20 text-primary">
-                    <MessageCircle size={24} />
-                </div>
-                <div>
-                    <h1 className="text-2xl font-bold text-white">{t('admin.messages.title')}</h1>
-                    <p className="text-gray-400 text-sm">{t('admin.messages.subtitle')}</p>
-                </div>
+            <div className="mb-6 px-6 pt-6">
+                <AdminPageHeader
+                    title={t('admin.messages.title')}
+                    subtitle={t('admin.messages.subtitle')}
+                />
             </div>
 
             {/* Chat Interface */}

@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
-import { DataTable, Column } from '@/components/ui/data-table';
-import Pagination from './ui/Pagination';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Column } from '@/components/ui/data-table';
+import { useQuery } from '@tanstack/react-query';
 import { productService } from '@/services/productService';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
+import { AdminDataTable } from './shared/AdminDataTable';
+import { useResourceDelete } from '@/hooks/useResourceDelete';
 
 // Define the Product type based on API response
 type Product = {
@@ -37,7 +37,6 @@ export default function ProductsTable({ filters }: ProductsTableProps) {
     const { formatPrice } = useCurrency();
     const [page, setPage] = useState(1);
     const limit = 10;
-    const queryClient = useQueryClient();
 
     // Reset page on filter change
     useEffect(() => {
@@ -61,23 +60,11 @@ export default function ProductsTable({ filters }: ProductsTableProps) {
         }),
     });
 
-    const deleteMutation = useMutation({
-        mutationFn: productService.deleteProduct,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['products'] });
-            queryClient.invalidateQueries({ queryKey: ['product-stats'] });
-            toast.success('Product deleted successfully');
-        },
-        onError: (error: Error) => {
-            toast.error(error.message || 'Failed to delete product');
-        }
+    const { handleDelete } = useResourceDelete({
+        fn: productService.deleteProduct,
+        resourceName: 'Product',
+        queryKey: ['products']
     });
-
-    const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this product?')) {
-            deleteMutation.mutate(id);
-        }
-    };
 
     const columns: Column<Product>[] = [
         {
@@ -163,32 +150,19 @@ export default function ProductsTable({ filters }: ProductsTableProps) {
         }
     ];
 
-    if (isLoading) return (
-        <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-    );
-
     const products = data?.products || [];
-    const totalPages = data?.pages || 1;
     const totalItems = data?.total || 0;
 
     return (
-        <div className="flex flex-col">
-            <DataTable
-                data={products}
-                columns={columns}
-                className="bg-surface-dark border-white/5"
-            />
-            {totalItems > limit && (
-                <Pagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    totalItems={totalItems}
-                    itemsPerPage={limit}
-                    onPageChange={setPage}
-                />
-            )}
-        </div>
+        <AdminDataTable
+            data={products}
+            columns={columns}
+            totalItems={totalItems}
+            currentPage={page}
+            onPageChange={setPage}
+            limit={limit}
+            isLoading={isLoading}
+            className="flex flex-col bg-surface-dark border-white/5"
+        />
     );
 }

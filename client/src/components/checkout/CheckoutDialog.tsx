@@ -10,6 +10,7 @@ import { orderService } from "@/services/orderService";
 import Dialog from "../ui/dialog";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useCurrency } from "@/hooks/useCurrency";
+import { isAxiosError } from "axios";
 
 interface CheckoutDialogProps {
     isOpen: boolean;
@@ -127,9 +128,14 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
 
         } catch (error: unknown) {
             console.error("Order Error:", error);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const err = error as any;
-            const message = err.response?.data?.message || err.message || "Failed to place order";
+            let message = "Failed to place order";
+            
+            if (isAxiosError(error)) {
+                message = error.response?.data?.message || error.message || message;
+            } else if (error instanceof Error) {
+                message = error.message;
+            }
+
             toast.error(message);
         } finally {
             setIsProcessing(false);

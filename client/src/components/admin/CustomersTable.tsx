@@ -1,41 +1,30 @@
 'use client';
 
 import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { DataTable, Column } from '@/components/ui/data-table';
-import Pagination from './ui/Pagination';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Column } from '@/components/ui/data-table';
+import { AdminDataTable } from '@/components/admin/shared/AdminDataTable';
+import { useQuery } from '@tanstack/react-query';
 import { userService } from '@/services/userService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { User } from '@/types';
+import { useResourceDelete } from '@/hooks/useResourceDelete';
 
 export default function CustomersTable() {
     const { t } = useTranslation();
     const [page, setPage] = useState(1);
     const limit = 10;
-    const queryClient = useQueryClient();
 
     const { data, isLoading } = useQuery({
         queryKey: ['users', page],
         queryFn: () => userService.getUsers({ pageNumber: page }),
     });
 
-    const deleteMutation = useMutation({
-        mutationFn: userService.deleteUser,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['users'] });
-            toast.success('User deleted successfully');
-        },
-        onError: (error: Error) => {
-            toast.error(error.message || 'Failed to delete user');
-        }
+    const { handleDelete } = useResourceDelete({
+        fn: userService.deleteUser,
+        resourceName: 'User',
+        queryKey: ['users'],
+        successMessage: t('admin.messages.user_deleted'),
     });
-
-    const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this user?')) {
-            deleteMutation.mutate(id);
-        }
-    };
 
     const usersData = data?.users || [];
     const totalPages = data?.pages || 1;
@@ -87,23 +76,16 @@ export default function CustomersTable() {
         }
     ];
 
-    if (isLoading) return <div className="text-white p-8">Loading...</div>;
-
     return (
-        <div className="w-full transition-all flex flex-col">
-            <DataTable
-                data={usersData}
-                columns={columns}
-                className="bg-surface-dark border-white/5"
-            />
-            <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                totalItems={totalItems}
-                itemsPerPage={limit}
-                onPageChange={setPage}
-                className="rounded-b-2xl border-x border-b border-white/5 -mt-[1px] bg-[#15261d]"
-            />
-        </div>
+        <AdminDataTable
+            data={usersData}
+            columns={columns}
+            totalItems={totalItems}
+            currentPage={page}
+            onPageChange={setPage}
+            limit={limit}
+            isLoading={isLoading}
+            className="w-full transition-all flex flex-col bg-surface-dark border-white/5 rounded-2xl"
+        />
     );
 }

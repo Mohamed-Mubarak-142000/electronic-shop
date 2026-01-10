@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import toast from 'react-hot-toast';
-import { DataTable, Column } from '@/components/ui/data-table';
-import Pagination from './ui/Pagination';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { brandService } from '@/services/metadataService';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import { Column } from '@/components/ui/data-table';
+import { useQuery } from '@tanstack/react-query';
+import { brandService } from '@/services/metadataService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Brand } from '@/types';
+import { AdminDataTable } from './shared/AdminDataTable';
+import { useResourceDelete } from '@/hooks/useResourceDelete';
 
 interface BrandsTableProps {
     filters: {
@@ -19,45 +19,37 @@ interface BrandsTableProps {
 export default function BrandsTable({ filters }: BrandsTableProps) {
     const { t } = useTranslation();
     const [page, setPage] = useState(1);
+    const [prevSearchTerm, setPrevSearchTerm] = useState(filters.searchTerm);
     const limit = 10;
-    const queryClient = useQueryClient();
+
+    if (filters.searchTerm !== prevSearchTerm) {
+        setPage(1);
+        setPrevSearchTerm(filters.searchTerm);
+    }
 
     const { data, isLoading } = useQuery({
         queryKey: ['brands'],
         queryFn: brandService.getBrands,
     });
 
-    const brands: Brand[] = Array.isArray(data) ? data : [];
+    const { handleDelete } = useResourceDelete({
+        fn: brandService.deleteBrand,
+        resourceName: 'Brand',
+        queryKey: ['brands']
+    });
 
     // Client-side filtering
     const filteredBrands = useMemo(() => {
+        const brands: Brand[] = Array.isArray(data) ? data : [];
         return brands.filter(brand =>
             brand.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
             (brand.description && brand.description.toLowerCase().includes(filters.searchTerm.toLowerCase()))
         );
-    }, [brands, filters.searchTerm]);
+    }, [data, filters.searchTerm]);
 
-    const totalItems = filteredBrands.length;
-    const totalPages = Math.ceil(totalItems / limit);
+
+
     const paginatedBrands = filteredBrands.slice((page - 1) * limit, page * limit);
-
-    const deleteMutation = useMutation({
-        mutationFn: brandService.deleteBrand,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['brands'] });
-            queryClient.invalidateQueries({ queryKey: ['brand-stats'] });
-            toast.success('Brand deleted successfully');
-        },
-        onError: (error: Error) => {
-            toast.error(error.message || 'Failed to delete brand');
-        }
-    });
-
-    const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this brand?')) {
-            deleteMutation.mutate(id);
-        }
-    };
 
     const columns: Column<Brand>[] = [
         {
@@ -103,29 +95,16 @@ export default function BrandsTable({ filters }: BrandsTableProps) {
         }
     ];
 
-    if (isLoading) return (
-        <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-    );
-
     return (
-        <div className="flex flex-col">
-            <DataTable
-                data={paginatedBrands}
-                columns={columns}
-                className="rounded-3xl shadow-xl bg-surface-dark border-[#254632]"
-            />
-            {totalItems > limit && (
-                <Pagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    totalItems={totalItems}
-                    itemsPerPage={limit}
-                    onPageChange={setPage}
-                    className="rounded-3xl shadow-xl mt-4"
-                />
-            )}
-        </div>
+        <AdminDataTable
+            data={paginatedBrands}
+            columns={columns}
+            totalItems={filteredBrands.length}
+            currentPage={page}
+            onPageChange={setPage}
+            limit={limit}
+            isLoading={isLoading}
+            className="flex flex-col rounded-3xl shadow-xl bg-surface-dark border-[#254632]"
+        />
     );
 }

@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import toast from 'react-hot-toast';
-import { DataTable, Column } from '@/components/ui/data-table';
-import Pagination from './ui/Pagination';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { categoryService } from '@/services/metadataService';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import { Column } from '@/components/ui/data-table';
+import { useQuery } from '@tanstack/react-query';
+import { categoryService } from '@/services/metadataService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Category } from '@/types';
+import { AdminDataTable } from './shared/AdminDataTable';
+import { useResourceDelete } from '@/hooks/useResourceDelete';
 
 interface CategoriesTableProps {
     filters: {
@@ -19,45 +19,37 @@ interface CategoriesTableProps {
 export default function CategoriesTable({ filters }: CategoriesTableProps) {
     const { t } = useTranslation();
     const [page, setPage] = useState(1);
+    const [prevSearchTerm, setPrevSearchTerm] = useState(filters.searchTerm);
     const limit = 10;
-    const queryClient = useQueryClient();
+
+    if (filters.searchTerm !== prevSearchTerm) {
+        setPage(1);
+        setPrevSearchTerm(filters.searchTerm);
+    }
 
     const { data, isLoading } = useQuery({
         queryKey: ['categories'],
         queryFn: categoryService.getCategories,
     });
 
-    const categories: Category[] = Array.isArray(data) ? data : [];
+    const { handleDelete } = useResourceDelete({
+        fn: categoryService.deleteCategory,
+        resourceName: 'Category',
+        queryKey: ['categories']
+    });
 
     // Client-side filtering
     const filteredCategories = useMemo(() => {
+        const categories: Category[] = Array.isArray(data) ? data : [];
         return categories.filter(cat =>
             cat.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
             (cat.description && cat.description.toLowerCase().includes(filters.searchTerm.toLowerCase()))
         );
-    }, [categories, filters.searchTerm]);
+    }, [data, filters.searchTerm]);
 
-    const totalItems = filteredCategories.length;
-    const totalPages = Math.ceil(totalItems / limit);
+
+
     const paginatedCategories = filteredCategories.slice((page - 1) * limit, page * limit);
-
-    const deleteMutation = useMutation({
-        mutationFn: categoryService.deleteCategory,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['categories'] });
-            queryClient.invalidateQueries({ queryKey: ['category-stats'] });
-            toast.success('Category deleted successfully');
-        },
-        onError: (error: Error) => {
-            toast.error(error.message || 'Failed to delete category');
-        }
-    });
-
-    const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this category?')) {
-            deleteMutation.mutate(id);
-        }
-    };
 
     const columns: Column<Category>[] = [
         {
@@ -101,29 +93,16 @@ export default function CategoriesTable({ filters }: CategoriesTableProps) {
         }
     ];
 
-    if (isLoading) return (
-        <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-    );
-
     return (
-        <div className="flex flex-col">
-            <DataTable
-                data={paginatedCategories}
-                columns={columns}
-                className="rounded-3xl shadow-xl bg-surface-dark border-[#254632]"
-            />
-            {totalItems > limit && (
-                <Pagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    totalItems={totalItems}
-                    itemsPerPage={limit}
-                    onPageChange={setPage}
-                    className="rounded-3xl shadow-xl mt-4"
-                />
-            )}
-        </div>
+        <AdminDataTable
+            data={paginatedCategories}
+            columns={columns}
+            totalItems={filteredCategories.length}
+            currentPage={page}
+            onPageChange={setPage}
+            limit={limit}
+            isLoading={isLoading}
+            className="flex flex-col rounded-3xl shadow-xl bg-surface-dark border-[#254632]"
+        />
     );
 }

@@ -34,7 +34,6 @@ const ChatPopup = () => {
         });
 
         socket.on('connect', () => {
-            console.log('Connected to chat server');
             setIsConnecting(false);
             socket.emit('join_room', user?._id);
         });

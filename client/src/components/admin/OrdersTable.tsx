@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { DataTable, Column } from '@/components/ui/data-table';
-import Pagination from './ui/Pagination';
+import { Column } from '@/components/ui/data-table';
+import { AdminDataTable } from '@/components/admin/shared/AdminDataTable';
 import { useQuery } from '@tanstack/react-query';
 import { orderService } from '@/services/orderService';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -98,24 +98,17 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
         }
     ];
 
-    if (isLoading) return <div className="text-white">Loading...</div>;
-
     return (
-        <div className="w-full lg:w-[65%] xl:w-[70%] transition-all flex flex-col">
-            <DataTable
-                data={orders}
-                columns={columns}
-                className="bg-surface-dark border-white/5"
-                onRowClick={onRowClick}
-            />
-            <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                totalItems={totalItems} // API usually provides this
-                itemsPerPage={limit}
-                onPageChange={setPage}
-                className="rounded-b-2xl border-x border-b border-white/5 -mt-[1px] bg-[#15261d]"
-            />
-        </div>
+        <AdminDataTable
+            data={orders}
+            columns={columns}
+            totalItems={totalItems}
+            currentPage={page}
+            onPageChange={setPage}
+            limit={limit}
+            isLoading={isLoading}
+            className="w-full lg:w-[65%] xl:w-[70%] transition-all flex flex-col bg-surface-dark border-white/5 rounded-2xl"
+            onRowClick={onRowClick}
+        />
     );
 }

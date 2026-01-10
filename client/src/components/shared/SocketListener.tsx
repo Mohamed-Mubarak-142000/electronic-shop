@@ -20,7 +20,6 @@ export default function SocketListener() {
         if (!socket) return;
 
         socket.on('connect', () => {
-            console.log('Socket connected');
             if (user) {
                 // Join user specific room
                 socket.emit('join_room', user._id);

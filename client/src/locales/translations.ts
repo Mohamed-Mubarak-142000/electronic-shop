@@ -240,6 +240,8 @@ export const en = {
     "admin.messages.conversations_list": "Conversations",
     "admin.messages.conversation_count": "conversation",
     "admin.messages.conversations_count": "conversations",
+    "admin.messages.user_deleted": "User deleted successfully",
+    "admin.messages.project_deleted": "Project deleted successfully",
 
     // Admin Category Form
     "admin.category.general_info": "General Information",
@@ -709,6 +711,8 @@ export const ar = {
     "admin.messages.conversations_list": "المحادثات",
     "admin.messages.conversation_count": "محادثة",
     "admin.messages.conversations_count": "محادثات",
+    "admin.messages.user_deleted": "تم حذف المستخدم بنجاح",
+    "admin.messages.project_deleted": "تم حذف المشروع بنجاح",
 
     // Admin Category Form
     "admin.category.general_info": "معلومات عامة",

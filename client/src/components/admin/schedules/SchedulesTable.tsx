@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { scheduleService } from '@/services/scheduleService';
-import { DataTable, Column } from '@/components/ui/data-table';
+import { Column } from '@/components/ui/data-table';
+import { AdminDataTable } from '@/components/admin/shared/AdminDataTable';
 import { DiscountSchedule } from '@/types';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,8 @@ export default function SchedulesTable() {
     const queryClient = useQueryClient();
     const { t } = useTranslation();
     const { symbol } = useCurrency();
+    const [page, setPage] = useState(1);
+    const limit = 10;
 
     const { data: schedules, isLoading } = useQuery({
         queryKey: ['schedules'],
@@ -96,11 +99,19 @@ export default function SchedulesTable() {
         }
     ];
 
-    if (isLoading) {
-        return <div className="p-8 text-center text-muted-foreground">{t('admin.schedules.table.loading')}</div>;
-    }
+    const totalItems = schedules?.length || 0;
+    const paginatedData = (schedules || []).slice((page - 1) * limit, page * limit);
 
     return (
-        <DataTable columns={columns} data={schedules || []} />
+         <AdminDataTable
+            data={paginatedData}
+            columns={columns}
+            totalItems={totalItems}
+            currentPage={page}
+            onPageChange={setPage}
+            limit={limit}
+            isLoading={isLoading}
+            className="w-full transition-all flex flex-col bg-surface-dark border-white/5 rounded-2xl"
+        />
     );
 }
