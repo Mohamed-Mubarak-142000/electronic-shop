@@ -33,16 +33,24 @@ export const addOrderItems = async (req, res) => {
                 throw new Error(`Product not found: ${item.product}`);
             }
 
-            if (product.stock < item.quantity) {
+            const quantity = Number(item.qty || item.quantity);
+            if (isNaN(quantity) || quantity <= 0) {
+                 throw new Error(`Invalid quantity for product: ${product.name}`);
+            }
+
+            if (product.stock < quantity) {
                 throw new Error(`Insufficient stock for product: ${product.name}`);
             }
 
-            product.stock -= item.quantity;
-            await product.save({ session });
+            // Update stock directly to avoid validation errors on other fields
+            await Product.updateOne(
+                { _id: product._id },
+                { $inc: { stock: -quantity } }
+            ).session(session);
 
             orderItems.push({
                 product: item.product,
-                qty: item.quantity,
+                qty: quantity,
                 price: item.price
             });
         }
@@ -52,12 +60,12 @@ export const addOrderItems = async (req, res) => {
             user: req.user._id,
             shipping,
             paymentMethod,
-            paymentResult: req.body.paymentDetails ? {
+            paymentResult: req.body.paymentResult || (req.body.paymentDetails ? {
                 id: req.body.paymentDetails.transactionId || req.body.paymentDetails.referenceNumber,
                 status: 'Pending',
                 update_time: String(Date.now()),
                 email_address: req.user.email
-            } : undefined,
+            } : undefined),
             total
         });
 

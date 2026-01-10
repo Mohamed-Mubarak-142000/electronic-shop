@@ -98,10 +98,10 @@ const ProjectCard = ({ project, index, language }: { project: Portfolio; index: 
                     <h4 className="text-xl font-bold line-clamp-1">{language === 'ar' ? project.titleAr : project.title}</h4>
                     <p className="text-sm text-gray-400 mt-1 line-clamp-2">{language === 'ar' ? project.descriptionAr : project.description}</p>
                 </div>
-                <button className="w-full py-3 rounded-xl bg-surface-highlight border border-white/5 text-white text-sm font-bold group-hover:bg-primary group-hover:text-[#0a140e] transition-all flex items-center justify-center gap-2">
+                <Link href={`/portfolio/${project._id}`} className="w-full py-3 rounded-xl bg-surface-highlight border border-white/5 text-white text-sm font-bold group-hover:bg-primary group-hover:text-[#0a140e] transition-all flex items-center justify-center gap-2">
                     {language === 'ar' ? 'عرض دراسة الحالة' : 'View Case Study'}
                     <ChevronRight size={16} />
-                </button>
+                </Link>
             </div>
         </motion.div>
     );

@@ -13,6 +13,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "@/types";
+import Testimonials from "@/components/home/Testimonials";
 
 const MapSelector = dynamic<{ value: { lat: number; lng: number }; onChange: (v: { lat: number, lng: number }) => void; readOnly?: boolean }>(
   () => import('../../components/MapSelector'),
@@ -372,6 +373,9 @@ export default function Home() {
             )}
           </div>
         </div>
+
+        {/* Testimonials Section */}
+        <Testimonials />
 
         {/* Store Locator Section */}
         <div className="py-12 border-t border-[#254632] mt-8">
