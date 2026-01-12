@@ -13,6 +13,7 @@ import { User as UserIcon } from "lucide-react";
 import { productService } from "@/services/productService";
 import { categoryService } from "@/services/metadataService";
 import { Product, Category } from "@/types";
+import OptimizedImage from "@/components/shared/OptimizedImage";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -151,7 +152,7 @@ export default function Navbar() {
                                             >
                                                 <div className="size-8 rounded-lg bg-surface-highlight flex items-center justify-center shrink-0">
                                                     {cat.imageUrl ? (
-                                                        <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover rounded-lg" />
+                                                        <OptimizedImage src={cat.imageUrl} alt={cat.name} className="object-cover rounded-lg" width={32} height={32} />
                                                     ) : (
                                                         <span className="material-symbols-outlined text-primary text-sm">category</span>
                                                     )}
@@ -176,10 +177,12 @@ export default function Navbar() {
                                                 className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 cursor-pointer transition-colors"
                                             >
                                                 <div className="size-10 rounded-lg bg-surface-highlight overflow-hidden shrink-0">
-                                                    <img 
+                                                    <OptimizedImage 
                                                         src={prod.imageUrl || (prod.images && prod.images[0]) || "https://placehold.co/100x100"} 
                                                         alt={prod.name} 
-                                                        className="w-full h-full object-cover"
+                                                        className="object-cover"
+                                                        width={40}
+                                                        height={40}
                                                     />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
@@ -216,8 +219,11 @@ export default function Navbar() {
                     {/* Action Buttons */}
                     <div className="flex gap-3">
                         <Link href="/wishlist">
-                            <button className="relative flex items-center justify-center size-10 rounded-full bg-surface-highlight hover:bg-primary hover:text-[#122118] text-white transition-all duration-300">
-                                <span className="material-symbols-outlined text-[20px]">
+                            <button 
+                                aria-label="Wishlist"
+                                className="relative flex items-center justify-center size-10 rounded-full bg-surface-highlight hover:bg-primary hover:text-[#122118] text-white transition-all duration-300"
+                            >
+                                <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
                                     favorite
                                 </span>
                                 {wishlistCount > 0 && (
@@ -228,8 +234,11 @@ export default function Navbar() {
                             </button>
                         </Link>
                         <Link href="/cart">
-                            <button className="relative flex items-center justify-center size-10 rounded-full bg-surface-highlight hover:bg-primary hover:text-[#122118] text-white transition-all duration-300">
-                                <span className="material-symbols-outlined text-[20px]">
+                            <button 
+                                aria-label="Shopping cart"
+                                className="relative flex items-center justify-center size-10 rounded-full bg-surface-highlight hover:bg-primary hover:text-[#122118] text-white transition-all duration-300"
+                            >
+                                <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
                                     shopping_cart
                                 </span>
                                 {cartCount > 0 && (
@@ -263,10 +272,11 @@ export default function Navbar() {
                                         </Link>
 
                                         <button
+                                            aria-label={`Switch language to ${language === 'ar' ? 'English' : 'Arabic'}`}
                                             onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
                                             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 text-sm text-white transition-colors"
                                         >
-                                            <span className="material-symbols-outlined text-lg">language</span>
+                                            <span className="material-symbols-outlined text-lg" aria-hidden="true">language</span>
                                             {language === 'ar' ? 'English' : 'العربية'}
                                         </button>
 
@@ -295,10 +305,12 @@ export default function Navbar() {
                         )}
                         {/* Mobile Menu Button */}
                         <button
+                            aria-label="Toggle menu"
+                            aria-expanded={isMenuOpen}
                             className="lg:hidden text-white ml-2"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                         >
-                            <span className="material-symbols-outlined">menu</span>
+                            <span className="material-symbols-outlined" aria-hidden="true">menu</span>
                         </button>
                     </div>
                 </div>

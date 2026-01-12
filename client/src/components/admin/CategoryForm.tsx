@@ -11,6 +11,7 @@ import { categoryService, brandService } from '@/services/metadataService';
 import { uploadService } from '@/services/uploadService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Category, Brand } from '@/types';
+import Image from 'next/image';
 
 const categorySchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -199,7 +200,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
                             {uploading && <p className="text-sm text-yellow-400">Uploading to Cloudinary...</p>}
                             {form.watch('imageUrl') && (
                                 <div className="mt-4 relative group w-fit">
-                                    <img src={form.watch('imageUrl')} alt="Category" className="h-32 w-32 object-cover rounded-lg border border-white/10" />
+                                    <Image src={form.watch('imageUrl') || ''} alt="Category" width={128} height={128} className="object-cover rounded-lg border border-white/10" />
                                     <button
                                         type="button"
                                         onClick={() => form.setValue('imageUrl', '')}

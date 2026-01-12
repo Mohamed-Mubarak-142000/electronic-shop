@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import api from '@/services/api';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from '@/hooks/useTranslation';
+import Image from 'next/image';
 
 interface Job {
     _id: string;
@@ -232,7 +233,7 @@ export default function JobsPage() {
                                 {uploading && <p className="text-sm text-yellow-400 mt-2">{t('admin.jobs.uploading')}</p>}
                                 {newJob.data.imageUrl && (
                                     <div className="mt-4 relative group w-fit">
-                                        <img src={newJob.data.imageUrl} alt="Job Image" className="h-32 w-32 object-contain rounded-lg border border-white/10 bg-white" />
+                                        <Image src={newJob.data.imageUrl || ''} alt="Job Image" width={128} height={128} className="object-contain rounded-lg border border-white/10 bg-white" />
                                         <button
                                             type="button"
                                             onClick={() => setNewJob(prev => ({ ...prev, data: { ...prev.data, imageUrl: '' } }))}

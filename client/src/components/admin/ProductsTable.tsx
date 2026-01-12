@@ -7,6 +7,7 @@ import { productService } from '@/services/productService';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
+import Image from 'next/image';
 import { AdminDataTable } from './shared/AdminDataTable';
 import { useResourceDelete } from '@/hooks/useResourceDelete';
 
@@ -72,10 +73,12 @@ export default function ProductsTable({ filters }: ProductsTableProps) {
             cell: (row) => (
                 <div className="flex items-center gap-4">
                     <div className="h-12 w-12 rounded-lg bg-white/5 flex-shrink-0 overflow-hidden border border-white/10">
-                        <img
+                        <Image
                             alt={row.name}
-                            className="h-full w-full object-cover"
+                            className="object-cover"
                             src={row.images[0] || '/placeholder.png'}
+                            width={48}
+                            height={48}
                         />
                     </div>
                     <div className="flex flex-col">

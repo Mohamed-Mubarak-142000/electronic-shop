@@ -5,6 +5,7 @@ import { useWishlistStore, WishlistItem } from "@/store/useWishlistStore";
 import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-hot-toast";
+import Image from "next/image";
 
 export default function WishlistPage() {
     const { wishlistItems, removeItem } = useWishlistStore();
@@ -63,10 +64,12 @@ export default function WishlistPage() {
 
                                 <Link href={`/product/${item.id}`}>
                                     <div className="relative aspect-square rounded-[1.5rem] overflow-hidden bg-white mb-4">
-                                        <img
+                                        <Image
                                             alt={item.name}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
                                             src={item.imageUrl}
+                                            fill
+                                            sizes="(max-width: 768px) 90vw, (max-width: 1024px) 45vw, (max-width: 1280px) 30vw, 22vw"
                                         />
                                     </div>
                                     <h3 className="font-bold text-lg mb-1 truncate group-hover:text-primary transition-colors">

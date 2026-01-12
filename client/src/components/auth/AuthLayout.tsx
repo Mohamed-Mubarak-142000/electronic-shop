@@ -1,5 +1,6 @@
 import React from 'react';
 import AuthHeader from './AuthHeader';
+import Image from 'next/image';
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -29,7 +30,7 @@ export default function AuthLayout({
 
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
-                    <img alt="Electrical components background" className="w-full h-full object-cover opacity-40 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxdlJ5rZ3NmZHDntb8x9I3MDDL9poTTM3QL5U7lUUPHb-Cpbeg3dwehO4Ss4d3nzKXuTR37NZYKoA0ZNSQNrNH7O-b5eyagGba9CwpWgZG499xcbn-ywdR0ZUkGDf8F13zqvQVA3SunWUZW3C4w-OfpI0rSaWa0vCcc3L3Q0s-6xksaacgzc-5CoGBLuyvLVhdCYOHA5s-7yGcGiCqzJY4b7XWVo2Hmm9wkCDzvVd1HgWL9BZ6hs_nZWgrEc3pICaFYa3B7-WYnVo" />
+                    <Image alt="Electrical components background" className="object-cover opacity-40 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxdlJ5rZ3NmZHDntb8x9I3MDDL9poTTM3QL5U7lUUPHb-Cpbeg3dwehO4Ss4d3nzKXuTR37NZYKoA0ZNSQNrNH7O-b5eyagGba9CwpWgZG499xcbn-ywdR0ZUkGDf8F13zqvQVA3SunWUZW3C4w-OfpI0rSaWa0vCcc3L3Q0s-6xksaacgzc-5CoGBLuyvLVhdCYOHA5s-7yGcGiCqzJY4b7XWVo2Hmm9wkCDzvVd1HgWL9BZ6hs_nZWgrEc3pICaFYa3B7-WYnVo" fill priority sizes="50vw" />
                 </div>
                 {/* Abstract Glow effects */}
                 <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-[100px] z-0"></div>
@@ -42,9 +43,9 @@ export default function AuthLayout({
                     <p className="text-gray-300 text-lg leading-relaxed">{visualDescription}</p>
                     <div className="mt-12 flex gap-4 justify-center">
                         <div className="flex -space-x-3">
-                            <img alt="User 1" className="w-10 h-10 rounded-full border-2 border-surface-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_a2eSJu9Phkg0DpMD1KrRqUhEMsX4AdYcvcrAGKqp8CF6gtW3-vIlkGkupBGCSTdZOmeTJF_8qsylhecfQOJKzjKlqsxlLeMfPnLnVmMYjqHdhNvLuLkszJh7XfOAkd4kF8U_hBK6WVRqB-iA7GfjAJdZKTlDLILQKxggsruUgdIoI8HLA9EdySq6viVpZNxoBr0kHpAiFPdqyGGw7opAXog0cjuq39sxRZXxlewfJ4nNOYJwxww62tjAE_3jL9dR4SZt4O-EH9E" />
-                            <img alt="User 2" className="w-10 h-10 rounded-full border-2 border-surface-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAybcPAt-MzG1pgZII4uxuKnM6u9kkMHO7h3TVzAByqVaJnREMF93kIRizopJfbXlZHqwhVJCY-D_qwFXKM4OMBlAalpSlRKxzFzhQ8vlRQOt7_RavDVsaeT6GBnVxCAExKOXTQJNgqF9bsVyuAe2-oHMXmzLEoeGyNWOrSKcdw_8l_amHkgG_HokkE07Ey43fZbCuDyVziY2OmKxhoZbdC-inm8VaYEfYqsBpH1zdP3sadg6HIVyXNrwsmqAn8dAB0Ilo02iJsXv4" />
-                            <img alt="User 3" className="w-10 h-10 rounded-full border-2 border-surface-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASHu64l2tD0lRbligPIQT1q6jawwMtQv9aINFBF3HZPRS0P_DCbvy4EzoJFUaHm8zocT5l5uhs0JhjnVr5ueijWnWNk1ev1yeHX99cM59efcrSOHTbAxN7K9UMuAKK36T8Ov7cg1mLM2jtXIZezpEmZ76WV9Bl2BeB27LFqvRWZBiHp0PKXF5ZU8eZTCOfHeOHnJxjc7Akg7PtF4baG6tau2tAAkmIJjpb7cGyMgKelJW_fE6CrYtrYPKkzRTUDFUhahaipCyStIg" />
+                            <Image alt="User 1" className="rounded-full border-2 border-surface-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_a2eSJu9Phkg0DpMD1KrRqUhEMsX4AdYcvcrAGKqp8CF6gtW3-vIlkGkupBGCSTdZOmeTJF_8qsylhecfQOJKzjKlqsxlLeMfPnLnVmMYjqHdhNvLuLkszJh7XfOAkd4kF8U_hBK6WVRqB-iA7GfjAJdZKTlDLILQKxggsruUgdIoI8HLA9EdySq6viVpZNxoBr0kHpAiFPdqyGGw7opAXog0cjuq39sxRZXxlewfJ4nNOYJwxww62tjAE_3jL9dR4SZt4O-EH9E" width={40} height={40} />
+                            <Image alt="User 2" className="rounded-full border-2 border-surface-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAybcPAt-MzG1pgZII4uxuKnM6u9kkMHO7h3TVzAByqVaJnREMF93kIRizopJfbXlZHqwhVJCY-D_qwFXKM4OMBlAalpSlRKxzFzhQ8vlRQOt7_RavDVsaeT6GBnVxCAExKOXTQJNgqF9bsVyuAe2-oHMXmzLEoeGyNWOrSKcdw_8l_amHkgG_HokkE07Ey43fZbCuDyVziY2OmKxhoZbdC-inm8VaYEfYqsBpH1zdP3sadg6HIVyXNrwsmqAn8dAB0Ilo02iJsXv4" width={40} height={40} />
+                            <Image alt="User 3" className="rounded-full border-2 border-surface-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASHu64l2tD0lRbligPIQT1q6jawwMtQv9aINFBF3HZPRS0P_DCbvy4EzoJFUaHm8zocT5l5uhs0JhjnVr5ueijWnWNk1ev1yeHX99cM59efcrSOHTbAxN7K9UMuAKK36T8Ov7cg1mLM2jtXIZezpEmZ76WV9Bl2BeB27LFqvRWZBiHp0PKXF5ZU8eZTCOfHeOHnJxjc7Akg7PtF4baG6tau2tAAkmIJjpb7cGyMgKelJW_fE6CrYtrYPKkzRTUDFUhahaipCyStIg" width={40} height={40} />
                             <div className="w-10 h-10 rounded-full border-2 border-surface-dark bg-gray-700 flex items-center justify-center text-xs text-white font-medium">+2k</div>
                         </div>
                         <div className="flex flex-col items-start justify-center">

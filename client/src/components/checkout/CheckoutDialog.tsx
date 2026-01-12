@@ -12,6 +12,8 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useCurrency } from "@/hooks/useCurrency";
 import { isAxiosError } from "axios";
 
+import OptimizedImage from '@/components/shared/OptimizedImage';
+
 interface CheckoutDialogProps {
     isOpen: boolean;
     onClose: () => void;
@@ -225,8 +227,15 @@ export default function CheckoutDialog({ isOpen, onClose }: CheckoutDialogProps)
                     <div className="space-y-3">
                         {cartItems.map(item => (
                             <div key={item.id} className="flex gap-4 p-3 rounded-2xl bg-white dark:bg-surface-dark shadow-sm border border-slate-100 dark:border-surface-highlight/50 items-center hover:border-primary/20 transition-colors">
-                                <div className="w-12 h-12 rounded-xl bg-gray-50 dark:bg-black/20 shrink-0 overflow-hidden border border-slate-100 dark:border-surface-highlight">
-                                    <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                                <div className="relative w-12 h-12 rounded-xl bg-gray-50 dark:bg-black/20 shrink-0 overflow-hidden border border-slate-100 dark:border-surface-highlight">
+                                    <OptimizedImage 
+                                        src={item.imageUrl} 
+                                        alt={item.name} 
+                                        fill 
+                                        className="object-cover" 
+                                        sizes="48px"
+                                        useSkeleton={false}
+                                    />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="font-bold text-sm text-slate-900 dark:text-white truncate">{item.name}</p>

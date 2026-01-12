@@ -7,6 +7,7 @@ import { X } from 'lucide-react';
 import { productService } from '@/services/productService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
+import Image from 'next/image';
 
 interface Product {
     _id: string;
@@ -87,19 +88,22 @@ export default function NewProductDrawer() {
         <AnimatePresence>
             {currentProduct && (
                 <motion.div
-                    initial={{ y: '100%' }}
-                    animate={{ y: 0 }}
-                    exit={{ y: '100%' }}
+                    // Performance: Use transform instead of y for better animation performance
+                    initial={{ opacity: 0, transform: "translateY(100%)" }}
+                    animate={{ opacity: 1, transform: "translateY(0)" }}
+                    exit={{ opacity: 0, transform: "translateY(100%)" }}
                     transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                     className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] p-6 rounded-t-3xl"
                 >
                     <div className="max-w-2xl mx-auto flex gap-6">
                         <div className="w-32 h-32 flex-shrink-0 bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-hidden">
                             {currentProduct.images?.[0] ? (
-                                <img
+                                <Image
                                     src={currentProduct.images[0]}
                                     alt={currentProduct.name}
-                                    className="w-full h-full object-cover"
+                                    className="object-cover"
+                                    width={128}
+                                    height={128}
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-slate-400">
@@ -119,10 +123,11 @@ export default function NewProductDrawer() {
                                     </h3>
                                 </div>
                                 <button
+                                    aria-label="Dismiss notification"
                                     onClick={() => setCurrentProduct(null)}
                                     className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
                                 >
-                                    <X size={20} />
+                                    <X size={20} aria-hidden="true" />
                                 </button>
                             </div>
 
@@ -141,12 +146,13 @@ export default function NewProductDrawer() {
                         </div>
                     </div>
 
-                    {/* Auto-close progress bar */}
+                    {/* Auto-close progress bar - Performance: use scaleX instead of width */}
                     <motion.div
-                        initial={{ width: '100%' }}
-                        animate={{ width: 0 }}
+                        initial={{ scaleX: 1 }}
+                        animate={{ scaleX: 0 }}
                         transition={{ duration: 30, ease: 'linear' }}
-                        className="absolute bottom-0 left-0 h-1 bg-primary-500/30"
+                        style={{ transformOrigin: 'left' }}
+                        className="absolute bottom-0 left-0 w-full h-1 bg-primary-500/30"
                     />
                 </motion.div>
             )}

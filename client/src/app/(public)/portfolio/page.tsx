@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAuthStore } from '@/store/useAuthStore';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Portfolio, PortfolioOwnerResponse } from '@/types';
 import {
     Briefcase,
@@ -45,9 +46,10 @@ const ProjectCard = ({ project, index, language }: { project: Portfolio; index: 
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
+            // Performance: Use only transform and opacity for smooth animations without layout shifts
+            initial={{ opacity: 0, transform: "translateY(20px)" }}
+            animate={{ opacity: 1, transform: "translateY(0)" }}
+            transition={{ delay: index * 0.1, duration: 0.3 }}
             className="group bg-[#112117] rounded-3xl overflow-hidden border border-[#1a3324] hover:border-primary/30 transition-all shadow-lg"
         >
             <div className="aspect-[4/3] bg-surface-highlight overflow-hidden relative">
@@ -56,6 +58,7 @@ const ProjectCard = ({ project, index, language }: { project: Portfolio; index: 
                         key={currentImage}
                         src={displayImage}
                         alt={project.title}
+                        // Performance: Use opacity-only animation for image transitions
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -71,16 +74,18 @@ const ProjectCard = ({ project, index, language }: { project: Portfolio; index: 
                 {project.images && project.images.length > 1 && (
                     <>
                         <button
+                            aria-label="Previous image"
                             onClick={prevImage}
                             className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full z-20 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
-                            <ChevronLeft size={20} />
+                            <ChevronLeft size={20} aria-hidden="true" />
                         </button>
                         <button
+                            aria-label="Next image"
                             onClick={nextImage}
                             className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full z-20 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
-                            <ChevronRight size={20} />
+                            <ChevronRight size={20} aria-hidden="true" />
                         </button>
                         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1 z-10">
                             {project.images.map((_, i) => (
@@ -175,11 +180,13 @@ export default function PortfolioDashboard() {
                         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-full -mr-20 -mt-20"></div>
 
                         <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
-                            <div className="size-32 rounded-3xl bg-surface-highlight overflow-hidden border-2 border-primary/20">
-                                <img
+                            <div className="size-32 rounded-3xl bg-surface-highlight overflow-hidden border-2 border-primary/20 shrink-0">
+                                <Image
                                     src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop"
                                     alt={owner.name}
-                                    className="w-full h-full object-cover"
+                                    width={128}
+                                    height={128}
+                                    className="object-cover"
                                 />
                             </div>
 

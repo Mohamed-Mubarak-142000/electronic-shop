@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import OptimizedImage from "@/components/shared/OptimizedImage";
 import ProductCard from "@/components/shared/ProductCard";
 import { productService } from "@/services/productService";
 import { categoryService, brandService } from "@/services/metadataService";
@@ -10,16 +10,39 @@ import { userService } from "@/services/userService";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import dynamic from 'next/dynamic';
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "@/types";
 import Testimonials from "@/components/home/Testimonials";
+import LazySection from "@/components/shared/LazySection";
+import { useEffect } from 'react';
 
+// Performance: Import slick carousel CSS
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+// Performance: Lazy load react-slick to reduce initial bundle size
+const Slider = dynamic(() => import("react-slick"), {
+  ssr: false,
+  loading: () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="h-96 bg-surface-dark/30 rounded-2xl animate-pulse"></div>
+      ))}
+    </div>
+  ),
+});
+
+// Performance: Lazy load MapSelector to reduce initial bundle
 const MapSelector = dynamic<{ value: { lat: number; lng: number }; onChange: (v: { lat: number, lng: number }) => void; readOnly?: boolean }>(
   () => import('../../components/shared/MapSelector'),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="h-full min-h-[600px] w-full bg-surface-dark/30 animate-pulse rounded-lg flex items-center justify-center">
+        <span className="material-symbols-outlined text-4xl text-gray-600 animate-spin">map</span>
+      </div>
+    ),
+  }
 );
 
 interface ArrowProps {
@@ -32,10 +55,11 @@ function SampleNextArrow(props: ArrowProps) {
   const { onClick } = props;
   return (
     <button
+      aria-label="Next slide"
       className="absolute right-0 top-1/2 -translate-y-1/2 z-10 size-12 rounded-full bg-[#112117]/80 backdrop-blur-sm border border-[#254632] flex items-center justify-center text-white hover:bg-primary hover:text-[#112117] transition-all shadow-xl -mr-6"
       onClick={onClick}
     >
-      <span className="material-symbols-outlined">chevron_right</span>
+      <span className="material-symbols-outlined" aria-hidden="true">chevron_right</span>
     </button>
   );
 }
@@ -44,10 +68,11 @@ function SamplePrevArrow(props: ArrowProps) {
   const { onClick } = props;
   return (
     <button
+      aria-label="Previous slide"
       className="absolute left-0 top-1/2 -translate-y-1/2 z-10 size-12 rounded-full bg-[#112117]/80 backdrop-blur-sm border border-[#254632] flex items-center justify-center text-white hover:bg-primary hover:text-[#112117] transition-all shadow-xl -ml-6"
       onClick={onClick}
     >
-      <span className="material-symbols-outlined">chevron_left</span>
+      <span className="material-symbols-outlined" aria-hidden="true">chevron_left</span>
     </button>
   );
 }
@@ -101,14 +126,21 @@ export default function Home() {
 
         {/* Hero Section */}
         <div className="py-6">
-          <div
-            className="relative overflow-hidden rounded-[2rem] min-h-[520px] flex items-center bg-cover bg-center group"
-            style={{
-              backgroundImage:
-                'linear-gradient(to right, rgba(17, 33, 23, 0.9) 0%, rgba(17, 33, 23, 0.4) 50%, rgba(17, 33, 23, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDADEqPsOmKi_XwT6AvVte0yDQygWKaXYZ2lasqr0jLA8v6hyUh66MVDYjpNFU2O-7zz3D72k5QkRVp3KOi-6o1nxnw_63XoyWOIxgMPa1GdeCpvrrQzN7J5iGAyJProQ_TjdnkXTwzicepoLZ2xTTorXP5pj0ehkLNZeXjB9HXxcVg1WHQdS6TNptMGr6odEC-0zSdIqIksRC6UuEzr0jlBxHubRXGtva1bUJHDOmUihlEXDu6s5dQPFSYlNCgAZK6wZq4Tfchwog")',
-            }}
-          >
+          <div className="relative overflow-hidden rounded-[2rem] min-h-[520px] flex items-center group">
+            {/* Performance: Hero image with high priority for LCP optimization */}
+            <OptimizedImage
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDADEqPsOmKi_XwT6AvVte0yDQygWKaXYZ2lasqr0jLA8v6hyUh66MVDYjpNFU2O-7zz3D72k5QkRVp3KOi-6o1nxnw_63XoyWOIxgMPa1GdeCpvrrQzN7J5iGAyJProQ_TjdnkXTwzicepoLZ2xTTorXP5pj0ehkLNZeXjB9HXxcVg1WHQdS6TNptMGr6odEC-0zSdIqIksRC6UuEzr0jlBxHubRXGtva1bUJHDOmUihlEXDu6s5dQPFSYlNCgAZK6wZq4Tfchwog"
+              alt="Electro Shop Hero - Modern Electronics and Professional Tools"
+              fill
+              priority
+              fetchPriority="high"
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1440px) 90vw, 1440px"
+              quality={85}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#112117]/90 via-[#112117]/40 to-transparent"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-[#112117] via-transparent to-transparent opacity-60"></div>
+            
             <div className="relative z-10 p-8 md:p-16 max-w-3xl flex flex-col gap-6 items-start">
               <span className="inline-flex items-center gap-2 rounded-full bg-primary/20 px-3 py-1 text-xs font-bold text-primary backdrop-blur-sm border border-primary/20">
                 <span className="material-symbols-outlined text-sm">eco</span>
@@ -193,11 +225,14 @@ export default function Home() {
               homeCategories.map((cat) => (
                 <Link key={cat._id} href={`/shop?category=${cat._id}`} className="group flex flex-col items-center gap-4">
                   <div className="relative w-full aspect-square rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                      style={{ backgroundImage: `url("${cat.imageUrl || 'https://placehold.co/400x400?text=' + cat.name}")` }}
-                    ></div>
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+                    <OptimizedImage
+                        src={cat.imageUrl || `https://placehold.co/400x400?text=${cat.name}`}
+                        alt={cat.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors z-10"></div>
                   </div>
                   <span className="text-white font-medium text-center group-hover:text-primary transition-colors">
                     {cat.name}
@@ -294,6 +329,7 @@ export default function Home() {
 
         {/* CTA Section */}
         <div className="py-12">
+          <LazySection>
           <div className="relative overflow-hidden rounded-[3rem] bg-[#254632] bg-opacity-40">
             <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/10 to-transparent"></div>
             <div className="absolute bottom-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
@@ -324,12 +360,16 @@ export default function Home() {
               {/* Visual Element */}
               <div className="relative size-64 md:size-80 flex-shrink-0">
                 <div className="absolute inset-0 bg-primary/20 rounded-full blur-3xl"></div>
-                <Image
-                  alt="Electrician hard hat and blueprints"
+                {/* Performance: Add proper sizes and loading strategy for B2B section image */}
+                <OptimizedImage
+                  alt="Professional electrician with safety equipment and project blueprints"
                   width={320}
                   height={320}
-                  className="relative z-10 w-full h-full object-cover rounded-full border-4 border-[#254632] shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500"
+                  containerClassName="w-full h-full rounded-full border-4 border-[#254632] shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500"
+                  className="relative z-10 w-full h-full object-cover rounded-full"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-AG2JpXiB2fT-3UQMvwbIsx9b-DzSLP8aG97UO710bW-wLjvufVzVglC4C3PuMCj9cIdNI-1kP9INrZraiWBOiuME2_9LXdrAwvqA0BdLCwAolHdbg6BwM0QDl6x2cF08AnJQGhu4fgIKUJPVsb-JYi3_YP20SlZrJmXcNQKYbyoOCLoowZlO4MEA0BRFoXxdbWCHjOko3iQJFK5207UCuOuof0n3TfwBpq8y2XofH1_FEEIgg2A7OJy5h48-xWaW-UdTY10xWPI"
+                  sizes="(max-width: 768px) 256px, 320px"
+                  loading="lazy"
                 />
                 <div className="absolute -bottom-4 -right-4 bg-[#122118] p-4 rounded-2xl border border-[#254632] shadow-xl z-20">
                   <div className="flex items-center gap-3">
@@ -345,6 +385,7 @@ export default function Home() {
               </div>
             </div>
           </div>
+          </LazySection>
         </div>
 
         {/* Latest Arrivals Section */}
@@ -373,9 +414,9 @@ export default function Home() {
         <Testimonials />
 
         {/* Store Locator Section */}
-        <div className="py-12 border-t border-[#254632] mt-8">
+        <LazySection className="py-12 border-t border-[#254632] mt-8" placeholderHeight="min-h-[500px]">
           <div className="grid md:grid-cols-2 gap-8 items-center rounded-3xl bg-surface-dark overflow-hidden min-h-[500px]">
-            <div className="p-8 md:p-12">
+             <div className="p-8 md:p-12">
               <h2 className="text-3xl font-bold text-white mb-4">
                 {t('home.visitShowroom')}
               </h2>
@@ -433,7 +474,7 @@ export default function Home() {
               />
             </div>
           </div>
-        </div>
+        </LazySection>
 
       </div>
     </div>

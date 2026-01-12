@@ -22,9 +22,11 @@ const ChatPopup = () => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
-        setTimeout(() => {
+        if (!messagesEndRef.current) return;
+        
+        requestAnimationFrame(() => {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        });
     };
 
     const connectSocket = () => {
@@ -115,9 +117,11 @@ const ChatPopup = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                        // Performance: Use transform and opacity for better animation performance
+                        initial={{ opacity: 0, transform: "translateY(20px) scale(0.95)" }}
+                        animate={{ opacity: 1, transform: "translateY(0) scale(1)" }}
+                        exit={{ opacity: 0, transform: "translateY(20px) scale(0.95)" }}
+                        transition={{ duration: 0.2 }}
                         className="bg-white dark:bg-slate-900 shadow-2xl rounded-2xl w-80 sm:w-96 h-[500px] flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800 mb-4"
                     >
                         {/* Header */}
@@ -132,10 +136,11 @@ const ChatPopup = () => {
                                 </div>
                             </div>
                             <button
+                                aria-label="Close chat"
                                 onClick={() => setIsOpen(false)}
                                 className="hover:bg-white/10 p-1 rounded-full transition-colors"
                             >
-                                <X size={20} />
+                                <X size={20} aria-hidden="true" />
                             </button>
                         </div>
 
@@ -188,10 +193,11 @@ const ChatPopup = () => {
                             />
                             <button
                                 type="submit"
+                                aria-label="Send message"
                                 disabled={!inputText.trim()}
                                 className="bg-primary text-white p-2 rounded-full hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
                             >
-                                <Send size={18} className={isRtl ? 'rotate-180' : ''} />
+                                <Send size={18} className={isRtl ? 'rotate-180' : ''} aria-hidden="true" />
                             </button>
                         </form>
                     </motion.div>
@@ -200,6 +206,7 @@ const ChatPopup = () => {
 
             {/* Toggle Button */}
             <motion.button
+                aria-label={isOpen ? "Close chat" : "Open chat"}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsOpen(!isOpen)}
@@ -208,7 +215,7 @@ const ChatPopup = () => {
                     : 'bg-primary text-white'
                     }`}
             >
-                {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
+                {isOpen ? <X size={24} aria-hidden="true" /> : <MessageCircle size={24} aria-hidden="true" />}
                 {!isOpen && (
                     <span className={`absolute -top-1 ${isRtl ? '-left-1' : '-right-1'} flex h-3 w-3`}>
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>

@@ -2,6 +2,7 @@
 
 import { useTranslation } from '@/hooks/useTranslation';
 import { Product } from '@/types';
+import Image from 'next/image';
 
 export default function LowStockAlert({ products }: { products?: Product[] }) {
     const { t } = useTranslation();
@@ -19,10 +20,12 @@ export default function LowStockAlert({ products }: { products?: Product[] }) {
                     products.map((product) => (
                         <div key={product._id} className="flex items-center gap-4 p-3 rounded-lg bg-background-dark border border-white/5">
                             <div className="relative size-12 rounded-lg overflow-hidden border border-white/10 shrink-0">
-                                <img
+                                <Image
                                     src={product.images?.[0] || 'https://via.placeholder.com/50'}
                                     alt={product.name}
-                                    className="w-full h-full object-cover"
+                                    className="object-cover"
+                                    fill
+                                    sizes="48px"
                                 />
                             </div>
                             <div className="flex-1 min-w-0">

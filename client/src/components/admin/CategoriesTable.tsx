@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { categoryService } from '@/services/metadataService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Category } from '@/types';
+import Image from 'next/image';
 import { AdminDataTable } from './shared/AdminDataTable';
 import { useResourceDelete } from '@/hooks/useResourceDelete';
 
@@ -56,7 +57,13 @@ export default function CategoriesTable({ filters }: CategoriesTableProps) {
             header: <span className="text-gray-400">{t('admin.table.category')}</span>,
             cell: (row) => (
                 <div className={`flex items-center gap-4`}>
-                    <img className="size-12 rounded-full object-cover border-2 border-[#254632] group-hover:border-primary transition-colors" src={row.imageUrl || '/placeholder.png'} alt={row.name} />
+                    <Image 
+                        className="size-12 rounded-full object-cover border-2 border-[#254632] group-hover:border-primary transition-colors" 
+                        src={row.imageUrl || '/placeholder.png'} 
+                        alt={row.name} 
+                        width={48} 
+                        height={48}
+                    />
                     <div>
                         <p className="text-white font-medium">{row.name}</p>
                     </div>

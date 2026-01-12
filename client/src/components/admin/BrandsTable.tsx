@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { brandService } from '@/services/metadataService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Brand } from '@/types';
+import Image from 'next/image';
 import { AdminDataTable } from './shared/AdminDataTable';
 import { useResourceDelete } from '@/hooks/useResourceDelete';
 
@@ -57,7 +58,13 @@ export default function BrandsTable({ filters }: BrandsTableProps) {
             cell: (row) => (
                 <div className="flex items-center gap-4">
                     <div className="size-12 rounded-full bg-white p-2 shrink-0 overflow-hidden flex items-center justify-center border-2 border-[#254632] group-hover:border-primary transition-colors">
-                        <img className="w-full h-auto object-contain" src={row.logoUrl || '/placeholder.png'} alt={row.name} />
+                        <Image 
+                            className="object-contain w-auto h-auto" 
+                            src={row.logoUrl || '/placeholder.png'} 
+                            alt={row.name} 
+                            width={32} 
+                            height={32}
+                        />
                     </div>
                     <div>
                         <p className="text-white font-medium">{row.name}</p>

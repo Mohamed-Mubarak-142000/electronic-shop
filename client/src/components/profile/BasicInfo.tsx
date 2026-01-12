@@ -2,11 +2,11 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { ProfileFormValues } from "./profile-schema";
+import { en } from "@/locales/translations";
 
 interface BasicInfoProps {
   form: UseFormReturn<ProfileFormValues>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  t: (key: any) => string;
+  t: (key: keyof typeof en) => string;
   language: string;
 }
 

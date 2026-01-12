@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 import ProductCard from "@/components/shared/ProductCard";
 import { useCurrency } from "@/hooks/useCurrency";
 import { Product } from "@/types";
+import OptimizedImage from "@/components/shared/OptimizedImage";
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -152,10 +153,13 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                     <div className="flex flex-col gap-4">
                         <div className="relative w-full aspect-square rounded-[2rem] overflow-hidden bg-slate-100 dark:bg-surface-dark group border border-slate-200 dark:border-transparent">
                             {product.images.length > 0 ? (
-                                <img
+                                <OptimizedImage
                                     alt={product.name}
-                                    className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                                     src={product.images[activeImageIndex]}
+                                    fill
+                                    priority
+                                    sizes="(max-width: 1024px) 100vw, 50vw"
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-slate-400">No image available</div>
@@ -187,10 +191,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                                         onClick={() => setActiveImageIndex(index)}
                                         className={`flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden border-2 transition-all ${activeImageIndex === index ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:border-slate-300 dark:hover:border-slate-600 opacity-70 hover:opacity-100'}`}
                                     >
-                                        <img
+                                        <OptimizedImage
                                             alt={`Thumbnail ${index}`}
-                                            className="w-full h-full object-cover"
+                                            className="object-cover"
                                             src={img}
+                                            width={96}
+                                            height={96}
                                         />
                                     </button>
                                 ))}

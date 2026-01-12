@@ -5,6 +5,7 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import { toast } from "react-hot-toast";
 import { useCurrency } from "@/hooks/useCurrency";
 import { Product } from "@/types";
+import OptimizedImage from "@/components/shared/OptimizedImage";
 
 export default function ProductCard({ product }: { product: Product }) {
     const user = useAuthStore((state) => state.user);
@@ -73,10 +74,14 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="group relative bg-surface-dark rounded-[2rem] p-4 hover:bg-surface-highlight transition-all duration-300 flex flex-col h-full font-display border border-surface-highlight/10 hover:border-primary/20">
             <div className="relative aspect-[4/3] rounded-[1.5rem] overflow-hidden bg-white mb-4 shadow-inner">
                 <Link href={`/product/${product._id}`}>
-                    <img
-                        alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                    {/* Performance: Lazy load product images with proper sizes */}
+                    <OptimizedImage
+                        alt={`${product.name} - ${product.description.slice(0, 50)}`}
+                        className="object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
                         src={imageSrc}
+                        fill
+                        loading="lazy"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     />
                 </Link>
                 {product.isDiscountActive && product.salePrice && (
@@ -129,16 +134,18 @@ export default function ProductCard({ product }: { product: Product }) {
                     </div>
                     <div className="flex gap-2">
                         <button
+                            aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
                             onClick={handleWishlistToggle}
                             className={`size-10 rounded-full border flex items-center justify-center transition-all ${isWishlisted ? 'bg-red-500/10 border-red-500 text-red-500' : 'bg-[#122118] border-surface-highlight text-white hover:border-red-500 hover:text-red-500'}`}
                         >
-                            <span className={`material-symbols-outlined ${isWishlisted ? 'filled' : ''}`} style={{ fontVariationSettings: isWishlisted ? "'FILL' 1" : "" }}>favorite</span>
+                            <span className={`material-symbols-outlined ${isWishlisted ? 'filled' : ''}`} style={{ fontVariationSettings: isWishlisted ? "'FILL' 1" : "" }} aria-hidden="true">favorite</span>
                         </button>
                         <button
+                            aria-label={`Add ${product.name} to cart`}
                             onClick={handleAddToCart}
                             className="size-10 rounded-full bg-[#122118] border border-surface-highlight text-white flex items-center justify-center hover:bg-primary hover:text-[#122118] hover:border-primary transition-all shadow-[0_0_15px_rgba(54,226,123,0)_hover:shadow-[0_0_15px_rgba(54,226,123,0.3)]"
                         >
-                            <span className="material-symbols-outlined">add_shopping_cart</span>
+                            <span className="material-symbols-outlined" aria-hidden="true">add_shopping_cart</span>
                         </button>
                     </div>
                 </div>

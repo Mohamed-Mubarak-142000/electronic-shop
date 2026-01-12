@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCurrency } from "@/hooks/useCurrency";
+import Image from 'next/image';
 
 interface CartItemProps {
     item: {
@@ -25,10 +26,12 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }: CartItemP
                 {/* Product Info */}
                 <div className="md:col-span-6 flex gap-4">
                     <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg bg-gray-100 dark:bg-black/20 overflow-hidden relative">
-                        <img
+                        <Image
                             src={item.imageUrl}
                             alt={item.name}
-                            className="w-full h-full object-cover object-center"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 80px, 96px"
                         />
                     </div>
                     <div className="flex flex-col justify-center">

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Portfolio } from '@/types';
+import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { portfolioService } from '@/services/portfolioService';
 import { useQueryClient } from '@tanstack/react-query';
@@ -216,7 +217,7 @@ export default function PortfolioForm({ initialData, onClose, isOpen }: Portfoli
                         <div className="flex flex-wrap gap-4 mt-4">
                             {formData.images.map((img, index) => (
                                 <div key={index} className="relative group">
-                                    <img src={img} alt="Project" className="h-24 w-24 object-cover rounded-lg border border-white/10" />
+                                    <Image src={img} alt="Project" width={96} height={96} className="object-cover rounded-lg border border-white/10" />
                                     <button
                                         type="button"
                                         onClick={() => setFormData(prev => ({ ...prev, images: prev.images.filter((_, i) => i !== index) }))}

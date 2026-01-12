@@ -2,7 +2,7 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import Image from 'next/image';
+import OptimizedImage from '@/components/shared/OptimizedImage';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -44,12 +44,13 @@ export default function HeroCarousel() {
                 {slides.map((slide) => (
                     <SwiperSlide key={slide.id} className="relative w-full h-full">
                         <div className="absolute inset-0 bg-black/40 z-10" />
-                        <Image
+                        <OptimizedImage
                             src={slide.image}
                             alt={slide.title}
                             fill
                             className="object-cover"
-                            priority
+                            priority={slide.id === 1}
+                            sizes="100vw"
                         />
                         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white text-center px-4">
                             <h1 className="text-4xl md:text-6xl font-bold mb-4">{slide.title}</h1>

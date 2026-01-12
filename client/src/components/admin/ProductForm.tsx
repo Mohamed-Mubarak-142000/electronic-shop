@@ -13,6 +13,7 @@ import { uploadService } from '@/services/uploadService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useConfigStore } from '@/store/useConfigStore';
 import { Product, Category, Brand } from '@/types';
+import Image from 'next/image';
 import { en } from '@/locales/translations';
 
 const createProductSchema = (minImages: number, maxImages: number, t: (key: keyof typeof en, params?: Record<string, string | number>) => string) => z.object({
@@ -128,7 +129,6 @@ export default function ProductForm({ initialData }: ProductFormProps) {
     };
 
     const createMutation = useMutation({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         mutationFn: (data: ProductPayload) => productService.createProduct(data as unknown as Record<string, unknown>),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -140,7 +140,6 @@ export default function ProductForm({ initialData }: ProductFormProps) {
     });
 
     const updateMutation = useMutation({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         mutationFn: (data: ProductPayload) => productService.updateProduct(initialData?._id || '', data as unknown as Record<string, unknown>),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -263,7 +262,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                         <div className="flex flex-wrap gap-4 mt-4">
                             {form.watch('images')?.map((img, index) => (
                                 <div key={index} className="relative group">
-                                    <img src={img} alt={`Product ${index}`} className="h-24 w-24 object-cover rounded-lg border border-white/10" />
+                                    <Image src={img} alt={`Product ${index}`} width={96} height={96} className="object-cover rounded-lg border border-white/10" />
                                     <button
                                         type="button"
                                         onClick={() => removeImage(index)}

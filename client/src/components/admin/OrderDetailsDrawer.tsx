@@ -3,6 +3,7 @@
 import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
 import { Order } from '@/types';
+import Image from 'next/image';
 
 interface OrderDetailsDrawerProps {
     order?: Order | null;
@@ -62,7 +63,7 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
                     <div className="space-y-3">
                         {order.orderItems?.map((item, index) => (
                             <div key={index} className="flex gap-4 p-3 rounded-xl bg-[#112117] border border-white/10 hover:border-gray-600 transition-colors">
-                                <img className="w-16 h-16 rounded-lg object-cover bg-white/5" src={item.image || '/placeholder.png'} alt={item.name} />
+                                <Image className="rounded-lg object-cover bg-white/5" src={item.image || '/placeholder.png'} alt={item.name} width={64} height={64} />
                                 <div className="flex-1">
                                     <div className="flex justify-between items-start">
                                         <p className="text-white text-sm font-bold line-clamp-2">{item.name}</p>
