@@ -172,6 +172,10 @@ export interface Order {
     user: User;
     orderItems: OrderItem[];
     shippingAddress: ShippingAddress;
+    shipping?: {
+        address: string;
+        cost: number;
+    };
     paymentMethod: string;
     paymentResult?: {
         id: string;
@@ -183,10 +187,12 @@ export interface Order {
     taxPrice: number;
     shippingPrice: number;
     totalPrice: number;
+    total?: number;
     isPaid: boolean;
     paidAt?: string;
     isDelivered: boolean;
     deliveredAt?: string;
+    status?: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
     createdAt: string;
     updatedAt: string;
 }

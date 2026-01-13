@@ -186,6 +186,7 @@ export const en = {
     "admin.sidebar.messages": "Messages",
     "admin.sidebar.jobs": "Jobs",
     "admin.sidebar.portfolio": "Portfolio",
+    "admin.sidebar.profile": "Profile",
     "admin.sidebar.schedules": "Schedules",
     "admin.sidebar.settings": "Settings",
     "admin.sidebar.logout": "Logout",
@@ -406,12 +407,19 @@ export const en = {
 
     "admin.orders.title": "Orders Management",
     "admin.orders.subtitle": "Track and manage customer orders and shipments.",
+    "admin.orders.select_order": "Select an Order",
+    "admin.orders.select_order_desc": "Click on an order from the list to view details",
+    "admin.orders.order": "Order",
+    "admin.orders.order_not_found": "Order Not Found",
+    "admin.orders.back_to_orders": "Back to Orders",
+    "admin.orders.payment_method": "Payment Method",
 
     "admin.customers.title": "Customers",
     "admin.customers.subtitle": "Manage user accounts and permissions.",
 
     // Order Details
     "admin.orders.update_status": "Update",
+    "admin.orders.download_invoice": "Download Invoice",
     "admin.orders.details.customer_details": "Customer Details",
     "admin.orders.details.items": "Items",
     "admin.orders.details.shipping_address": "Shipping Address",
@@ -659,7 +667,10 @@ export const ar = {
     "admin.sidebar.customers": "العملاء",
     "admin.sidebar.messages": "الرسائل",
     "admin.sidebar.jobs": "الوظائف",
-    "admin.sidebar.portfolio": "الأعمال",    "admin.sidebar.schedules": "الجداول",    "admin.sidebar.settings": "الإعدادات",
+    "admin.sidebar.portfolio": "الأعمال",
+    "admin.sidebar.profile": "الملف الشخصي",
+    "admin.sidebar.schedules": "الجداول",
+    "admin.sidebar.settings": "الإعدادات",
     "admin.sidebar.logout": "تسجيل الخروج",
 
     "admin.portfolio.form.published": "منشور",
@@ -880,12 +891,19 @@ export const ar = {
 
     "admin.orders.title": "إدارة الطلبات",
     "admin.orders.subtitle": "تتبع وإدارة طلبات العملاء والشحنات.",
+    "admin.orders.select_order": "اختر طلب",
+    "admin.orders.select_order_desc": "انقر على طلب من القائمة لعرض التفاصيل",
+    "admin.orders.order": "طلب",
+    "admin.orders.order_not_found": "الطلب غير موجود",
+    "admin.orders.back_to_orders": "العودة إلى الطلبات",
+    "admin.orders.payment_method": "طريقة الدفع",
 
     "admin.customers.title": "العملاء",
     "admin.customers.subtitle": "إدارة حسابات المستخدمين والصلاحيات.",
 
     // Order Details
     "admin.orders.update_status": "تحديث",
+    "admin.orders.download_invoice": "تحميل الفاتورة",
     "admin.orders.details.customer_details": "تفاصيل العميل",
     "admin.orders.details.items": "العناصر",
     "admin.orders.details.shipping_address": "عنوان الشحن",

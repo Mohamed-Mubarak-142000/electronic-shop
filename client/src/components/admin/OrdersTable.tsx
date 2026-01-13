@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Column } from '@/components/ui/data-table';
 import { AdminDataTable } from '@/components/admin/shared/AdminDataTable';
 import { useQuery } from '@tanstack/react-query';
@@ -9,9 +10,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
 import { Order } from '@/types';
 
-export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order) => void }) {
+export default function OrdersTable() {
     const { t } = useTranslation();
     const { formatPrice } = useCurrency();
+    const router = useRouter();
     const [page, setPage] = useState(1);
     const limit = 10;
 
@@ -65,24 +67,33 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
                 let statusStyles = '';
                 let dotColor = '';
 
-                const status = row.isDelivered ? 'Delivered' : (row.isPaid ? 'Paid' : 'Pending');
-                const statusLabel = row.isDelivered ? t('admin.status.delivered') : (row.isPaid ? t('admin.status.paid') : t('admin.status.pending'));
+                // Use the actual status field, fallback to derived status
+                const status = row.status || (row.isDelivered ? 'Delivered' : (row.isPaid ? 'Processing' : 'Pending'));
 
                 if (status === 'Pending') {
                     statusStyles = 'bg-yellow-500/20 text-yellow-400 border-yellow-500/20';
                     dotColor = 'bg-yellow-400';
-                } else if (status === 'Paid') {
+                } else if (status === 'Processing') {
+                    statusStyles = 'bg-purple-500/20 text-purple-400 border-purple-500/20';
+                    dotColor = 'bg-purple-400';
+                } else if (status === 'Shipped') {
                     statusStyles = 'bg-blue-500/20 text-blue-400 border-blue-500/20';
                     dotColor = 'bg-blue-400';
-                } else {
+                } else if (status === 'Delivered') {
                     statusStyles = 'bg-green-500/20 text-green-400 border-green-500/20';
                     dotColor = 'bg-green-400';
+                } else if (status === 'Cancelled') {
+                    statusStyles = 'bg-red-500/20 text-red-400 border-red-500/20';
+                    dotColor = 'bg-red-400';
+                } else {
+                    statusStyles = 'bg-gray-500/20 text-gray-400 border-gray-500/20';
+                    dotColor = 'bg-gray-400';
                 }
 
                 return (
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${statusStyles}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
-                        {statusLabel}
+                        {status}
                     </span>
                 );
             }
@@ -90,8 +101,14 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
         {
             header: t('admin.table.actions'),
             className: 'text-right',
-            cell: () => (
-                <button className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors">
+            cell: (row) => (
+                <button 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(`/admin/orders/${row._id}`);
+                    }}
+                    className="text-gray-400 hover:text-primary p-2 rounded-lg hover:bg-primary/10 transition-colors"
+                >
                     <span className="material-symbols-outlined">visibility</span>
                 </button>
             )
@@ -107,8 +124,8 @@ export default function OrdersTable({ onRowClick }: { onRowClick?: (order: Order
             onPageChange={setPage}
             limit={limit}
             isLoading={isLoading}
-            className="w-full lg:w-[65%] xl:w-[70%] transition-all flex flex-col bg-surface-dark border-white/5 rounded-2xl"
-            onRowClick={onRowClick}
+            className="w-full transition-all flex flex-col bg-surface-dark border-white/5 rounded-2xl"
+            onRowClick={(order) => router.push(`/admin/orders/${order._id}`)}
         />
     );
 }

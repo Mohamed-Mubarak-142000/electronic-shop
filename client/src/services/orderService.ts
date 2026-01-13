@@ -30,5 +30,10 @@ export const orderService = {
     async updateOrderToDelivered(id: string): Promise<Order> {
         const response = await api.put(`/orders/${id}/deliver`);
         return response.data;
+    },
+
+    async updateOrderStatus(id: string, status: string): Promise<Order> {
+        const response = await api.put(`/orders/${id}/status`, { status });
+        return response.data;
     }
 };

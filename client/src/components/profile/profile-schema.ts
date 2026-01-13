@@ -5,6 +5,7 @@ export const profileSchema = z.object({
     message: "Name must be at least 2 characters.",
   }),
   email: z.string().email(),
+  avatar: z.string().optional(),
   phone: z.string().optional(),
   address: z.object({
     street: z.string().optional(),

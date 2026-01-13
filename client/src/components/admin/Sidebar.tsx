@@ -1,14 +1,28 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useLanguageStore } from '@/store/useLanguageStore';
 
 export default function Sidebar() {
     const pathname = usePathname();
-    const { t } = useTranslation();
+    const router = useRouter();
+    const { t, language } = useTranslation();
+    const { user, logout } = useAuthStore();
+    const { setLanguage } = useLanguageStore();
 
     const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
+
+    const handleLogout = () => {
+        logout();
+        router.push('/login');
+    };
+
+    const toggleLanguage = () => {
+        setLanguage(language === 'en' ? 'ar' : 'en');
+    };
 
     return (
         <aside className="hidden md:flex flex-col w-72 h-full border-r border-white/10 bg-background-dark flex-shrink-0">
@@ -194,6 +208,27 @@ export default function Sidebar() {
                         </span>
                     </Link>
 
+                    <Link
+                        href="/admin/profile"
+                        className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors border-l-4 ${isActive('/admin/profile')
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-white/5 border-transparent'
+                            } group`}
+                    >
+                        <span
+                            className={`material-symbols-outlined group-hover:text-white ${isActive('/admin/profile') ? 'text-primary' : 'text-gray-400'
+                                }`}
+                        >
+                            person
+                        </span>
+                        <span
+                            className={`font-medium text-sm group-hover:text-white ${isActive('/admin/profile') ? 'text-white' : 'text-gray-300'
+                                }`}
+                        >
+                            {t('admin.sidebar.profile')}
+                        </span>
+                    </Link>
+
                     <div className="my-4 border-t border-white/10"></div>
 
                     <Link
@@ -237,19 +272,43 @@ export default function Sidebar() {
                         </span>
                     </Link>                </nav>
 
+                {/* Language Switcher */}
+                <button
+                    onClick={toggleLanguage}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-colors border border-white/10 mb-3"
+                    title={language === 'en' ? 'Switch to Arabic' : 'Switch to English'}
+                >
+                    <span className="material-symbols-outlined text-primary">language</span>
+                    <span className="font-medium text-sm text-gray-300 flex-1 text-left">
+                        {language === 'en' ? 'English' : 'العربية'}
+                    </span>
+                    <span className="material-symbols-outlined text-gray-400 text-xl">swap_horiz</span>
+                </button>
+
                 {/* User Profile (Bottom Sidebar) */}
                 <div className="mt-auto flex items-center gap-3 p-3 rounded-xl bg-card-dark border border-white/5">
-                    <div
-                        className="bg-center bg-no-repeat bg-cover rounded-full size-10 border border-white/10"
-                        style={{
-                            backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBq_-oxROBy13n0pLHoWq1xwK-7c2YkJRgYuwAC9Z300gidVXH7ZCHKGGobSqiK_Otd3NgWblaLK63ntecUbXgQQYYz7rrDWwXSRl4dU6cpTZu7SLpJ9KcTNp4vXtusImJDT1MWTDHg8Ba6ddREbqfyVpRuAZJ4XPnkQGC3GiCpcNK_UkMsVxxYWdIK7SR61rOHIbiI6n5mIyBIaSMrC_qd283j2aXwQo40pJmm-6qqOANLyaeo17k8NfF20QbvOpqmLkaLx2j59lI")',
-                        }}
-                    ></div>
-                    <div className="flex flex-col flex-1 min-w-0">
-                        <p className="text-white text-sm font-semibold truncate">Alex Morgan</p>
-                        <p className="text-primary text-xs truncate">Super Admin</p>
+                    <div className="relative w-10 h-10 rounded-full border border-white/10 overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center flex-shrink-0">
+                        {user?.avatar ? (
+                            <img 
+                                src={user.avatar} 
+                                alt={user.name} 
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <span className="material-symbols-outlined text-primary text-2xl">
+                                {user?.role === 'admin' ? 'admin_panel_settings' : 'person'}
+                            </span>
+                        )}
                     </div>
-                    <button className="text-gray-400 hover:text-white">
+                    <div className="flex flex-col flex-1 min-w-0">
+                        <p className="text-white text-sm font-semibold truncate">{user?.name || 'User'}</p>
+                        <p className="text-primary text-xs truncate capitalize">{user?.role || 'Member'}</p>
+                    </div>
+                    <button 
+                        onClick={handleLogout}
+                        className="text-gray-400 hover:text-white transition-colors"
+                        title="Logout"
+                    >
                         <span className="material-symbols-outlined text-xl">logout</span>
                     </button>
                 </div>

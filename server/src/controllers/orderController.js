@@ -106,10 +106,9 @@ export const addOrderItems = async (req, res) => {
 // @access  Private
 export const getOrderById = async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id).populate(
-            'user',
-            'name email'
-        );
+        const order = await Order.findById(req.params.id)
+            .populate('user', 'name email')
+            .populate('items.product', 'name images');
 
         if (order) {
             res.json(order);
@@ -180,6 +179,44 @@ export const updateOrderToDelivered = async (req, res) => {
     }
 };
 
+// @desc    Update order status
+// @route   PUT /api/orders/:id/status
+// @access  Private/Admin
+export const updateOrderStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+        const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+
+        if (!status || !validStatuses.includes(status)) {
+            return res.status(400).json({ message: 'Invalid status value' });
+        }
+
+        const order = await Order.findById(req.params.id);
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        order.status = status;
+
+        // Update related fields based on status
+        if (status === 'Delivered') {
+            order.isDelivered = true;
+            order.deliveredAt = Date.now();
+        }
+
+        const updatedOrder = await order.save();
+
+        if (req.io) {
+            notifyOrderStatusUpdate(req.io, updatedOrder, status.toLowerCase());
+        }
+
+        res.json(updatedOrder);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 // @desc    Get logged in user orders
 // @route   GET /api/orders/myorders
 // @access  Private
@@ -204,7 +241,8 @@ export const getOrders = async (req, res) => {
         const orders = await Order.find({})
             .limit(pageSize)
             .skip(pageSize * (page - 1))
-            .populate('user', 'id name');
+            .populate('user', 'id name email')
+            .populate('items.product', 'name images');
 
         res.json({ orders, page, pages: Math.ceil(count / pageSize), total: count });
     } catch (error) {

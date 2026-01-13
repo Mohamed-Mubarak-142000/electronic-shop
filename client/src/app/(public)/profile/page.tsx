@@ -13,6 +13,8 @@ import { profileSchema, ProfileFormValues } from '@/components/profile/profile-s
 import { BasicInfo } from '@/components/profile/BasicInfo';
 import { AddressInfo } from '@/components/profile/AddressInfo';
 import { ProfessionalInfo } from '@/components/profile/ProfessionalInfo';
+import { AvatarUpload } from '@/components/profile/AvatarUpload';
+import { UserOrders } from '@/components/profile/UserOrders';
 import { Form } from '@/components/ui/form';
 
 export default function ProfilePage() {
@@ -26,6 +28,7 @@ export default function ProfilePage() {
         defaultValues: {
             name: '',
             email: '',
+            avatar: '',
             phone: '',
             address: {
                 street: '',
@@ -55,6 +58,7 @@ export default function ProfilePage() {
                 const profileData: ProfileFormValues = {
                     name: data.name || '',
                     email: data.email || '',
+                    avatar: data.avatar || '',
                     phone: data.phone || '',
                     address: {
                         street: data.address?.street || '',
@@ -126,8 +130,16 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
+                {/* User Orders Section */}
+                <div className="mb-8">
+                    <UserOrders />
+                </div>
+
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-8">
+                        {/* Avatar Upload */}
+                        <AvatarUpload form={form} language={language} />
+
                         {/* Top Row: Basic Info & Address */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <BasicInfo form={form} t={t} language={language} />

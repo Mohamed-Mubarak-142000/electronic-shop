@@ -13,9 +13,10 @@ export const useCurrency = () => {
         }
     };
 
-    const formatPrice = (price: number) => {
+    const formatPrice = (price: number | undefined | null) => {
         const symbol = getSymbol();
-        return `${symbol}${Number(price).toFixed(2)}`;
+        const numPrice = Number(price) || 0;
+        return `${symbol}${numPrice.toFixed(2)}`;
     };
 
     return { 

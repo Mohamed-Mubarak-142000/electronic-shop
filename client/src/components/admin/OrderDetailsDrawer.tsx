@@ -13,7 +13,15 @@ interface OrderDetailsDrawerProps {
 export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawerProps) {
     const { t } = useTranslation();
     const { formatPrice } = useCurrency();
+    
     if (!order) return null;
+
+    // Safely parse shipping address
+    const shippingAddr = order.shippingAddress?.address || order.shipping?.address || '';
+    const addressParts = shippingAddr.split(',').map(s => s.trim());
+    const [street, city, postalCode, country] = addressParts.length >= 4 
+        ? addressParts 
+        : [shippingAddr, '', '', ''];
 
     return (
         <div className="flex flex-col absolute inset-y-0 right-0 w-full md:w-[450px] lg:w-[35%] bg-surface-dark border-l border-white/5 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] z-30">
@@ -84,9 +92,13 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
                     <div className="flex gap-3">
                         <span className="material-symbols-outlined text-gray-500 mt-0.5">location_on</span>
                         <div>
-                            <p className="text-white text-sm">{order.shippingAddress?.address}</p>
-                            <p className="text-white text-sm">{order.shippingAddress?.city}, {order.shippingAddress?.postalCode}</p>
-                            <p className="text-gray-500 text-xs mt-1">{order.shippingAddress?.country}</p>
+                            {street && <p className="text-white text-sm">{street}</p>}
+                            {(city || postalCode) && (
+                                <p className="text-white text-sm">
+                                    {city}{city && postalCode && ', '}{postalCode}
+                                </p>
+                            )}
+                            {country && <p className="text-gray-500 text-xs mt-1">{country}</p>}
                         </div>
                     </div>
                 </div>
@@ -96,19 +108,19 @@ export default function OrderDetailsDrawer({ order, onClose }: OrderDetailsDrawe
                     <div className="space-y-2 text-sm">
                         <div className="flex justify-between text-gray-400">
                             <span>{t('admin.orders.summary.subtotal')}</span>
-                            <span className="text-white font-mono">{formatPrice(order.itemsPrice)}</span>
+                            <span className="text-white font-mono">{formatPrice(order.itemsPrice || 0)}</span>
                         </div>
                         <div className="flex justify-between text-gray-400">
                             <span>{t('admin.orders.summary.shipping')}</span>
-                            <span className="text-white font-mono">{formatPrice(order.shippingPrice)}</span>
+                            <span className="text-white font-mono">{formatPrice(order.shippingPrice || order.shipping?.cost || 0)}</span>
                         </div>
                         <div className="flex justify-between text-gray-400">
                             <span>{t('admin.orders.summary.tax')}</span>
-                            <span className="text-white font-mono">{formatPrice(order.taxPrice)}</span>
+                            <span className="text-white font-mono">{formatPrice(order.taxPrice || 0)}</span>
                         </div>
                         <div className="flex justify-between pt-2 border-t border-white/10 mt-2 items-end">
                             <span className="text-white font-bold">{t('admin.orders.summary.total')}</span>
-                            <span className="text-2xl text-primary font-bold font-mono">{formatPrice(order.totalPrice)}</span>
+                            <span className="text-2xl text-primary font-bold font-mono">{formatPrice(order.totalPrice || order.total || 0)}</span>
                         </div>
                     </div>
                 </div>

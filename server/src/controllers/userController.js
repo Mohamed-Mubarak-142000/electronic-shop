@@ -15,9 +15,17 @@ export const getUserProfile = async (req, res) => {
             role: user.role,
             isActive: user.isActive,
             verified: user.verified,
+            avatar: user.avatar,
             phone: user.phone,
             address: user.address,
-            location: user.location
+            location: user.location,
+            jobTitle: user.jobTitle,
+            jobTitleAr: user.jobTitleAr,
+            bio: user.bio,
+            bioAr: user.bioAr,
+            experience: user.experience,
+            isHiring: user.isHiring,
+            skills: user.skills
         });
     } else {
         res.status(404).json({ message: 'User not found' });
@@ -33,11 +41,17 @@ export const updateUserProfile = async (req, res) => {
     if (user) {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
-        user.phone = req.body.phone || user.phone;
+        user.avatar = req.body.avatar !== undefined ? req.body.avatar : user.avatar;
+        user.phone = req.body.phone !== undefined ? req.body.phone : user.phone;
         user.address = req.body.address || user.address;
         user.location = req.body.location || user.location;
-        user.jobTitle = req.body.jobTitle || user.jobTitle;
-        user.experience = req.body.experience || user.experience;
+        user.jobTitle = req.body.jobTitle !== undefined ? req.body.jobTitle : user.jobTitle;
+        user.jobTitleAr = req.body.jobTitleAr !== undefined ? req.body.jobTitleAr : user.jobTitleAr;
+        user.bio = req.body.bio !== undefined ? req.body.bio : user.bio;
+        user.bioAr = req.body.bioAr !== undefined ? req.body.bioAr : user.bioAr;
+        user.experience = req.body.experience !== undefined ? req.body.experience : user.experience;
+        user.isHiring = req.body.isHiring !== undefined ? req.body.isHiring : user.isHiring;
+        user.skills = req.body.skills !== undefined ? req.body.skills : user.skills;
         
         if (req.body.password) {
             user.password = req.body.password;
@@ -50,9 +64,17 @@ export const updateUserProfile = async (req, res) => {
             name: updatedUser.name,
             email: updatedUser.email,
             role: updatedUser.role,
+            avatar: updatedUser.avatar,
             phone: updatedUser.phone,
             address: updatedUser.address,
             location: updatedUser.location,
+            jobTitle: updatedUser.jobTitle,
+            jobTitleAr: updatedUser.jobTitleAr,
+            bio: updatedUser.bio,
+            bioAr: updatedUser.bioAr,
+            experience: updatedUser.experience,
+            isHiring: updatedUser.isHiring,
+            skills: updatedUser.skills,
             token: generateToken(updatedUser._id),
         });
     } else {

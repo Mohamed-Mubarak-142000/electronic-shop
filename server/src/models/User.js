@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     role: { type: String, enum: ['user', 'admin', 'business'], default: 'user' },
     isActive: { type: Boolean, default: true },
     verified: { type: Boolean, default: false },
+    avatar: { type: String },
     phone: { type: String },
     address: {
         street: String,

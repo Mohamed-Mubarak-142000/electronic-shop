@@ -25,6 +25,7 @@
     "lucide-react": "^0.561.0",
     "mapbox-gl": "^3.17.0",
     "next": "16.0.10",
+    "pdfmake": "^0.3.2",
     "react": "19.2.1",
     "react-dom": "19.2.1",
     "react-hook-form": "^7.68.0",
@@ -42,7 +43,8 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/mapbox-gl": "^3.4.1",
-    "@types/node": "^20.19.27",
+    "@types/node": "^20.19.28",
+    "@types/pdfmake": "^0.2.12",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
