@@ -101,6 +101,24 @@ io.use(async (socket, next) => {
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.user?.name} (${socket.id})`);
 
+    // Store user socket mapping for online status
+    if (socket.user) {
+        socket.userId = socket.user._id.toString();
+        
+        // Update user online status
+        User.findByIdAndUpdate(socket.user._id, {
+            isOnline: true,
+            lastSeen: new Date()
+        }).catch(err => console.error('Error updating online status:', err));
+        
+        // Broadcast user online status
+        io.emit('user_status_change', {
+            userId: socket.user._id,
+            isOnline: true,
+            lastSeen: new Date()
+        });
+    }
+
     // Auto-join 'notifications' room for non-admin users
     if (socket.user && socket.user.role !== 'admin') {
         socket.join('notifications');
@@ -146,14 +164,52 @@ io.on('connection', (socket) => {
                 .populate('from', 'name role')
                 .populate('to', 'name role');
 
+            // Emit to the room
             io.to(roomId).emit('receive_message', populatedMessage);
+            
+            // Play notification sound for recipient only (not sender)
+            if (to.toString() !== socket.user._id.toString()) {
+                io.to(roomId).emit('new_message_notification', {
+                    from: socket.user._id,
+                    to: to,
+                    message: populatedMessage
+                });
+            }
         } catch (error) {
             console.error('Error saving message:', error);
         }
     });
 
+    // Typing indicator
+    socket.on('typing_start', (data) => {
+        const { roomId, userName, userRole } = data;
+        // Broadcast to room except sender
+        socket.to(roomId).emit('user_typing', { userName, userRole, isTyping: true });
+    });
+
+    socket.on('typing_stop', (data) => {
+        const { roomId, userName, userRole } = data;
+        // Broadcast to room except sender
+        socket.to(roomId).emit('user_typing', { userName, userRole, isTyping: false });
+    });
+
     socket.on('disconnect', () => {
         console.log('User disconnected', socket.id);
+        
+        // Update user offline status
+        if (socket.userId) {
+            User.findByIdAndUpdate(socket.userId, {
+                isOnline: false,
+                lastSeen: new Date()
+            }).catch(err => console.error('Error updating offline status:', err));
+            
+            // Broadcast user offline status
+            io.emit('user_status_change', {
+                userId: socket.userId,
+                isOnline: false,
+                lastSeen: new Date()
+            });
+        }
     });
 });
 

@@ -18,8 +18,13 @@ const ChatPopup = () => {
     const [inputText, setInputText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
+    const [isTyping, setIsTyping] = useState(false);
+    const [typingUser, setTypingUser] = useState<string>('');
+    const [recipientOnline, setRecipientOnline] = useState(false);
+    const [recipientLastSeen, setRecipientLastSeen] = useState<Date | null>(null);
     const socketRef = useRef<Socket | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const scrollToBottom = () => {
         if (!messagesEndRef.current) return;
@@ -48,6 +53,29 @@ const ChatPopup = () => {
             if (isOpen && message.to._id === user?._id) {
                 chatService.markAsRead(user?._id);
             }
+        });
+
+        // New message notification with sound
+        socket.on('new_message_notification', (data: { from: string, to: string, message: ChatMessage }) => {
+            // Only play sound if I'm the recipient (not the sender)
+            if (data.to === user?._id) {
+                // Play notification sound
+                const audio = new Audio('/notification.mp3');
+                audio.play().catch(err => console.log('Audio play failed:', err));
+            }
+        });
+
+        // Typing indicator
+        socket.on('user_typing', (data: { userName: string, userRole: string, isTyping: boolean }) => {
+            setIsTyping(data.isTyping);
+            setTypingUser(data.userName);
+        });
+
+        // Online status updates
+        socket.on('user_status_change', (data: { userId: string, isOnline: boolean, lastSeen: Date }) => {
+            // Update recipient status if it's the admin (for user chats)
+            setRecipientOnline(data.isOnline);
+            setRecipientLastSeen(new Date(data.lastSeen));
         });
 
         socket.on('connect_error', (error) => {
@@ -97,9 +125,45 @@ const ChatPopup = () => {
     // Only show for logged-in users who are NOT admins
     if (!user || user.role === 'admin') return null;
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputText(e.target.value);
+
+        // Send typing indicator
+        if (socketRef.current && e.target.value) {
+            socketRef.current.emit('typing_start', {
+                roomId: user._id,
+                userName: user.name,
+                userRole: user.role
+            });
+
+            // Clear previous timeout
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+            }
+
+            // Stop typing after 2 seconds of inactivity
+            typingTimeoutRef.current = setTimeout(() => {
+                if (socketRef.current) {
+                    socketRef.current.emit('typing_stop', {
+                        roomId: user._id,
+                        userName: user.name,
+                        userRole: user.role
+                    });
+                }
+            }, 2000);
+        }
+    };
+
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault();
         if (!inputText.trim() || !socketRef.current) return;
+
+        // Stop typing indicator
+        socketRef.current.emit('typing_stop', {
+            roomId: user._id,
+            userName: user.name,
+            userRole: user.role
+        });
 
         socketRef.current.emit('send_message', {
             roomId: user._id,
@@ -111,6 +175,20 @@ const ChatPopup = () => {
     };
 
     const isRtl = language === 'ar';
+
+    const formatLastSeen = (lastSeen: Date | null) => {
+        if (!lastSeen) return '';
+        const now = new Date();
+        const diff = now.getTime() - new Date(lastSeen).getTime();
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (minutes < 1) return 'Just now';
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours < 24) return `${hours}h ago`;
+        return `${days}d ago`;
+    };
 
     return (
         <div className={`fixed bottom-6 ${isRtl ? 'left-6' : 'right-6'} z-50`} dir={isRtl ? 'rtl' : 'ltr'}>
@@ -127,12 +205,17 @@ const ChatPopup = () => {
                         {/* Header */}
                         <div className="bg-primary p-4 flex items-center justify-between text-white">
                             <div className="flex items-center gap-3">
-                                <div className="bg-white/20 p-2 rounded-full">
+                                <div className="bg-white/20 p-2 rounded-full relative">
                                     <Headset size={20} />
+                                    {recipientOnline && (
+                                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-primary rounded-full"></span>
+                                    )}
                                 </div>
                                 <div>
                                     <h3 className="font-semibold">{t('chat.title')}</h3>
-                                    <p className="text-xs text-white/80">{t('chat.subtitle')}</p>
+                                    <p className="text-xs text-white/80">
+                                        {recipientOnline ? 'Online' : recipientLastSeen ? formatLastSeen(recipientLastSeen) : t('chat.subtitle')}
+                                    </p>
                                 </div>
                             </div>
                             <button
@@ -174,6 +257,17 @@ const ChatPopup = () => {
                                             </div>
                                         );
                                     })}
+                                    {isTyping && (
+                                        <div className="flex justify-start">
+                                            <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl text-sm shadow-sm border border-slate-100 dark:border-slate-700">
+                                                <div className="flex gap-1">
+                                                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                                                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                                                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                     <div ref={messagesEndRef} />
                                 </>
                             )}
@@ -187,7 +281,7 @@ const ChatPopup = () => {
                             <input
                                 type="text"
                                 value={inputText}
-                                onChange={(e) => setInputText(e.target.value)}
+                                onChange={handleInputChange}
                                 placeholder={t('chat.inputPlaceholder')}
                                 className="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none text-slate-900 dark:text-white"
                             />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Column } from '@/components/ui/data-table';
 import { AdminDataTable } from '@/components/admin/shared/AdminDataTable';
 import { useQuery } from '@tanstack/react-query';
@@ -9,14 +9,33 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { User } from '@/types';
 import { useResourceDelete } from '@/hooks/useResourceDelete';
 
-export default function CustomersTable() {
+interface CustomersTableProps {
+    filters?: {
+        search?: string;
+        role?: string;
+        sort?: string;
+    };
+}
+
+export default function CustomersTable({ filters }: CustomersTableProps) {
     const { t } = useTranslation();
     const [page, setPage] = useState(1);
     const limit = 10;
 
+    // Reset page on filter change
+    useEffect(() => {
+        setPage(1);
+    }, [filters]);
+
     const { data, isLoading } = useQuery({
-        queryKey: ['users', page],
-        queryFn: () => userService.getUsers({ pageNumber: page }),
+        queryKey: ['users', page, filters],
+        queryFn: () => userService.getUsers({
+            page,
+            limit,
+            search: filters?.search,
+            role: filters?.role,
+            sort: filters?.sort || '-createdAt'
+        }),
     });
 
     const { handleDelete } = useResourceDelete({

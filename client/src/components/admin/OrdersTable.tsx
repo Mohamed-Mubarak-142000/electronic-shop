@@ -10,7 +10,15 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrency } from '@/hooks/useCurrency';
 import { Order } from '@/types';
 
-export default function OrdersTable() {
+interface OrdersTableProps {
+    filters?: {
+        search?: string;
+        status?: string;
+        sort?: string;
+    };
+}
+
+export default function OrdersTable({ filters }: OrdersTableProps) {
     const { t } = useTranslation();
     const { formatPrice } = useCurrency();
     const router = useRouter();
@@ -18,13 +26,19 @@ export default function OrdersTable() {
     const limit = 10;
 
     const { data, isLoading } = useQuery({
-        queryKey: ['orders', page], // Add page to query key if server pagination
-        queryFn: () => orderService.getOrders({ pageNumber: page }), // Assuming API supports pageNumber
+        queryKey: ['orders', page, filters],
+        queryFn: () => orderService.getOrders({
+            page,
+            limit,
+            search: filters?.search,
+            status: filters?.status,
+            sort: filters?.sort || '-createdAt'
+        }),
     });
 
     const ordersData = data?.orders || [];
     const totalPages = data?.pages || 1;
-    const totalItems = data?.total || 0; // Assuming API returns total count
+    const totalItems = data?.total || 0;
 
     // Transform API data to Table format if needed
     const orders: Order[] = ordersData;

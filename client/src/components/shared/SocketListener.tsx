@@ -23,26 +23,34 @@ export default function SocketListener() {
             if (user) {
                 // Join user specific room
                 socket.emit('join_room', user._id);
-                // If admin, join admin room? Usually handled by backend logic (server autojoins based on token)
-                // But if explicit join needed:
-                if (user.role === 'admin') {
-                     // backend usually handles this via token or explicit join
-                }
             }
         });
 
         socket.on('new_notification', (notification: NotificationPayload) => {
-            toast(notification.body, {
-                icon: '🔔',
-                duration: 5000,
-            });
+            // Only show notification if user is NOT admin
+            if (user?.role !== 'admin') {
+                toast(notification.body, {
+                    icon: '🔔',
+                    duration: 5000,
+                });
+                // Play notification sound
+                const audio = new Audio('/notification.mp3');
+                audio.play().catch(err => console.log('Audio play failed:', err));
+            }
         });
 
-        socket.on('new_product', (product: { name: string }) => {
-             toast(`New product available: ${product.name}`, {
-                 icon: '🆕',
-                 duration: 6000,
-             });
+        socket.on('new_product', (product: { name: string, nameAr?: string }) => {
+            // Only show to users, NOT admins
+            if (user?.role !== 'admin') {
+                const productName = product.name;
+                toast.success(`New product available: ${productName}`, {
+                    icon: '🆕',
+                    duration: 6000,
+                });
+                // Play notification sound
+                const audio = new Audio('/notification.mp3');
+                audio.play().catch(err => console.log('Audio play failed:', err));
+            }
         });
 
         socket.on('order_status_updated', () => {

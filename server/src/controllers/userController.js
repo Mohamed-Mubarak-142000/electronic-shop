@@ -87,18 +87,54 @@ export const updateUserProfile = async (req, res) => {
 // @access  Private/Admin
 export const getUsers = async (req, res) => {
     try {
-        const page = Number(req.query.pageNumber) || 1;
-        const limit = 10;
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const count = await User.countDocuments({});
-        const users = await User.find({}).limit(limit).skip(skip);
+        // Build filter object
+        const filter = {};
+
+        // Search by name or email
+        if (req.query.search) {
+            filter.$or = [
+                { name: { $regex: req.query.search, $options: 'i' } },
+                { email: { $regex: req.query.search, $options: 'i' } }
+            ];
+        }
+
+        // Filter by role
+        if (req.query.role) {
+            filter.role = req.query.role;
+        }
+
+        // Filter by active status
+        if (req.query.isActive !== undefined) {
+            filter.isActive = req.query.isActive === 'true';
+        }
+
+        // Filter by verified status
+        if (req.query.verified !== undefined) {
+            filter.verified = req.query.verified === 'true';
+        }
+
+        // Sorting
+        let sort = '-createdAt'; // Default newest first
+        if (req.query.sort) {
+            sort = req.query.sort;
+        }
+
+        const count = await User.countDocuments(filter);
+        const users = await User.find(filter)
+            .select('-password')
+            .sort(sort)
+            .limit(limit)
+            .skip(skip);
 
         res.json({ users, page, pages: Math.ceil(count / limit), total: count });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-};
+};;
 
 // @desc    Delete user
 // @route   DELETE /api/users/:id

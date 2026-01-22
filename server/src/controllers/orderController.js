@@ -237,8 +237,51 @@ export const getOrders = async (req, res) => {
         const pageSize = Number(req.query.limit) || 12;
         const page = Number(req.query.page) || 1;
 
-        const count = await Order.countDocuments({});
-        const orders = await Order.find({})
+        // Build filter object
+        const filter = {};
+
+        // Search by order ID, user name, or email
+        if (req.query.search) {
+            filter.$or = [
+                { _id: { $regex: req.query.search, $options: 'i' } }
+            ];
+        }
+
+        // Filter by status
+        if (req.query.status) {
+            filter.status = req.query.status;
+        }
+
+        // Filter by payment status
+        if (req.query.isPaid !== undefined) {
+            filter.isPaid = req.query.isPaid === 'true';
+        }
+
+        // Filter by delivery status
+        if (req.query.isDelivered !== undefined) {
+            filter.isDelivered = req.query.isDelivered === 'true';
+        }
+
+        // Filter by date range
+        if (req.query.startDate || req.query.endDate) {
+            filter.createdAt = {};
+            if (req.query.startDate) {
+                filter.createdAt.$gte = new Date(req.query.startDate);
+            }
+            if (req.query.endDate) {
+                filter.createdAt.$lte = new Date(req.query.endDate);
+            }
+        }
+
+        // Sorting
+        let sort = '-createdAt'; // Default newest first
+        if (req.query.sort) {
+            sort = req.query.sort;
+        }
+
+        const count = await Order.countDocuments(filter);
+        const orders = await Order.find(filter)
+            .sort(sort)
             .limit(pageSize)
             .skip(pageSize * (page - 1))
             .populate('user', 'id name email')

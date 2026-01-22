@@ -37,7 +37,10 @@ const userSchema = new mongoose.Schema({
         icon: String
     }],
     experience: Number,
-    isHiring: { type: Boolean, default: false }
+    isHiring: { type: Boolean, default: false },
+    // Online status and last seen
+    isOnline: { type: Boolean, default: false },
+    lastSeen: { type: Date, default: Date.now }
 }, { timestamps: true });
 
 userSchema.pre('save', async function () {

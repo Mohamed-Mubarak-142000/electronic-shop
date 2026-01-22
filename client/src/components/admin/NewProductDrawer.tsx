@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSocket } from '@/hooks/useSocket';
+import { useAuthStore } from '@/store/useAuthStore';
 import { X } from 'lucide-react';
 import { productService } from '@/services/productService';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -23,11 +24,15 @@ export default function NewProductDrawer() {
     const [queue, setQueue] = useState<Product[]>([]);
     const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
     const socket = useSocket();
+    const { user } = useAuthStore();
     const { language, t } = useTranslation();
     const { formatPrice } = useCurrency();
 
+    // Only show for regular users, NOT admins
+    const shouldShow = user && user.role !== 'admin';
+
     useEffect(() => {
-        if (!socket) return;
+        if (!socket || !shouldShow) return;
 
         socket.on('new_product', (product: Product) => {
             const shownProducts = JSON.parse(localStorage.getItem('shownProducts') || '[]');
@@ -39,10 +44,12 @@ export default function NewProductDrawer() {
         return () => {
             socket.off('new_product');
         };
-    }, [socket]);
+    }, [socket, shouldShow]);
 
     // Handle offline cases: Fetch latest 5 on mount
     useEffect(() => {
+        if (!shouldShow) return;
+        
         const fetchLatest = async () => {
             try {
                 const response = await productService.getProducts({ limit: 5, sort: '-createdAt' });
@@ -59,9 +66,11 @@ export default function NewProductDrawer() {
         };
 
         fetchLatest();
-    }, []);
+    }, [shouldShow]);
 
     useEffect(() => {
+        if (!shouldShow) return;
+        
         if (!currentProduct && queue.length > 0) {
             const next = queue[0];
             // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -72,9 +81,11 @@ export default function NewProductDrawer() {
             const shownProducts = JSON.parse(localStorage.getItem('shownProducts') || '[]');
             localStorage.setItem('shownProducts', JSON.stringify([...shownProducts, next._id]));
         }
-    }, [queue, currentProduct]);
+    }, [queue, currentProduct, shouldShow]);
 
     useEffect(() => {
+        if (!shouldShow) return;
+        
         if (currentProduct) {
             const timer = setTimeout(() => {
                 setCurrentProduct(null);
@@ -82,7 +93,12 @@ export default function NewProductDrawer() {
 
             return () => clearTimeout(timer);
         }
-    }, [currentProduct]);
+    }, [currentProduct, shouldShow]);
+
+    // Don't render anything for admins
+    if (!shouldShow) {
+        return null;
+    }
 
     return (
         <AnimatePresence>
